@@ -1,4 +1,4 @@
-package com.org.agritadka.websocket;
+/*package com.org.agritadka.websocket;
 
 import java.io.IOException;
 
@@ -17,3 +17,4 @@ public class PushUpdateMenu extends HttpServlet {
     }
 
 }
+*/

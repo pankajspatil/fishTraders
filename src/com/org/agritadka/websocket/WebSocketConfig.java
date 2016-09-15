@@ -1,4 +1,4 @@
-package com.org.agritadka.websocket;
+/*package com.org.agritadka.websocket;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +32,7 @@ public class WebSocketConfig implements ServerApplicationConfig{
 		// TODO Auto-generated method stub
 		System.out.println("******getEndpointConfigs******");
 		Set<ServerEndpointConfig> res=new HashSet<>();
-		/*
+		
 	   //UseProgrammatic API server address
 
 		if (scanned.contains(EchoEndpoint.class)) {
@@ -40,8 +40,9 @@ public class WebSocketConfig implements ServerApplicationConfig{
                     EchoEndpoint.class,
                     "/websocket/echoProgrammatic").build());
         }
-        */
+        
 		return res;
 	}
 
 }
+*/
