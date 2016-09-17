@@ -1,0 +1,11 @@
+@CHARSET "ISO-8859-1";
+
+.homeTable td{
+	background-clip: padding-box; /* this has been added */
+    border-radius: 40px;
+    background-color: #15b717;/* #369; */
+    color: white;
+    border: 5px solid white;
+    height: 5vh;
+    text-align: center;
+}
