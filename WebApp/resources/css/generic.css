@@ -81,13 +81,13 @@ table{
 	text-align: center;
 }
 .header {
-    background-color:#39b1cc;
+    /* background-color:#39b1cc; */
     color:white;
     text-align:center;
     padding:5px;
 }
 .headercol {
-    background-color:#0e94b1;
+    /* background-color:#0e94b1; */
     color:white;
     text-align:center;
     padding:5px;

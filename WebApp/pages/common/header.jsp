@@ -21,7 +21,13 @@
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/jquery.fancybox.css?v=2.1.5"></link>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/font-awesome.min.css"></link>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/buttons.dataTables.min.css"></link>
-<link rel="stylesheet" href="<%=contextPath%>/resources/css/multiple-select.css">
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/multiple-select.css">
+
+<!-- Accordion CSS -->
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/accordion-demo.css">
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/accordion-theme.css">
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/accordion-styles.css">
 
 
 
@@ -45,6 +51,10 @@
 <script type="text/javascript" src="<%=contextPath%>/resources/js/menu.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/jquery.fancybox.pack.js?v=2.1.5"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/multiple-select.js"></script>
+
+<!-- Accordion JS -->
+<script type="text/javascript" src="<%=contextPath%>/resources/js/accordion-theme.js"></script>
+<script type="text/javascript" src="<%=contextPath%>/resources/js/jquery.bwlaccordion.min.js"></script>
 </head>
 
 <body>
