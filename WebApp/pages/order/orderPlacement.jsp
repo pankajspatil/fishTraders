@@ -67,7 +67,7 @@
 		</td>
 		<td width="50%" valign="top">
 			<table width="98%;" height="100%" border="0" align="center">
-				<tr style="background: #2d9fd0;line-height: 34px;text-align: center;color: white;">
+				<tr class="headerTR">
 					<td>Menu</td>
 					<td width="10%" style="border-right: thin;">Quantity</td>
 					<td width="10%">Unit Price</td>
