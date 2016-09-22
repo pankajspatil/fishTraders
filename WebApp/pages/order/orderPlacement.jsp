@@ -1,3 +1,9 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.org.agritadka.transfer.MenuMapper"%>
+<%@page import="java.util.List"%>
+<%@page import="com.org.agritadka.transfer.MainMenu"%>
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="com.org.agritadka.order.Order"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/pages/common/header.jsp"%>
@@ -8,6 +14,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+<%
+
+Order order = new Order();
+LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
+
+%>
+
+
 <table width="99.5%" border="0" align="center">
 	<tr>
 		<td>
@@ -25,44 +39,51 @@
 		</td>	
 	</tr>
 	<tr align="left">
-		<td width="50%" align="left">
-			<div class="bwl_acc_container" id="accordion_1" 
+		<td width="50%" align="left" valign="top">
+			<div class="bwl_acc_container" id="accordion_1" style="width: 98%; 
+			height:80%;/* border:1px solid black; */">
+    			<div class="accordion_search_container">
+        				<input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
+        		</div>
+
+			<div class="search_result_container"></div>
+		<%
+			//out.println(menuMap.size());
+			if(menuMap.size() > 0){
+				List<MenuMapper> mappers = new ArrayList();
+				for(MainMenu mainMenu : menuMap.keySet()){
+					mappers = menuMap.get(mainMenu);
+					
+					
+					%>
+					<section>
+					<h2 class="acc_title_bar">
+						<a href="#"><%=mainMenu.getMainMenuName() %></a>
+					</h2>
+					<div class="acc_container">
+						<div class="block" style="overflow: auto;">
+						<%if(mappers.size() > 0){
+							%><table width="100%" border="1">
+							<%for(MenuMapper mapper : mappers){ %>
+								<tr>
+									<td width="80%"><%=mapper.getSubMenu().getSubMenuName() %></td>
+									<td width="20%">&nbsp;</td>
+									<td width="10%"><input type="button" value="ADD"></td>
+								</tr>
+								<%} %>
+							</table><%
+						}%>
+							
+						</div>
+					</div>
+					</section>
+					<%
+						}
+						}
+					%>
+
 			
-			style="width: 98%; height:80%;/* border:1px solid black; */">
-    <div class="accordion_search_container">
-        <input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
-        </div> <!-- end .bwl_acc_container -->
-
-<div class="search_result_container"></div> <!-- end .search_result_container -->
-
-<section>
-    <h2 class="acc_title_bar"><a href="#">Accordion Title #1</a></h2>
-    <div class="acc_container">
-        <div class="block">
-            accordion content for title 1
-        </div>
-    </div>
-</section>
-
-<section>
-    <h2 class="acc_title_bar"><a href="#">Accordion Title #2</a></h2>
-    <div class="acc_container">
-        <div class="block">
-            accordion content for title 2
-        </div>
-    </div>
-</section>
-
-<section>
-    <h2 class="acc_title_bar"><a href="#">Accordion Title #3</a></h2>
-    <div class="acc_container">
-        <div class="block">
-            accordion content for title 3
-        </div>
-    </div>
-</section>
-
-</div> <!-- end .bwl_acc_container -->
+		</div>
 			
 		</td>
 		<td width="50%" valign="top">
@@ -95,8 +116,9 @@
 <script>
 $("#accordion_1").bwlAccordion({
 	theme:'theme-blue',
-	pagination: false,
-	limit: 1
+	pagination: true,
+	limit: 6,
+	toggle: true
 });
 </script>
 <!-- <div style="border: 1px solid black; width: 50%; height: 200px;display: inline-block;">Div1</div>

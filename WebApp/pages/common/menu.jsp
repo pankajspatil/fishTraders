@@ -11,7 +11,7 @@
 <ul>
    <li><a href='<%=request.getContextPath()%>/pages/home/home.jsp'><span>Home</span></a></li>
    <li>
-   		<a href='#'><span>Plan</span></a>
+   		<a href='#'><span>Order</span></a>
 	 	<ul>
 	 	<li class='first-child'><a href='<%=request.getContextPath()%>/pages/plans/addPlan.jsp'><span>Add Resource Plan</span></a></li>
          <li class='has-sub'><a href='#'><span>Reports</span></a>

@@ -50,7 +50,7 @@ if(tableMap.size() > 0){
 			<%
 			int count = tablesPerRow;
 			for(Table table : tableList){
-				%><td><b><%=table.getTableName()%></b></td><%
+				%><td><b onclick="location.href='/AgriTadka/pages/order/orderPlacement.jsp'" ><%=table.getTableName()%></b></td><%
 				count --;
 				if(count == 0){
 					%></tr><tr class="homeTable"><%

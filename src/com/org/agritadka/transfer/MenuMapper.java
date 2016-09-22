@@ -37,7 +37,7 @@ public class MenuMapper {
 	public String toString() {
 		return "MenuMapper [mainSubMenuId=" + mainSubMenuId + ", mainMenuId="
 				+ mainMenu.getMainMenuId() + ", mainMenuName=" + mainMenu.getMainMenuName() + ", subMenuId="
-				+ subMenu.getSubMenuId() + "subMenuName=" + subMenu.getSubMenuId() + "]";
+				+ subMenu.getSubMenuId() + "subMenuName=" + subMenu.getSubMenuName() + "]";
 	}
 	
 	

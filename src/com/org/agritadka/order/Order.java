@@ -36,7 +36,7 @@ public class Order {
 		
 		while(dataRS.next()){
 			
-			mainMenuId = dataRS.getInt("main_sub_menu_map_id");
+			mainMenuId = dataRS.getInt("main_menu_id");
 			mainMenuName = dataRS.getString("main_menu");
 			subMenuName = dataRS.getString("sub_menu");
 			subMenuId = dataRS.getInt("sub_menu_id");
@@ -64,6 +64,7 @@ public class Order {
 			menus.add(menuMapper);
 			
 			oldObj = mainMenuObj;
+			prevId = mainMenuId;
 			
 		}
 		mainSubMenuMap.put(oldObj, menus);
