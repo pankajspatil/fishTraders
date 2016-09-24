@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import com.google.gson.JsonParser;
 import com.org.agritadka.generic.ConnectionsUtil;
 import com.org.agritadka.transfer.MainMenu;
 import com.org.agritadka.transfer.MenuMapper;
+import com.org.agritadka.transfer.OrderData;
+import com.org.agritadka.transfer.OrderMenu;
 import com.org.agritadka.transfer.SubMenu;
 
 public class Order {
@@ -85,7 +88,7 @@ public class Order {
 		return mainSubMenuMap;
 	}
 	
-	public Integer saveOrder(String data) throws SQLException{
+	public Integer saveOrder(String data, String userId) throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
@@ -93,28 +96,111 @@ public class Order {
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
 
-		String query = "insert into order_menu_map(order_id, main_sub_menu_map_id, quantity, unit_price, status_id, notes, created_by)" +
-					   "values(?,?,?,?, (select status_id from status_master where status_name = 'In Progress'),?,?)";
+		String query = "insert into order_menu_map(order_id, main_sub_menu_map_id, quantity, unit_price, status_id, notes, created_by, order_price)" +
+					   "values(?,?,?,?, (select status_id from status_master where status_name = 'In Progress'),?,?,?)";
+		
+		String query1 = "update order_menu_map set quantity = ?, order_price = ?, notes = ? where order_menu_map_id = ? ";
 		
 		PreparedStatement psmt = conn.prepareStatement(query);
+		PreparedStatement psmt1 = conn.prepareStatement(query1);
 		
 		for (Map.Entry<String,JsonElement> entry : jsonObject.entrySet()) {
 		    JsonObject jObject = entry.getValue().getAsJsonObject();
 		 
-		    psmt.setInt(1, 1/*jObject.get("orderId").getAsInt()*/);
-		    psmt.setInt(2, jObject.get("menuId").getAsInt());
-		    psmt.setInt(3, jObject.get("quantity").getAsInt());
-		    psmt.setFloat(4, jObject.get("unitPrice").getAsFloat());
-		    psmt.setString(5, jObject.get("notes").getAsString());
-		    psmt.setInt(6, 1);
-		    
-		    psmt.addBatch();
+		    if(jObject.get("orderMenuMapId") != null){
+		    	psmt1.setInt(1, jObject.get("quantity").getAsInt());
+		    	psmt1.setInt(2, jObject.get("finalPrice").getAsInt());
+		    	psmt1.setString(3, jObject.get("notes").getAsString());
+		    	psmt1.setInt(4, jObject.get("orderMenuMapId").getAsInt());
+		    	
+		    	psmt1.addBatch();
+		    }else{
+		    	psmt.setInt(1, jObject.get("orderId").getAsInt());
+			    psmt.setInt(2, jObject.get("menuId").getAsInt());
+			    psmt.setInt(3, jObject.get("quantity").getAsInt());
+			    psmt.setFloat(4, jObject.get("unitPrice").getAsFloat());
+			    psmt.setString(5, jObject.get("notes").getAsString());
+			    psmt.setString(6, userId);
+			    psmt.setString(7, jObject.get("finalPrice").getAsString());
+			    
+			    psmt.addBatch();
+		    }
 		}
 		
 		psmt.executeBatch();
+		psmt1.executeBatch();
+		
+		connectionsUtil.closeConnection(conn);
+		
 		return 0;
 	}
 	
+	public OrderData getOrderData(Integer tableId, String userId) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, om.order_price, sm.menu_name, om.notes "+ 
+						"from order_master o inner join status_master s on o.status_id = s.status_id "+ 
+						"and s.status_code = 'INPROGRESS' and o.table_id = "+tableId+" "+
+						"left join order_menu_map om on o.order_id = om.order_id "+
+						"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
+						"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
+						"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
+		System.out.println("query==>" + query);
+		
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		int count = 0;
+		OrderData orderData = new OrderData();
+		OrderMenu orderMenu;
+		List<OrderMenu> orderMenus = new ArrayList<OrderMenu>();
+		
+		while(dataRS.next()){
+			if(count == 0){
+				orderData.setOrderId(dataRS.getInt("order_id"));
+			}
+			
+			if(dataRS.getString("main_sub_menu_map_id") != null){
+				orderMenu = new OrderMenu();
+				orderMenu.setMainSubMenuMapId(dataRS.getInt("main_sub_menu_map_id"));
+				orderMenu.setOrderMenuMapId(dataRS.getInt("order_menu_map_id"));
+				orderMenu.setQuantity(dataRS.getInt("quantity"));
+				orderMenu.setUnitPrice(dataRS.getFloat("unit_price"));
+				orderMenu.setFinalPrice(dataRS.getFloat("order_price"));
+				orderMenu.setNotes(dataRS.getString("notes"));
+				orderMenu.setSubMenuName(dataRS.getString("menu_name"));
+				
+				orderMenus.add(orderMenu);
+				orderData.setSelectedMenus(orderMenus);
+			}
+			count ++;
+		}
+		
+		if(count == 0){
+			
+			query = "INSERT INTO `agri_tadka`.`order_master`(`table_id`,`status_id`,`created_by`) "+
+					"VALUES(?, (select status_id from status_master where status_code = 'INPROGRESS'), ?);";
+			
+			PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
+			psmt.setInt(1, tableId);
+			psmt.setString(2, userId);
+			psmt.executeUpdate();
+			
+			dataRS = psmt.getGeneratedKeys();
+			
+			if(dataRS.next()){
+				orderData.setOrderId(dataRS.getInt(1));
+			}
+		}
+		
+		connectionsUtil.closeConnection(conn);
+		
+		System.out.println("orderData===>" + orderData.toString());
+		
+		return orderData;
+	}
+
 	public static void main(String args[]) throws SQLException{
 		
 		Order order = new Order();

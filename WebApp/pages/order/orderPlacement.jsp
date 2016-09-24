@@ -1,3 +1,5 @@
+<%@page import="com.org.agritadka.transfer.OrderMenu"%>
+<%@page import="com.org.agritadka.transfer.OrderData"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.org.agritadka.transfer.MenuMapper"%>
 <%@page import="java.util.List"%>
@@ -12,17 +14,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="/AgriTadka/resources/css/order.css" rel="stylesheet" type="text/css">
+<link href="/AgriTadka/resources/css/demo.css" rel="stylesheet" type="text/css">
 <script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
+<script src="/AgriTadka/resources/js/loadingoverlay.js" type="text/javascript"></script>
+
 </head>
 <body>
 <%
 
-out.println(request.getParameter("tableId"));
+Integer tableId = Integer.parseInt(Utils.getString(request.getParameter("tableId")));
+String tableName = Utils.getString(request.getParameter("tableName"));
+String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
 
 Order order = new Order();
+OrderData orderData = order.getOrderData(tableId, userId);
 LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
-
-
 
 %>
 
@@ -30,13 +36,16 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 <table width="99.5%" border="0" align="center">
 	<tr>
 		<td>
-			<table width="100%">
-				<tr>
-					<td><h1>Order No : 0000000001</h1></td>
-					<td width="20%"><b>Table : Table 3</b></td>
-					<td width="30%">
-						<b>Waiter :</b>
-						<input type="text"> 
+			<table width="100%" border="1">
+				<tr align="center">
+					<td width="35%" style="border-right: thick;">
+						<h1>Order No : <%=orderData.getOrderId() %></h1>
+						<input type="hidden" id="orderId" value="<%=orderData.getOrderId()%>">
+					</td>
+					<td width="32%"><h2>Table : <%=tableName %></h2></td>
+					<td width="33%">
+						<h2>Waiter :<input type="text"></h2>
+						 
 					</td>
 				</tr>
 			</table>
@@ -91,7 +100,7 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 		</div>
 			
 		</td>
-		<td width="50%" style="position: relative;">
+		<td width="50%" style="position: relative;" id="rightCell">
 		<div id="divTop">
 			<table width="98%;" height="100%" border="0" align="center" id="orderedTable">
 				<tr class="headerTR">
@@ -101,8 +110,35 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 					<td width="15%">Total Price</td>
 					<td width="5%">Del</td>
 				</tr>
+				<%if(orderData.getSelectedMenus() != null && orderData.getSelectedMenus().size() > 0){
+					for(OrderMenu orderMenu : orderData.getSelectedMenus()){
+					%>
+					<tr align="center">
+						<td align="left">
+							<input type="hidden" id="<%=orderMenu.getOrderMenuMapId()%>">
+							<%=orderMenu.getSubMenuName() %></td>
+						<td><select onChange='updatePrice(this)'>
+							<%for(int i=1; i<=30; i++){
+								if(i == orderMenu.getQuantity()){
+									%><option value="<%=i%>" selected="selected"><%=i%></option><%
+								}else{
+								%><option value="<%=i%>"><%=i%></option><%
+								}
+							}%></select>
+						</td>
+						<td><%=orderMenu.getUnitPrice() %></td>
+						<td><%=orderMenu.getFinalPrice() %></td>
+						<td><input type='button' value="Del"></input></td>						
+					</tr>
+					<%
+					}
+				}
+				%>
 				<tr>
-					<td><input type="text" style="background:rgba(0,0,0,0); border: none;" readonly="readonly"></td>
+					<td>
+						<!-- <input type="text" style="background:rgba(0,0,0,0); border: none;" readonly="readonly"> -->
+						
+					</td>
 				</tr>
 			</table>
 			</div>
@@ -113,7 +149,7 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 					<td>29</td>
 				</tr>
 				<tr>
-					<td><input type="button" value="Save" onclick="saveOrder()"> </td>
+					<td><input type="button" value="Save" id="saveOrder"> </td>
 					<td><input type="button" value="Cancel"> </td>
 					<td><input type="button" value="Checkout"> </td>
 				</tr>

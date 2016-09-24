@@ -1,3 +1,4 @@
+<%@page import="com.org.agritadka.generic.Constants"%>
 <%@page import="com.org.agritadka.order.Order"%>
 <%@page import="com.org.agritadka.generic.Utils"%>
 <%@page import="com.google.gson.JsonParser"%>
@@ -12,15 +13,21 @@
 response.setCharacterEncoding("UTF-8");
 
 String action = Utils.getString(request.getParameter("action"));
+String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
+
 if(action.equals("saveOrder")){
 	String data = Utils.getString(request.getParameter("data"));
 	Order order = new Order();
 	
-	Integer returnValue = order.saveOrder(data);
+	try{
+		Integer returnValue = order.saveOrder(data, userId);
+		out.println(returnValue);
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("1");
+	}
+	
 }
-
-
-out.println(request.getParameter("menuData"));
 
 /* String page1 = Utils.getString(request.getParameter("page1"));
 System.out.println("page1===>" + page1);
@@ -41,6 +48,4 @@ if(page1.equals("InactiveRecord")){
 	} 
 	}*/
 	
-	out.println("1");
-
 %>
