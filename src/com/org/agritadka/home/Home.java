@@ -17,7 +17,7 @@ public class Home {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "select tm.table_type_id, t.table_id, t.table_name from table_type_name_map ttn "+
+		String query = "select tm.table_type_id, t.table_id, t.table_name,tm.table_type,tm.is_active from table_type_name_map ttn "+
 						"inner join table_type_master tm on ttn.table_type_id = tm.table_type_id "+
 						"inner join table_master t on ttn.table_id = t.table_id "+
 						"where t.is_active = 1 and ttn.is_active = 1 && tm.is_active = 1 "+
@@ -39,6 +39,8 @@ public class Home {
 			table = new Table();
 			table.setTableId(dataRS.getInt("table_id"));
 			table.setTableName(dataRS.getString("table_name"));
+			table.setTableType(dataRS.getString("table_type"));
+			table.setIsActive(dataRS.getString("is_active"));
 			tableList.add(table);
 			previousTblTypeId = currentTblTypeId;
 		}
