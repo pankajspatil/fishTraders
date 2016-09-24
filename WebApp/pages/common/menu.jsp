@@ -9,7 +9,7 @@
 <body>
 <div id='cssmenu'>
 <ul>
-   <li><a href='<%=request.getContextPath()%>/pages/home/home.jsp'><span>Home</span></a></li>
+   <li><a href='<%=request.getContextPath()%>/pages/common/home.jsp'><span>Home</span></a></li>
    <li>
    		<a href='#'><span>Order</span></a>
 	 	<ul>
@@ -23,6 +23,12 @@
         </ul>
    		</li>
 	</ul>
+	</li>
+	<li>
+		<a href='#'><span>Master</span></a>
+		<ul>
+		<li class='first-child'><a href='<%=request.getContextPath()%>/pages/master/tableMaster.jsp'><span>Table Master</span></a></li>
+		</ul>
 	</li>
 	<li style="float: right;padding-right: 10px;">
 		<a href='#'><span>Account</span></a>
