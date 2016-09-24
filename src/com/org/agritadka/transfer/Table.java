@@ -6,6 +6,7 @@ public class Table {
 	private String tableName;
 	private String tableType;
 	private String statusCode;
+	private Integer isActive;
 
 	
 	public Integer getTableId() {
@@ -47,11 +48,20 @@ public class Table {
 		this.statusCode = statusCode;
 	}
 
+	public Integer getIsActive() {
+		return isActive;
+	}
+
+
+	public void setIsActive(Integer isActive) {
+		this.isActive = isActive;
+	}
+
 
 	@Override
 	public String toString() {
 		return "Table [tableId=" + tableId + ", tableName=" + tableName
 				+ ", tableType=" + tableType + ", statusCode=" + statusCode
-				+ "]";
+				+ ", isActive=" + isActive + "]";
 	}
 }

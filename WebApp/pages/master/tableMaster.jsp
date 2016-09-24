@@ -19,19 +19,19 @@
 	<%
 		int tablesPerRow = 5;
 		Home home = new Home();
-		LinkedHashMap<Integer, List<Table>> tableMap = home.getTables();
+		LinkedHashMap<String, List<Table>> tableMap = home.getTables();
 
-		for (Integer tableTypeId : tableMap.keySet()) {
+		for (String tableType : tableMap.keySet()) {
 	%>
 	<table width="100%" align="center">
 		<tr>
 			<td width="33.33%">&nbsp;</td>
-			<td width="33.33%" align="center"><h3><%=tableTypeId%></h3></td>
+			<td width="33.33%" align="center"><h3><%=tableType%></h3></td>
 			<td width="33.33%" align="right"></td>
 		</tr>
 	</table>
 	<%
-		List<Table> tableList = tableMap.get(tableTypeId);
+		List<Table> tableList = tableMap.get(tableType);
 			if (tableList.size() > 0) {
 	%><table align="center" width="<%=tablesPerRow * 10%>%" border="1"
 		cellpadding="20" cellspacing="20">
