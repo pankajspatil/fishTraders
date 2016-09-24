@@ -8,6 +8,8 @@ public class SubMenu {
 	
 	private boolean isVeg;
 	
+	private Float unitPrice;
+	
 	public Integer getSubMenuId() {
 		return subMenuId;
 	}
@@ -31,10 +33,18 @@ public class SubMenu {
 	public void setVeg(boolean isVeg) {
 		this.isVeg = isVeg;
 	}
+	
+	public Float getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Float unitPrice) {
+		this.unitPrice = unitPrice;
+	}
 
 	@Override
 	public String toString() {
 		return "SubMenu [subMenuId=" + subMenuId + ", subMenuName="
-				+ subMenuName + ", isVeg=" + isVeg + "]";
+				+ subMenuName + ", isVeg=" + isVeg + ", unit_price=" + unitPrice + "]";
 	}
 }

@@ -9,6 +9,5 @@
 <body>
 <h3>Sorry an exception occurred! Please contact administrator.</h3>
 Exception is: <%= exception.printStackTrace() %><br/>
-
 </body>
 </html>

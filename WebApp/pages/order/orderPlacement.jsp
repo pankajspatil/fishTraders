@@ -11,13 +11,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<link href="/AgriTadka/resources/css/order.css" rel="stylesheet" type="text/css">
+<script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
 </head>
 <body>
 <%
 
+out.println(request.getParameter("tableId"));
+
 Order order = new Order();
 LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
+
+
 
 %>
 
@@ -63,12 +68,12 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 					<div class="acc_container">
 						<div class="block" style="overflow: auto;">
 						<%if(mappers.size() > 0){
-							%><table width="100%" border="1">
+							%><table width="100%" border="0">
 							<%for(MenuMapper mapper : mappers){ %>
-								<tr>
-									<td width="80%"><%=mapper.getSubMenu().getSubMenuName() %></td>
-									<td width="20%">&nbsp;</td>
-									<td width="10%"><input type="button" value="ADD"></td>
+								<tr id="<%=mapper.getMainSubMenuId()%>" align="center">
+									<td width="80%" align="left" style=""><%=mapper.getSubMenu().getSubMenuName() %></td>
+									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
+									<td width="10%"><input type="button" value="ADD" onclick="addMenuToOrder(this)"></td>
 								</tr>
 								<%} %>
 							</table><%
@@ -86,28 +91,34 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 		</div>
 			
 		</td>
-		<td width="50%" valign="top">
-			<table width="98%;" height="100%" border="0" align="center">
+		<td width="50%" style="position: relative;">
+		<div id="divTop">
+			<table width="98%;" height="100%" border="0" align="center" id="orderedTable">
 				<tr class="headerTR">
 					<td>Menu</td>
 					<td width="10%" style="border-right: thin;">Quantity</td>
-					<td width="10%">Unit Price</td>
-					<td width="10%">Total Price</td>
+					<td width="15%">Unit Price</td>
+					<td width="15%">Total Price</td>
 					<td width="5%">Del</td>
 				</tr>
 				<tr>
 					<td><input type="text" style="background:rgba(0,0,0,0); border: none;" readonly="readonly"></td>
 				</tr>
-				<tr>
+			</table>
+			</div>
+			<div id="divBottom">
+				<table style="float: right;">
+					<tr>
 					<td>Sub total</td>
 					<td>29</td>
 				</tr>
 				<tr>
-					<td><input type="button" value="Save"> </td>
+					<td><input type="button" value="Save" onclick="saveOrder()"> </td>
 					<td><input type="button" value="Cancel"> </td>
 					<td><input type="button" value="Checkout"> </td>
 				</tr>
-			</table>		
+				</table>
+			</div>	
 		</td>
 	</tr>
 </table>

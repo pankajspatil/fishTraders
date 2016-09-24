@@ -12,41 +12,45 @@ import com.org.agritadka.transfer.Table;
 
 public class Home {
 	
-	public LinkedHashMap<Integer, List<Table>> getTables() throws SQLException{
+	public LinkedHashMap<String, List<Table>> getTables() throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "select tm.table_type_id, t.table_id, t.table_name,tm.table_type,tm.is_active from table_type_name_map ttn "+
-						"inner join table_type_master tm on ttn.table_type_id = tm.table_type_id "+
-						"inner join table_master t on ttn.table_id = t.table_id "+
-						"where t.is_active = 1 and ttn.is_active = 1 && tm.is_active = 1 "+
-						"order by tm.table_type_id, t.table_id";
+		String query = "select ttn.table_type_name_map_id, t.table_name, tm.table_type, status_code"
+				+ " from table_type_name_map ttn inner join table_type_master tm on ttn.table_type_id = tm.table_type_id "
+				+ "and ttn.is_active = 1 and tm.is_active = 1 inner join table_master t on ttn.table_id = t.table_id "
+				+ "and t.is_active = 1 left join (select o.table_id, s.status_code, status_name from order_master o "
+				+ "inner join status_master s on o.status_id = s.status_id and s.status_code = 'INPROGRESS' "
+				+ "and o.table_id is not null) ord on ttn.table_type_name_map_id = ord.table_id "
+				+ "order by tm.table_type_id, t.table_id;";
+		
+		System.out.println("query ==> " + query);
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
-		LinkedHashMap<Integer, List<Table>> tableMap = new LinkedHashMap<Integer, List<Table>>();
-		Integer previousTblTypeId = 0, currentTblTypeId = 0;
+		LinkedHashMap<String, List<Table>> tableMap = new LinkedHashMap<String, List<Table>>();
+		String previousTblType = "", currentTblType = "";
 		Table table;
 		List<Table> tableList = new ArrayList<Table>();
 		
 		while(dataRS.next()){
 			
-			currentTblTypeId = dataRS.getInt("table_type_id");
-			if(previousTblTypeId != currentTblTypeId && previousTblTypeId != 0){
-				tableMap.put(previousTblTypeId, tableList);
+			currentTblType = dataRS.getString("table_type");
+			if(!previousTblType.equals(currentTblType) && !previousTblType.equals("")){
+				tableMap.put(previousTblType, tableList);
 				tableList = new ArrayList<Table>();
 			}
 			table = new Table();
-			table.setTableId(dataRS.getInt("table_id"));
+			table.setTableId(dataRS.getInt("table_type_name_map_id"));
 			table.setTableName(dataRS.getString("table_name"));
 			table.setTableType(dataRS.getString("table_type"));
-			table.setIsActive(dataRS.getString("is_active"));
+			table.setStatusCode(dataRS.getString("status_code"));
 			tableList.add(table);
-			previousTblTypeId = currentTblTypeId;
+			previousTblType = currentTblType;
 		}
 		
 		if(tableList.size() > 0){
-			tableMap.put(previousTblTypeId, tableList);
+			tableMap.put(previousTblType, tableList);
 		}
 		
 		connectionsUtil.closeConnection(conn);

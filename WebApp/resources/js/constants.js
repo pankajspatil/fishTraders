@@ -20,6 +20,7 @@ var	USER_ID = "USER_ID"
 
 
 
+
 //Define messages here
 
 var SELECT_PROJECT = "Please select project.";
