@@ -1,6 +1,7 @@
 package com.org.agritadka.home;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,6 +58,23 @@ public class Home {
 		
 		connectionsUtil.closeConnection(conn);
 		return tableMap;
+	}
+	
+	public void updateTable(int tableId,String tablename,int active){
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		
+		String query="update table_master set table_name='"+tablename+"',is_active="+active+" where table_id="+tableId;
+		PreparedStatement psmt;
+		try {
+			psmt = conn.prepareStatement(query);
+			psmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
