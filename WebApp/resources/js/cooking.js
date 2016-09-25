@@ -38,3 +38,10 @@ function callback() {
       //$( "#effect:visible" ).removeAttr( "style" ).fadeOut();
     }, 1000 );
   };
+  
+  setInterval(function(){ 
+	    //code goes here that will be run every 5 seconds.
+	  
+	  console.log("Method Called at : " + new Date());
+	}, 30000);
+  
