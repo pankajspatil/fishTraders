@@ -15,6 +15,8 @@ public class OrderMenu {
 	private String notes;
 	
 	private String subMenuName;
+	
+	private String createdOn;
 
 	public Integer getOrderMenuMapId() {
 		return orderMenuMapId;
@@ -71,6 +73,14 @@ public class OrderMenu {
 	public void setSubMenuName(String subMenuName) {
 		this.subMenuName = subMenuName;
 	}
+	
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
 
 	@Override
 	public String toString() {
@@ -78,6 +88,6 @@ public class OrderMenu {
 				+ ", mainSubMenuMapId=" + mainSubMenuMapId + ", quantity="
 				+ quantity + ", unitPrice=" + unitPrice + ", finalPrice="
 				+ finalPrice + ", notes=" + notes + ", subMenuName="
-				+ subMenuName + "]";
+				+ subMenuName + ", createdOn=" + createdOn + "]";
 	}
 }

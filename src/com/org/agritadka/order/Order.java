@@ -15,6 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.org.agritadka.generic.ConnectionsUtil;
+import com.org.agritadka.transfer.Cooking;
 import com.org.agritadka.transfer.MainMenu;
 import com.org.agritadka.transfer.MenuMapper;
 import com.org.agritadka.transfer.OrderData;
@@ -216,8 +217,85 @@ public class Order {
 		
 		Order order = new Order();
 		
-		order.getMenus();
+		order.getOrderedMenus("");
 	}
 	
-	
+	public List<Cooking> getOrderedMenus(String data) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		
+		String timestamp = jsonObject.get("timestamp").getAsString();
+		String statusCode = jsonObject.get("statusCode").getAsString();
+		
+		String query = "select o.order_id, sm.menu_name, om.quantity, om.order_menu_map_id, om.created_on, "+
+				 		"tm.table_name, om.notes  from order_master o "+ 
+						"inner join order_menu_map om on o.order_id = om.order_id " ;
+		
+				 		if(timestamp != null && !timestamp.equals("")){
+				 			query += "and om.created_by >= '" + timestamp + "' ";
+				 		}
+						 
+				 		query += "inner join status_master s on om.status_id = s.status_id and status_code = '"+statusCode+"' "+
+						"inner join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
+						"inner join sub_menu_master sm on sm.sub_menu_id = msm.sub_menu_id "+
+						"inner join table_type_name_map ttn on ttn.table_type_name_map_id = o.table_id "+
+						"inner join table_master tm on tm.table_id = ttn.table_id order by om.created_by asc";
+				 		
+				 		ResultSet dataRS = conn.createStatement().executeQuery(query);
+				 		Cooking cooking;
+				 		OrderData orderData;
+				 		
+				 		List<Cooking> orderedMenus = new ArrayList<Cooking>();
+				 		while(dataRS.next()){
+				 			cooking = new Cooking();
+				 			orderData = new OrderData();
+				 			
+				 			orderData.setOrderId(dataRS.getInt("order_id"));
+				 			orderData.setTableName(dataRS.getString("table_name"));
+				 			
+				 			cooking.setOrderMenuMapId(dataRS.getInt("order_menu_map_id"));
+				 			cooking.setSubMenuName(dataRS.getString("menu_name"));
+				 			cooking.setCreatedOn(dataRS.getString("created_on"));
+				 			cooking.setQuantity(dataRS.getInt("quantity"));
+				 			cooking.setNotes(dataRS.getString("notes"));
+				 			
+				 			cooking.setOrderData(orderData);				 			
+				 			orderedMenus.add(cooking);
+				 		}
+				 		
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return orderedMenus;
+	}
+
+	public Integer updateCookingStatus(String data) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		
+		String operation = jsonObject.get("operation").getAsString();
+		Integer orderMenuMapId = jsonObject.get("orderMenuMapId").getAsInt();
+		
+		String statusCode = operation.equals("Cook") ? "COOKED" : "COMPLETED";
+		
+		String query = "update order_menu_map set status_id = (select status_id from status_master where status_code = ?) "+
+					   "where order_menu_map_id = ?";
+
+		PreparedStatement psmt = conn.prepareStatement(query);
+		
+		psmt.setString(1,statusCode);
+		psmt.setInt(2, orderMenuMapId);
+		
+		psmt.executeUpdate();
+		
+		return 0;
+	}
 }

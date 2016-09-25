@@ -55,6 +55,11 @@
 <!-- Accordion JS -->
 <script type="text/javascript" src="<%=contextPath%>/resources/js/accordion-theme.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/jquery.bwlaccordion.min.js"></script>
+
+<!-- OverLay JS-->
+
+<script src="/AgriTadka/resources/js/loadingoverlay.js" type="text/javascript"></script>
+
 </head>
 
 <body>

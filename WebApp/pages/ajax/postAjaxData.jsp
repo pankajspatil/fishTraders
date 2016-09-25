@@ -1,3 +1,5 @@
+<%@page import="com.org.agritadka.transfer.Cooking"%>
+<%@page import="java.util.List"%>
 <%@page import="com.org.agritadka.generic.Constants"%>
 <%@page import="com.org.agritadka.order.Order"%>
 <%@page import="com.org.agritadka.generic.Utils"%>
@@ -25,6 +27,35 @@ if(action.equals("saveOrder")){
 	}catch(Exception ex){
 		ex.printStackTrace();
 		out.println("error");
+	}
+	
+}else if(action.equals("fetchCookingData")){
+	String data = Utils.getString(request.getParameter("data"));
+	Order order = new Order();
+	
+	try{
+		List<Cooking> returnList = order.getOrderedMenus(data);
+		Gson gson = new Gson();
+		
+		String returnValue = gson.toJson(returnList);
+		out.println(returnValue);
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("error");
+	}
+	
+}
+else if(action.equals("updateCookingStatus")){
+	try{
+		String data = Utils.getString(request.getParameter("data"));
+		Order order = new Order();
+		
+		Integer returnValue = order.updateCookingStatus(data);
+		out.println(returnValue);
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("1");
 	}
 	
 }

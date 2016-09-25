@@ -12,7 +12,7 @@
 #divBottom {
 	bottom: 0;
 }
-
+/* 
 @font-face {
   font-family: "demo";
   src: url('fonts/icons.woff') format("woff"), url('fonts/icons.ttf') format("truetype");
@@ -93,4 +93,4 @@
   vertical-align: middle;
   content: "\e000";
   font-family: "demo";
-}
+ }*/

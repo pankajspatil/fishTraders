@@ -97,3 +97,36 @@ function validPassword(str)
   var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   return re.test(str);
 }
+
+function callAjax(paramsMap){
+	
+	var methodType = paramsMap.hasKey(METHOD_TYPE) ? paramsMap.get(METHOD_TYPE) : 'POST';
+	var url = paramsMap.hasKey(URL) ? paramsMap.get(URL) : '/AgriTadka/pages/ajax/postAjaxData.jsp';
+	var postData = paramsMap.hasKey(DATA) ? paramsMap.get(DATA) : {};
+	var dataType = paramsMap.hasKey(DATA_TYPE) ? paramsMap.get(DATA_TYPE) : 'json';
+	var successHandler = paramsMap.hasKey(SUCCESS_HANDLER) ? paramsMap.get(SUCCESS_HANDLER) : 'defaultSuccessHandler';
+	var errorHandler = paramsMap.hasKey(ERROR_HANDLER) ? paramsMap.get(ERROR_HANDLER) : 'defaultErrorHandler';
+	
+	$.ajax({
+	      type: methodType,
+	      url: url,
+	      data: postData, 
+	      dataType: 'json',
+	      success: function(resultData) {
+	    	  	console.log('resultData = ' + resultData);
+	    	  	eval(successHandler + "()");
+	    	 },
+	    	 error: function (xhr, status) { 
+	    		 console.log('ajax error = ' + xhr.statusText);
+	    		 eval(errorHandler + "()");
+	         } 
+	});
+}
+
+function defaultSuccessHandler(){
+	
+}
+
+function defaultErrorHandler(){
+	
+}

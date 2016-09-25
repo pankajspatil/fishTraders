@@ -15,10 +15,11 @@ var PATIENT_ID = "patientId";
 var MENU_REQUIRED = "menuRequired";
 var METHOD_TYPE = "METHOD_TYPE";
 var MSG = "MSG";
-var MONITOR_ID = "MONITOR_ID"
-var	USER_ID = "USER_ID"
-
-
+var MONITOR_ID = "MONITOR_ID";
+var	USER_ID = "USER_ID";
+var DATA_TYPE = "DATA_TYPE";
+var SUCCESS_HANDLER = "SUCCESS_HANDLER";
+var ERROR_HANDLER = "ERROR_HANDLER";
 
 
 //Define messages here

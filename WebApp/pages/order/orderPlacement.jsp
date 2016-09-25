@@ -14,9 +14,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="/AgriTadka/resources/css/order.css" rel="stylesheet" type="text/css">
-<link href="/AgriTadka/resources/css/demo.css" rel="stylesheet" type="text/css">
+<!-- <link href="/AgriTadka/resources/css/demo.css" rel="stylesheet" type="text/css"> -->
 <script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
-<script src="/AgriTadka/resources/js/loadingoverlay.js" type="text/javascript"></script>
 
 </head>
 <body>
