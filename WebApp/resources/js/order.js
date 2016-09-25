@@ -34,19 +34,14 @@ function addMenuToOrder(buttonObj){
     var quantityCell = $("<td></td>");
     quantityCell.append(combo);
     
-    var newRow = $("<tr id='"+menuId+"' align='center'></tr>");
+    var newRow = $("<tr id='"+randomNumber+"' align='center'></tr>");
     
     newRow.append($(clonedRow).find('td:nth-child(1)').removeAttr('width').attr("align","left"));
     newRow.append(quantityCell);
     newRow.append("<td>"+unitPrice+"</td>");
     newRow.append("<td>"+finalPrice+"</td>");
     newRow.append($("<input type='button'></input>").attr('value', "Del"));
-    /*
-	    		$(clonedRow).find('td:nth-child(0)') +
-	    		"<td>" + combo + "</td>" +
-	    		$(clonedRow).find('td:nth-child(1)') +
-	    		$(clonedRow).find('td:nth-child(0)') +
-	    		"</tr>");*/
+   
     console.log(newRow);
 	
 	var table2 = $('#orderedTable');
@@ -54,21 +49,20 @@ function addMenuToOrder(buttonObj){
 	
 	$(newRow).effect("highlight",{},3000);
 	
-	console.log(menuList);
+	//console.log(menuList);
 }
 
 function updatePrice(selectObj){
 	
 	var rowObj = $(selectObj).closest('tr');
-	var id = $(selectObj).attr("id");	
-	var orderMenuMapId;
+	var id = $(rowObj).attr("id");	
+	var orderMenuMapId = rowObj.find("input:hidden").attr("id");
 	
 	if(id === undefined){
-		orderMenuMapId = rowObj.find("input:hidden").attr("id");		
 		id = (Math.floor(1000 + Math.random() * 9000)).toString();
 		id = id.substring(-2);
 		
-		$(selectObj).attr("id", id);
+		$(rowObj).attr("id", id);
 	}
 	
 	var quantity = $(selectObj).find("option:selected").val();
@@ -83,9 +77,7 @@ function updatePrice(selectObj){
 	menu.notes = menu.notes === undefined ? '' : menu.notes;
 	menuList[id] = menu;
 	
-	
 	var cellObj = $(rowObj).find('td:nth-child(4)').text(finalPrice);
-	
 	$(cellObj).effect("highlight",{},3000);
 	
 }
@@ -103,12 +95,23 @@ function saveOrder(){
 	      dataType: 'json',
 	      success: function(resultData) {
 	    	  //alert("Save Complete" + resultData)
+	    	  
+	    	  $.each(resultData, function(key, value) {
+	    		  
+	    		  var trRow = ('#'+key);
+	    		  var inputObj = $(trRow).find('input:hidden');
+	    		  
+	    		  if(inputObj === undefined || inputObj.length === 0){
+	    			  $(trRow).find('td:nth-child(1)').append($("<input></input>").attr("type","hidden").attr("id",value.orderMenuMapId));
+	    		  }
+	    		  delete menuList[key];
+	    		  
+	    		  });
+	    	  
 	    	  $('#rightCell').LoadingOverlay("hide");
-	    	  if(resultData == 0){
-	    		  Lobibox.alert("success",{
+	    	    Lobibox.alert("success",{
 	    				msg : 'Record saved successfully!!'
 	    			});
-	    	  	}	    	  
 	    	 },
 	    	 error: function (xhr, status) { 
 	    		 console.log('ajax error = ' + xhr.statusText);

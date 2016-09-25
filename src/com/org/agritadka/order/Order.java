@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -88,7 +89,7 @@ public class Order {
 		return mainSubMenuMap;
 	}
 	
-	public Integer saveOrder(String data, String userId) throws SQLException{
+	public String saveOrder(String data, String userId) throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
@@ -101,8 +102,10 @@ public class Order {
 		
 		String query1 = "update order_menu_map set quantity = ?, order_price = ?, notes = ? where order_menu_map_id = ? ";
 		
-		PreparedStatement psmt = conn.prepareStatement(query);
+		PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		PreparedStatement psmt1 = conn.prepareStatement(query1);
+		
+		ResultSet dataRS;
 		
 		for (Map.Entry<String,JsonElement> entry : jsonObject.entrySet()) {
 		    JsonObject jObject = entry.getValue().getAsJsonObject();
@@ -123,16 +126,24 @@ public class Order {
 			    psmt.setString(6, userId);
 			    psmt.setString(7, jObject.get("finalPrice").getAsString());
 			    
-			    psmt.addBatch();
+			    psmt.executeUpdate();
+				
+				dataRS = psmt.getGeneratedKeys();
+				
+				if(dataRS.next()){
+					jObject.addProperty("orderMenuMapId", dataRS.getString(1));
+				}
+			    //psmt.addBatch();
 		    }
 		}
 		
-		psmt.executeBatch();
+		//psmt.executeBatch();
 		psmt1.executeBatch();
+		Gson gson = new Gson();
 		
 		connectionsUtil.closeConnection(conn);
 		
-		return 0;
+		return gson.toJson(jsonObject);
 	}
 	
 	public OrderData getOrderData(Integer tableId, String userId) throws SQLException{

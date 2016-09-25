@@ -10,7 +10,7 @@
 	String contextPath = (request == null || request.getContextPath() == null) ? ""
 						: request.getContextPath();
 
-	System.out.println("contextPath" + contextPath);
+	//System.out.println("contextPath" + contextPath);
 %>
 <script>
 var contextPath = '<%=contextPath%>'; 

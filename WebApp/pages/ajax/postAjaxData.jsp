@@ -20,11 +20,11 @@ if(action.equals("saveOrder")){
 	Order order = new Order();
 	
 	try{
-		Integer returnValue = order.saveOrder(data, userId);
+		String returnValue = order.saveOrder(data, userId);
 		out.println(returnValue);
 	}catch(Exception ex){
 		ex.printStackTrace();
-		out.println("1");
+		out.println("error");
 	}
 	
 }
