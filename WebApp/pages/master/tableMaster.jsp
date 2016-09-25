@@ -12,51 +12,56 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css"
 	href="<%=contextPath%>/resources/css/home.css">
+<script type="text/javascript"
+	src="<%=contextPath%>/resources/js/search.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#appointmentData').DataTable({
+			"aoColumnDefs" : [ {
+				"bSortable" : false,
+				"aTargets" : [ 0 ]
+			} ],
+			"order" : [ [ 1, "asc" ] ]
+		});
+	});
+</script>
+
 </head>
 
 <body>
 <form action="">
-	<%
-		int tablesPerRow = 5;
-		Home home = new Home();
-		LinkedHashMap<String, List<Table>> tableMap = home.getTables();
-
-		for (String tableType : tableMap.keySet()) {
-	%>
-	<table width="100%" align="center">
-		<tr>
-			<td width="33.33%">&nbsp;</td>
-			<td width="33.33%" align="center"><h3><%=tableType%></h3></td>
-			<td width="33.33%" align="right"></td>
-		</tr>
-	</table>
-	<%
-		List<Table> tableList = tableMap.get(tableType);
-			if (tableList.size() > 0) {
-	%><table align="center" width="<%=tablesPerRow * 10%>%" border="1"
-		cellpadding="20" cellspacing="20">
-		
+<br><br>
+	<table align="center" border="1"
+		cellpadding="20" cellspacing="20" id="appointmentData" class="display">
+		<thead>
+			<tr class="mainTR">
+				<th>Table No</th>
+				<th>Table Section</th>
+				<th>Status</th>
+				<th>Operation</th>
+			</tr>
+		</thead>
 			<%
-				int count = tablesPerRow;
-			for (Table table : tableList) {
-				
-			%><tr><td><%=table.getTableName()%></td>
-			<td><%=table.getTableType() %></td>
-			<td><select name="tableActive<%=table.getTableId() %>">
-			<option value="1" <%if(table.getIsActive().equals("1")) out.println("selected"); %>>Active</option>
-			<option value="0" <%if(table.getIsActive().equals("0")) out.println("selected"); %>>InActive</option> 
-			</select>
-			</td>
+				Home home = new Home();
+				LinkedHashMap<String, List<Table>> tableMap = home.getTables();
+
+				for (String tableType : tableMap.keySet()) {
+					List<Table> tableList = tableMap.get(tableType);
+					if (tableList.size() > 0) {
+				for (Table table : tableList) {
+			%><tr>
+				<td><%=table.getTableName()%></td>
+				<td><%=table.getTableType()%></td>
+				<td><%= (table.getIsActive()==1)?"Active":"InActive"%></td>
+				<td><input type="button" value="Edit" onclick="openPage('edit',<%=table.getTableId() %>)"/></td>
 			</tr>
 			<%
 				}
-			%>	
-
-	</table>
-	<%
-		}// end of if
-		}// end of for
-	%>
+					}// end of if
+				}// end of for
+			%>
+		</table>
+	
 </form>
 </body>
 </html>
