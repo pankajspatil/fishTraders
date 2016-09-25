@@ -3,6 +3,7 @@ package com.org.agritadka.transfer;
 public class Table {
 
 	private Integer tableId;
+	private Integer tableMasterId;
 	private String tableName;
 	private String tableType;
 	private String statusCode;
@@ -55,6 +56,16 @@ public class Table {
 
 	public void setIsActive(Integer isActive) {
 		this.isActive = isActive;
+	}
+
+
+	public Integer getTableMasterId() {
+		return tableMasterId;
+	}
+
+
+	public void setTableMasterId(Integer tableMasterId) {
+		this.tableMasterId = tableMasterId;
 	}
 
 

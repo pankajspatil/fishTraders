@@ -27,14 +27,14 @@ function searchKeySelect(selectObj){
 	}
 }
 
-function openPage(oepration, patientId, appointmentId){
+function openPage(oepration, tableMasterId,tableName,tableType,active){
 	
 	var formObj = $(document.createElement('form'));
 	formObj.attr("method", "post");
 	
 	var userIdObj = $(document.createElement('input'));
 	userIdObj.attr("type", "text");
-	userIdObj.attr("value", patientId);
+	userIdObj.attr("value", tableMasterId);
 	userIdObj.attr("name", "userId");
 	
 	formObj.append(userIdObj);
@@ -45,10 +45,13 @@ function openPage(oepration, patientId, appointmentId){
     	var paramsMap = new Map();
     	var dataMap = new Map();
     	
-    	dataMap.put(PATIENT_ID, patientId);
+    	dataMap.put("tableMasterId", tableMasterId);
+    	dataMap.put("tableName", tableName);
+    	dataMap.put("tableType", tableType);
+    	dataMap.put("active", active);    	
     	dataMap.put(MENU_REQUIRED,false);
     	
-    	paramsMap.put(WIN_URL, '/DoctorsOnline/pages/doctor/visitHistory.jsp');
+    	paramsMap.put(WIN_URL, '/AgriTadka/pages/master/tableModify.jsp');
     	paramsMap.put(DATA, dataMap);
     	
     	openWindow(paramsMap);
@@ -73,16 +76,7 @@ function openPage(oepration, patientId, appointmentId){
     	break;      
     case 'vNew': 
     	
-    	if(appointmentId !== undefined){
-    		var appointObj = $(document.createElement('input'));
-        	appointObj.attr("type", "text");
-        	appointObj.attr("value", appointmentId);
-        	appointObj.attr("name", "appointmentId");
-        	formObj.append(appointObj);
-    	}
     	
-    	formObj.attr("action", "/DoctorsOnline/pages/doctor/newVisit.jsp");
-        formObj.submit();
         break;
     default:
         alert('Something went wrong!');

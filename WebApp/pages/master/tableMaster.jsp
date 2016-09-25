@@ -31,6 +31,7 @@
 <body>
 <form action="">
 <br><br>
+<input type="button" value="Add New">
 	<table align="center" border="1"
 		cellpadding="20" cellspacing="20" id="appointmentData" class="display">
 		<thead>
@@ -53,7 +54,7 @@
 				<td><%=table.getTableName()%></td>
 				<td><%=table.getTableType()%></td>
 				<td><%= (table.getIsActive()==1)?"Active":"InActive"%></td>
-				<td><input type="button" value="Edit" onclick="openPage('edit',<%=table.getTableId() %>)"/></td>
+				<td><input type="button" value="Edit" onclick="openPage('edit','<%=table.getTableMasterId()%>','<%=table.getTableName()%>','<%=table.getTableType()%>','<%=table.getIsActive() %>')"/></td>
 			</tr>
 			<%
 				}
