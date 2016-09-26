@@ -10,22 +10,26 @@
 	<h1 align="center">Cooking Dashboard</h1>
 	<div id="divleft">
 	<center style="font-size: 40px;"><b>Ordered</b></center>
-	<table width="100%" border="1">
+	<table width="100%" border="0" id="cookingTable">
+	<thead>
 		<tr class="headerTR">
 			<td width="10%">No</td>
 			<td>Name</td>
 			<td width="5%">Quantity</td>
-			<td width="10%">Time</td>
+			<td width="10%">Time(Ago)</td>
 			<td width="10%">Table</td>
 			<td width="10%">Notes</td>
 			<td width="5%">Action</td>
 		</tr>
+	</thead>
+	<tbody></tbody>
 		</table>
 	
 	</div>
 	<div id="divright">
 	<center style="font-size: 40px;"><b>Cooking</b></center>
-		<table width="100%" border="1" id="table2">
+		<table width="100%" border="0" id="cookedTable">
+		<thead>
 		<tr class="headerTR">
 			<td width="10%">No</td>
 			<td>Name</td>
@@ -35,6 +39,8 @@
 			<td width="10%">Notes</td>
 			<td width="5%">Action</td>
 		</tr>
+		</thead>
+		<tbody></tbody>
 	</table>
 	</div>
 	<script type="text/javascript" src="<%=contextPath%>/resources/js/cooking.js"></script>

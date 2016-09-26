@@ -2,10 +2,21 @@
  * 
  */
 
+$(document).ready(function() {
+   var cookingTable = $('#cookingTable').DataTable({
+    	//"bSort" : false,
+    	"paging" : true
+    });
+   
+   var cookedTable = $('#cookedTable').DataTable({
+   	//"bSort" : false,
+   	"paging" : true
+   });
+} );
+
 function moveRow(buttonObj) {
 
 	var operation = $(buttonObj).val();
-	alert(operation);
 	
 	var orderedRow = $(buttonObj).closest('tr');
 	var orderingRow = orderedRow.clone(true);
@@ -32,13 +43,16 @@ function moveRow(buttonObj) {
 	    	  //alert("Save Complete" + resultData)
 	    	  console.log('resultData = ' + resultData);
 	    	  
-	    	  $(orderedRow).find('td').fadeOut(500, function() {
-	    			$(this).parents('tr:first').remove();
+	    	  $(orderedRow).fadeOut(500, function() {
+	    		  $(orderedRow).closest('table').DataTable().rows($(orderedRow)).remove().draw();
 	    		});
 	    		
 	    	  if(operation == 'Cook'){
-	    		  var table2 = $('#table2');
-		    	  table2.append(orderingRow);
+	    		  var btnObj = $(orderingRow).find('input:button').attr("value","Finish");
+	    		  
+	    		  $('#cookedTable').DataTable().row.add(
+	    				 orderingRow
+	  	    		  ).draw();
 		    	  $(orderingRow).effect("highlight",{},3000);
 	    	  }
 	    	 },
@@ -88,7 +102,9 @@ function callback() {
 	    	  
 	    	  var tableObj = $('#' + divId).find('table');
 	    	  
-	    	  $(tableObj).find("tr:gt(0)").remove();
+	    	  //$(tableObj).find("tr:gt(0)").remove();
+	    	  
+	    	  $(tableObj).DataTable().rows().remove().draw();
 	    	  
 	    	  var buttonObj = $("<input></input>").attr("type", "button").attr("onClick", "moveRow(this)");
 	    	  if(fetchType == 'INPROGRESS'){
@@ -98,19 +114,31 @@ function callback() {
 	    	  }
 	    	  
 	    	  $.each(resultData, function(key, value) {
+	    		  
 	    		  var rowObj = $("<tr align = 'center' id = '"+value.orderMenuMapId+"'></tr>");
+	    		  
+	    		  var timeJson = timeDifference(new Date(), new Date(value.createdOn));
+	    		  
+	    		  var timeDiff = timeJson.days != 0 ? timeJson.days : "";
+	    		  timeDiff += timeJson.hours != 0 ? "<b>:</b>" + timeJson.hours : "";
+	    		  timeDiff += timeJson.minutes != 0 ? "<b>:</b>" +timeJson.minutes : "";
+	    		  
+	    		  timeDiff = timeDiff.replace(/^:/g,'');
 	    		  
 	    		  rowObj.append($("<td>"+value.orderData.orderId+"</td>"));
 	    		  rowObj.append($("<td>"+value.subMenuName+"</td>"));
 	    		  rowObj.append($("<td>"+value.quantity+"</td>"));
-	    		  rowObj.append($("<td>"+value.createdOn+"</td>"));
+	    		  rowObj.append($("<td>"+timeDiff+"</td>"));
 	    		  rowObj.append($("<td>"+value.orderData.tableName+"</td>"));
 	    		  rowObj.append($("<td>"+value.notes+"</td>"));
 	    		  
 	    		  var btnObj = buttonObj.clone(true);
 	    		  rowObj.append($("<td></td>").append(btnObj));
 	    		  
-	    		  tableObj.append(rowObj);
+	    		  //tableObj.append(rowObj);
+				$(tableObj).DataTable().row.add(
+					rowObj
+	    		  ).draw();
 	    	  });
 	    	  
 	    	  $('#' + divId).LoadingOverlay("hide");
@@ -132,8 +160,8 @@ function callback() {
   setInterval(function(){ 
 	    //code goes here that will be run every 5 seconds.
 	  //console.log("Inside Interval");
-	  //fetchCookingData("INPROGRESS");
-	}, 30000);
+	  fetchCookingData("INPROGRESS");
+	}, 5000);
   
   
   

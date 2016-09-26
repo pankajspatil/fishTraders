@@ -144,3 +144,6 @@ td {
 	max-height: 700px;
 	overflow: auto;
 }
+
+/* table.dataTable tbody tr { background-color:  }
+table.dataTable tbody tr:nth-child(2n) { background-color:#c0c0c0 } */
