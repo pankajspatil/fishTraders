@@ -61,6 +61,8 @@ public class Home {
 		return tableMap;
 	}
 	
+	
+	
 	public void updateTable(int tableId,String tablename,int active){
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();

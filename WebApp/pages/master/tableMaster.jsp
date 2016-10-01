@@ -16,7 +16,7 @@
 	src="<%=contextPath%>/resources/js/search.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#appointmentData').DataTable({
+		$('#tableData').DataTable({
 			"aoColumnDefs" : [ {
 				"bSortable" : false,
 				"aTargets" : [ 0 ]
@@ -28,28 +28,47 @@
 
 
 <script type="text/javascript">
+var tableArray =[];
+
+
 function changeReadOnly(rowid){
 
-	if (){
-		
-	}
 	var el = document.getElementById("tableName"+rowid);
 	el.readOnly =false;
 	
 	var el = document.getElementById("tableType"+rowid);
 	el.disabled =false;
-	
+	tableArray[rowid]=rowid;
+
 }
+
+function updateTables(){
+	
+	document.getElementById("tableRows").value = tableArray.toString();
+	document.getElementById("myForm").submit();	
+
+}
+</script>
+<script language="javascript" type="text/javascript">
+
+function popitup() {
+	newwindow=window.open("AddTable.html",'name','height=500,width=500');
+	if (window.focus) {newwindow.focus()}
+	return false;
+}
+
 </script>
 
 </head>
 
 <body>
-<form action="">
+<form id="myForm" action="tableModify.jsp" method="get">
 <br><br>
-<input type="button" value="Add New">
+<input type="button" value="Add New" onClick="popitup()">
+<input type="button" value="update" onclick="updateTables()">
+<input type="text" id="tableRows" name="tableRows" value="">
 		<table align="center" border="1" cellpadding="20" cellspacing="20"
-			id="appointmentData" class="display">
+			id="tableData" class="display">
 			<thead>
 				<tr class="mainTR">
 					<th>Table No</th>
@@ -68,9 +87,9 @@ function changeReadOnly(rowid){
 						for (Table table : tableList) {
 			%><tr>
 				<td><%=table.getTableMasterId()%></td>
-				<td><input type="text" value='<%=table.getTableName()%>'
-					id="tableName<%=table.getTableMasterId()%>" readonly></td>
-				<td><select id="tableType<%=table.getTableMasterId()%>"
+				<td><input type="text"  readonly value='<%=table.getTableName()%>'
+					id="tableName<%=table.getTableMasterId()%>" name="tableName<%=table.getTableMasterId()%>" ></td>
+				<td><select id="tableType<%=table.getTableMasterId()%>" name="tableType<%=table.getTableMasterId()%>"
 					disabled="true">
 						<option value="1" <%=(table.getIsActive() == 1) ? "selected" : ""%>>Active</option>
 						<option value="0" <%=(table.getIsActive() == 0) ? "selected" : ""%>>In

@@ -161,7 +161,7 @@ function callback() {
 	    //code goes here that will be run every 5 seconds.
 	  //console.log("Inside Interval");
 	  fetchCookingData("INPROGRESS");
-	}, 5000);
+	}, 15000);
   
   
   

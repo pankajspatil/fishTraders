@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form action="tableModify.jsp" method="get">
+		<table>
+			<thead>
+				<tr class="mainTR">
+					<th>Table Section</th>
+					<th>Status</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+			<tr>
+				<td colspan=2><h1>Add new table</h1></td>
+			</tr>
+			<tr>
+				<td>Table name</td>
+				<td><input type="text" name="tableName" /></td>
+			</tr>
+			<tr>
+				<td>Table Type</td>
+				<td><select id="tableType" name="tableType">
+						<option value="1">A/C</option>
+						<option value="2">Garden WO A/c</option>
+				</select></td>
+
+			</tr>
+			<tr>
+				<td>Table Status</td>
+				<td><select id="tableStatus" name="tableStatus" >
+						<option value="1">Active</option>
+						<option value="0">In-Active</option>
+				</select></td>
+			</tr>
+			<tr><td colspan="2"><input type="submit" value= "Create"></td></tr>
+			
+		</table>
+	</form>
