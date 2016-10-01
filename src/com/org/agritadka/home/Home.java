@@ -18,7 +18,7 @@ public class Home {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "select ttn.table_type_name_map_id,t.table_id, t.table_name, tm.table_type,tm.is_active,  status_code"
+		String query = "select ttn.table_type_name_map_id,t.table_id, t.table_name, tm.table_type,tm.is_active,status_code, ttn.price_type"
 				+ " from table_type_name_map ttn inner join table_type_master tm on ttn.table_type_id = tm.table_type_id "
 				+ "and ttn.is_active = 1 and tm.is_active = 1 inner join table_master t on ttn.table_id = t.table_id "
 				+ "and t.is_active = 1 left join (select o.table_id, s.status_code, status_name from order_master o "
@@ -26,7 +26,7 @@ public class Home {
 				+ "and o.table_id is not null) ord on ttn.table_type_name_map_id = ord.table_id "
 				+ "order by tm.table_type_id, t.table_id;";
 		
-		System.out.println("query ==> " + query);
+		//System.out.println("query ==> " + query);
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		LinkedHashMap<String, List<Table>> tableMap = new LinkedHashMap<String, List<Table>>();
@@ -48,6 +48,7 @@ public class Home {
 			table.setTableType(dataRS.getString("table_type"));
 			table.setIsActive(dataRS.getInt("is_active"));
 			table.setStatusCode(dataRS.getString("status_code"));
+			table.setPriceType(dataRS.getString("price_type"));
 			tableList.add(table);
 			previousTblType = currentTblType;
 		}

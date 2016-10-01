@@ -78,7 +78,7 @@ function updatePrice(selectObj){
 	menuList[id] = menu;
 	
 	var cellObj = $(rowObj).find('td:nth-child(4)').text(finalPrice);
-	$(cellObj).effect("highlight",{},3000);
+	$(cellObj).effect("highlight",{},30000);
 	
 }
 function saveOrder(){
@@ -124,12 +124,13 @@ function saveOrder(){
 	
 }
 
-function openOrderPage(tableId, tableName){
+function openOrderPage(tableId, tableName, priceType){
 	
 	var form = $("<form></form>").attr('id', 'tableTransferForm')
 				.attr("name", "tableTransferForm")
 				.attr("action", "/AgriTadka/pages/order/orderPlacement.jsp")
 				.attr("method","post");
+	
 	var tableIdObj = $("<input></input>")
 				.attr("name","tableId")
 				.attr("id","tableId")
@@ -140,8 +141,14 @@ function openOrderPage(tableId, tableName){
 	.attr("id","tableName")
 	.attr("value", tableName);
 	
+	var tablePriceTypeObj = $("<input></input>")
+	.attr("name","priceType")
+	.attr("id","priceType")
+	.attr("value", priceType);
+	
 	form.append(tableIdObj);
 	form.append(tableNameObj);
+	form.append(tablePriceTypeObj);
 	
 	form.submit();	
 }

@@ -24,10 +24,11 @@
 Integer tableId = Integer.parseInt(Utils.getString(request.getParameter("tableId")));
 String tableName = Utils.getString(request.getParameter("tableName"));
 String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
+String priceType = Utils.getString(request.getParameter("priceType"));
 
 Order order = new Order();
 OrderData orderData = order.getOrderData(tableId, userId);
-LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
+LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 
 %>
 
@@ -148,9 +149,9 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus();
 					<td>29</td>
 				</tr>
 				<tr>
-					<td><input type="button" value="Save" id="saveOrder"> </td>
-					<td><input type="button" value="Cancel"> </td>
-					<td><input type="button" value="Checkout"> </td>
+					<td><input type="button" value="Save" id="saveOrder" name="page1"> </td>
+					<td><input type="button" value="Cancel" name="page2" id="cancelOrder"> </td>
+					<td><input type="button" value="Checkout" name="page3" id="checkoutOrder"> </td>
 				</tr>
 				</table>
 			</div>	

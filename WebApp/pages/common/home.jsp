@@ -52,7 +52,8 @@ if(tableMap.size() > 0){
 			int count = tablesPerRow;
 			for(Table table : tableList){
 				%><td align="center" class='waves-effect <%=Utils.getString(table.getStatusCode()).equals("INPROGRESS") 
-						? "homeTableOccpd" : "homeTableAvlble"%>' onclick="openOrderPage(<%=table.getTableId()%>,'<%=table.getTableName()%>')">
+						? "homeTableOccpd" : "homeTableAvlble"%>' 
+						onclick="openOrderPage(<%=table.getTableId()%>,'<%=table.getTableName()%>','<%=table.getPriceType()%>')">
 						<b><%=table.getTableName()%></b>
 					</td><%
 				count --;

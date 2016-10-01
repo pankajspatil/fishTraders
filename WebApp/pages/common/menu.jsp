@@ -13,7 +13,8 @@
    <li>
    		<a href='#'><span>Order</span></a>
 	 	<ul>
-	 	<li class='first-child'><a href='<%=request.getContextPath()%>/pages/plans/addPlan.jsp'><span>Add Resource Plan</span></a></li>
+	 	<li class='first-child'><a href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
+	 	<li class='first-child'><a href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking Dashboard</span></a></li>
          <li class='has-sub'><a href='#'><span>Reports</span></a>
             <ul>
    			<li class='first-child'><a href='<%=request.getContextPath()%>/pages/reports/psdfReport.jsp'><span>PSDF Report</span></a></li>

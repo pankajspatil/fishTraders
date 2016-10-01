@@ -8,6 +8,7 @@ public class Table {
 	private String tableType;
 	private String statusCode;
 	private Integer isActive;
+	private String priceType;
 
 	
 	public Integer getTableId() {
@@ -67,12 +68,23 @@ public class Table {
 	public void setTableMasterId(Integer tableMasterId) {
 		this.tableMasterId = tableMasterId;
 	}
+	
+
+	public String getPriceType() {
+		return priceType;
+	}
+
+
+	public void setPriceType(String priceType) {
+		this.priceType = priceType;
+	}
 
 
 	@Override
 	public String toString() {
-		return "Table [tableId=" + tableId + ", tableName=" + tableName
-				+ ", tableType=" + tableType + ", statusCode=" + statusCode
-				+ ", isActive=" + isActive + "]";
+		return "Table [tableId=" + tableId + ", tableMasterId=" + tableMasterId
+				+ ", tableName=" + tableName + ", tableType=" + tableType
+				+ ", statusCode=" + statusCode + ", isActive=" + isActive
+				+ ", priceType=" + priceType + "]";
 	}
 }
