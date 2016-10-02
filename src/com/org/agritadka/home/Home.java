@@ -62,6 +62,55 @@ public class Home {
 	}
 	
 	
+public LinkedHashMap<String, List<Table>> getAllTables() throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+					String query = "SELECT ttn.table_type_name_map_id, tm.table_type_id,     "
+							+ "t.table_id,     t.table_name,     tm.table_type,      ttn.is_active "
+							+ "FROM     table_type_name_map ttn 	"
+							+ "INNER JOIN     "
+							+ "table_type_master tm ON ttn.table_type_id = tm.table_type_id 	"
+							+ "INNER JOIN     table_master t ON ttn.table_id = t.table_id "
+							+ "WHERE     t.is_active = 1 "
+							+ "ORDER BY tm.table_type_id , t.table_id";
+		
+		
+		System.out.println("query ==> " + query);
+		
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		LinkedHashMap<String, List<Table>> tableMap = new LinkedHashMap<String, List<Table>>();
+		String previousTblType = "", currentTblType = "";
+		Table table;
+		List<Table> tableList = new ArrayList<Table>();
+		
+		while(dataRS.next()){
+			
+			currentTblType = dataRS.getString("table_type");
+			if(!previousTblType.equals(currentTblType) && !previousTblType.equals("")){
+				tableMap.put(previousTblType, tableList);
+				tableList = new ArrayList<Table>();
+			}
+			table = new Table();
+			table.setTableId(dataRS.getInt("table_type_name_map_id"));
+			table.setTableMasterId(dataRS.getInt("table_id"));
+			table.setTableName(dataRS.getString("table_name"));
+			table.setTableType(dataRS.getString("table_type"));
+			table.setIsActive(dataRS.getInt("is_active"));			
+			tableList.add(table);
+			previousTblType = currentTblType;
+		}
+		
+		if(tableList.size() > 0){
+			tableMap.put(previousTblType, tableList);
+		}
+		
+		connectionsUtil.closeConnection(conn);
+		return tableMap;
+	}
+	
+	
 	
 	public void updateTable(int tableId,String tablename,int active){
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();

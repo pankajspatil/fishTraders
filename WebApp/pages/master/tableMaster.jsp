@@ -33,9 +33,7 @@ var tableArray =[];
 
 function changeReadOnly(rowid){
 
-	var el = document.getElementById("tableName"+rowid);
-	el.readOnly =false;
-	
+
 	var el = document.getElementById("tableType"+rowid);
 	el.disabled =false;
 	tableArray[rowid]=rowid;
@@ -72,31 +70,32 @@ function popitup() {
 			<thead>
 				<tr class="mainTR">
 					<th>Table No</th>
+					<th>Table Name</th>
 					<th>Table Section</th>
 					<th>Status</th>
-					<th>Operation</th>
+					<th>Edit</th>
 				</tr>
 			</thead>
 			<%
 				Home home = new Home();
-				LinkedHashMap<String, List<Table>> tableMap = home.getTables();
+				LinkedHashMap<String, List<Table>> tableMap = home.getAllTables();
 
 				for (String tableType : tableMap.keySet()) {
 					List<Table> tableList = tableMap.get(tableType);
 					if (tableList.size() > 0) {
 						for (Table table : tableList) {
 			%><tr>
-				<td><%=table.getTableMasterId()%></td>
-				<td><input type="text"  readonly value='<%=table.getTableName()%>'
-					id="tableName<%=table.getTableMasterId()%>" name="tableName<%=table.getTableMasterId()%>" ></td>
-				<td><select id="tableType<%=table.getTableMasterId()%>" name="tableType<%=table.getTableMasterId()%>"
+				<td><%=table.getTableId()%></td>
+				<td><%=table.getTableName()%></td>
+				<td><%=table.getTableType()%></td>
+				<td><select id="tableType<%=table.getTableId()%>" name="tableType<%=table.getTableId()%>"
 					disabled="true">
 						<option value="1" <%=(table.getIsActive() == 1) ? "selected" : ""%>>Active</option>
 						<option value="0" <%=(table.getIsActive() == 0) ? "selected" : ""%>>In
 							Active</option>
 				</select></td>
-				<td><input type="checkbox" name="checkbox<%=table.getTableMasterId()%>" value="EDIT"
-					onClick="changeReadOnly('<%=table.getTableMasterId()%>')" title="Click to Edit" />
+				<td><input type="checkbox" name="checkbox<%=table.getTableId()%>" value="EDIT"
+					onClick="changeReadOnly('<%=table.getTableId()%>')" title="Click to Edit" />
 			</tr>
 			<%
 				}

@@ -69,13 +69,11 @@
     				if (rowidStr == null && rowidStr.trim().length() == 0) {
     					continue;
     				}
-    				String tableName = request.getParameter("tableName"
-    						+ rowidStr);
+    				
     				String tableType = request.getParameter("tableType"
     						+ rowidStr);
-    				String query = "UPDATE table_master SET table_name ='"
-    						+ tableName + "',is_active =" + tableType
-    						+ " WHERE table_id =" + rowidStr;
+    				String query = "UPDATE table_type_name_map SET is_active =" + tableType
+    						+ " WHERE table_type_name_map_id =" + rowidStr;
     				psmt = conn.prepareStatement(query,
     						Statement.RETURN_GENERATED_KEYS);
     				psmt.addBatch();
