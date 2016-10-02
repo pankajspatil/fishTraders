@@ -12,6 +12,18 @@
 #divBottom {
 	bottom: 0;
 }
+
+.accordionDiv{
+	height: 700px;
+	max-height: 700px;
+	overflow: auto;
+}
+
+.orderedDiv{
+	max-height: 600px;
+	overflow: auto;
+}
+
 /* 
 @font-face {
   font-family: "demo";

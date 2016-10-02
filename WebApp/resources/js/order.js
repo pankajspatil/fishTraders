@@ -49,6 +49,9 @@ function addMenuToOrder(buttonObj){
 	
 	$(newRow).effect("highlight",{},3000);
 	
+	var subTotal = parseFloat($('#priceTotal').text()) + parseFloat(finalPrice);
+	$('#priceTotal').text(subTotal.toFixed(2));
+	
 	//console.log(menuList);
 }
 
@@ -71,6 +74,13 @@ function updatePrice(selectObj){
 	var unitPrice = $(rowObj).find('td:nth-child(3)').text();	
 	var finalPrice = parseFloat(quantity * unitPrice);
 	
+	var existingFinalPrice = parseFloat(menu.finalPrice);
+	var subTotal = parseFloat($('#priceTotal').text());
+	
+	subTotal = (subTotal - existingFinalPrice) + finalPrice;
+	$('#priceTotal').text(subTotal.toFixed(2));
+	$('#priceTotal').effect("bounce",{},3000);
+	
 	menu.quantity = quantity;
 	menu.finalPrice = finalPrice;
 	menu.orderMenuMapId = orderMenuMapId;
@@ -78,7 +88,9 @@ function updatePrice(selectObj){
 	menuList[id] = menu;
 	
 	var cellObj = $(rowObj).find('td:nth-child(4)').text(finalPrice);
-	$(cellObj).effect("highlight",{},30000);
+	$(cellObj).effect("highlight",{},3000);
+	
+	
 	
 }
 function saveOrder(){

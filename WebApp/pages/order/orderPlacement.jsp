@@ -29,6 +29,7 @@ String priceType = Utils.getString(request.getParameter("priceType"));
 Order order = new Order();
 OrderData orderData = order.getOrderData(tableId, userId);
 LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
+Float subTotal = new Float(0);
 
 %>
 
@@ -54,8 +55,7 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 	</tr>
 	<tr align="left">
 		<td width="50%" align="left" valign="top">
-			<div class="bwl_acc_container" id="accordion_1" style="width: 98%; 
-			height:80%;/* border:1px solid black; */">
+			<div class="bwl_acc_container scroll accordionDiv" id="accordion_1" style="width: 98%; /* border:1px solid black; */">
     			<div class="accordion_search_container">
         				<input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
         		</div>
@@ -101,7 +101,7 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 			
 		</td>
 		<td width="50%" style="position: relative;" id="rightCell">
-		<div id="divTop">
+		<div id="divTop" class="orderedDiv scroll">
 			<table width="98%;" height="100%" border="0" align="center" id="orderedTable">
 				<tr class="headerTR">
 					<td>Menu</td>
@@ -131,6 +131,7 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 						<td><input type='button' value="Del"></input></td>						
 					</tr>
 					<%
+					subTotal += orderMenu.getFinalPrice();
 					}
 				}
 				%>
@@ -143,20 +144,22 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 			</table>
 			</div>
 			<div id="divBottom">
-				<table style="float: right;">
+				<table width="100%">
 					<tr>
-					<td>Sub total</td>
-					<td>29</td>
+					<td width="14%"><div style="font-size: 25px;">Sub total : </div></td>
+					<td><div id="priceTotal" style="font-size: 50px;"><%=String.format("%.2f", subTotal) %></div></td>
 				</tr>
 				<tr>
 				<%	if(orderData.getStatusCode().equals("INQUEUE")){
 					%>
-						<td><input type="button" value="Save" id="saveOrder" name="page1"> </td>
-					<td><input type="button" value="Cancel" name="page2" id="cancelOrder"> </td>
-					<td><input type="button" value="Checkout" name="page3" id="checkoutOrder"> </td>
+					<td width="100%" colspan="5">
+						<button class="btn btn-main btn-2g" name="page1" id="saveOrder">Save</button>
+						<button class="btn btn-main btn-2g" name="page2" id="cancelOrder">Cancel</button>
+						<button class="btn btn-main btn-2g" name="page3" id="checkoutOrder">Checkout</button>
+					</td>
 					<%
 				}else if(orderData.getStatusCode().equals("COMPLETED")){
-					%><td><input type="button" value="Print" name="page4" id="printOrder"></td><%
+					%><td><button class="btn btn-main btn-2g" name="page4" id="printOrder">Print</button></td><%
 				}
 				%>
 				</tr>

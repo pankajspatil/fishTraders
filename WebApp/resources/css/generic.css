@@ -145,5 +145,68 @@ td {
 	overflow: auto;
 }
 
+.scroll {
+   /* width: 200px;
+   height: 400px; */
+   /* background: red; */
+   overflow: auto;
+}
+.scroll::-webkit-scrollbar {
+    width: 12px;
+}
+
+.scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+.btn {
+	border: none;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background: none;
+	cursor: pointer;
+	padding: 10px 15px;
+	display: inline-block;
+	margin: 1px 1px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 700;
+	outline: none;
+	position: relative;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+	width:150px;
+}
+
+.btn-main {
+	background: #2d9fd0;
+	color: #fff;
+	box-shadow: 0 6px #237294;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
+}
+.btn-2g {
+	border-radius: 40px;
+}
+
+.btn-2g:hover {
+	box-shadow: 0 4px #237294;
+	top: 2px;
+}
+
+.btn-2g:active {
+	box-shadow: 0 0 #237294;
+	top: 6px;
+}
+
 /* table.dataTable tbody tr { background-color:  }
 table.dataTable tbody tr:nth-child(2n) { background-color:#c0c0c0 } */

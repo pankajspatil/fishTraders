@@ -8,6 +8,6 @@
 </head>
 <body>
 <h3>Sorry an exception occurred! Please contact administrator.</h3>
-Exception is: <%= exception.getMessage()%><br/>
+Exception is: <%= exception.getMessage()%><%exception.printStackTrace(); %><br/>
 </body>
 </html>
