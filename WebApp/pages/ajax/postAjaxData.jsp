@@ -16,11 +16,11 @@ response.setCharacterEncoding("UTF-8");
 
 String action = Utils.getString(request.getParameter("action"));
 String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
+String data = Utils.getString(request.getParameter("data"));
+
+Order order = new Order();
 
 if(action.equals("saveOrder")){
-	String data = Utils.getString(request.getParameter("data"));
-	Order order = new Order();
-	
 	try{
 		String returnValue = order.saveOrder(data, userId);
 		out.println(returnValue);
@@ -30,8 +30,6 @@ if(action.equals("saveOrder")){
 	}
 	
 }else if(action.equals("fetchCookingData")){
-	String data = Utils.getString(request.getParameter("data"));
-	Order order = new Order();
 	
 	try{
 		List<Cooking> returnList = order.getOrderedMenus(data);
@@ -47,9 +45,6 @@ if(action.equals("saveOrder")){
 }
 else if(action.equals("updateCookingStatus")){
 	try{
-		String data = Utils.getString(request.getParameter("data"));
-		Order order = new Order();
-		
 		Integer returnValue = order.updateCookingStatus(data);
 		out.println(returnValue);
 		
@@ -58,25 +53,15 @@ else if(action.equals("updateCookingStatus")){
 		out.println("1");
 	}
 	
+}else if(action.equals("checkoutOrder")){
+	try{
+		Integer returnValue = order.checkoutOrder(data);
+		out.println(returnValue);
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("1");
+	}
+	
 }
-
-/* String page1 = Utils.getString(request.getParameter("page1"));
-System.out.println("page1===>" + page1);
-if(page1.equals("InactiveRecord")){
-	String monId = Utils.getString(request.getParameter(Constants.MONITOR_ID));
-	String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
-	System.out.println("userId==>" + userId + "==" + monId);
-	
-	if(!monId.equals("") && !userId.equals("")){
-		LinkedHashMap<String, String> paramMap = new LinkedHashMap<String, String>();
-		paramMap.put(Constants.MONITOR_ID, monId);
-		paramMap.put(Constants.USER_ID, userId);
-		Reports reports = new Reports();
-		Integer success = reports.inactiveRecord(paramMap);
-		out.println(success);		
-	}else{
-		out.println("-1");
-	} 
-	}*/
-	
 %>

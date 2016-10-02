@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 public class Utils {
 	
 	public static String getString(Object param){
@@ -70,4 +73,10 @@ public class Utils {
 		return weekNumber;
 	}
 
+	public static JsonObject getJSONObjectFromString(String data){
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		
+		return jsonObject;
+	}
 }

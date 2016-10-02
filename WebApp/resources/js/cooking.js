@@ -78,7 +78,7 @@ function callback() {
 	  
 	  console.log("Method Called at : " + new Date() + " for " + fetchType);
 	  
-	  var divId = fetchType == 'INPROGRESS' ? "divleft" : "divright";
+	  var divId = fetchType == 'INQUEUE' ? "divleft" : "divright";
 	  $('#' + divId).LoadingOverlay("show");
 	  
 	  var parameters = {};
@@ -107,7 +107,7 @@ function callback() {
 	    	  $(tableObj).DataTable().rows().remove().draw();
 	    	  
 	    	  var buttonObj = $("<input></input>").attr("type", "button").attr("onClick", "moveRow(this)");
-	    	  if(fetchType == 'INPROGRESS'){
+	    	  if(fetchType == 'INQUEUE'){
 	    		  buttonObj.attr("value", "Cook");
 	    	  }else{
 	    		  buttonObj.attr("value", "Finish");
@@ -123,7 +123,7 @@ function callback() {
 	    		  timeDiff += timeJson.hours != 0 ? "<b>:</b>" + timeJson.hours : "";
 	    		  timeDiff += timeJson.minutes != 0 ? "<b>:</b>" +timeJson.minutes : "";
 	    		  
-	    		  timeDiff = timeDiff.replace(/^:/g,'');
+	    		  timeDiff = timeDiff.replace(/^\s*<b>:<\/b>\s*/g,'');
 	    		  
 	    		  rowObj.append($("<td>"+value.orderData.orderId+"</td>"));
 	    		  rowObj.append($("<td>"+value.subMenuName+"</td>"));
@@ -154,13 +154,13 @@ function callback() {
 	});
   }
   
-  fetchCookingData("INPROGRESS");
-  fetchCookingData("COOKED");
+  fetchCookingData("INQUEUE");
+  fetchCookingData("COOKING");
   
   setInterval(function(){ 
 	    //code goes here that will be run every 5 seconds.
 	  //console.log("Inside Interval");
-	  fetchCookingData("INPROGRESS");
+	  fetchCookingData("INQUEUE");
 	}, 15000);
   
   

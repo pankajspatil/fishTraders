@@ -22,11 +22,11 @@ public class Home {
 				+ " from table_type_name_map ttn inner join table_type_master tm on ttn.table_type_id = tm.table_type_id "
 				+ "and ttn.is_active = 1 and tm.is_active = 1 inner join table_master t on ttn.table_id = t.table_id "
 				+ "and t.is_active = 1 left join (select o.table_id, s.status_code, status_name from order_master o "
-				+ "inner join status_master s on o.status_id = s.status_id and s.status_code = 'INPROGRESS' "
+				+ "inner join status_master s on o.status_id = s.status_id and s.status_code = 'INQUEUE' "
 				+ "and o.table_id is not null) ord on ttn.table_type_name_map_id = ord.table_id "
 				+ "order by tm.table_type_id, t.table_id;";
 		
-		//System.out.println("query ==> " + query);
+		System.out.println("query ==> " + query);
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		LinkedHashMap<String, List<Table>> tableMap = new LinkedHashMap<String, List<Table>>();

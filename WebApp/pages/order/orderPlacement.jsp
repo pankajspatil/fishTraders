@@ -149,9 +149,16 @@ LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 					<td>29</td>
 				</tr>
 				<tr>
-					<td><input type="button" value="Save" id="saveOrder" name="page1"> </td>
+				<%	if(orderData.getStatusCode().equals("INQUEUE")){
+					%>
+						<td><input type="button" value="Save" id="saveOrder" name="page1"> </td>
 					<td><input type="button" value="Cancel" name="page2" id="cancelOrder"> </td>
 					<td><input type="button" value="Checkout" name="page3" id="checkoutOrder"> </td>
+					<%
+				}else if(orderData.getStatusCode().equals("COMPLETED")){
+					%><td><input type="button" value="Print" name="page4" id="printOrder"></td><%
+				}
+				%>
 				</tr>
 				</table>
 			</div>	

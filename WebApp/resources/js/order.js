@@ -124,6 +124,55 @@ function saveOrder(){
 	
 }
 
+function checkoutOrder(){
+	
+	var data = {
+			"orderId" : $('#orderId').val()
+	};
+	
+	var postData = {
+			"action" : "checkoutOrder",
+			"data" : JSON.stringify(data)
+	};
+	
+	$.ajax({
+	      type: 'POST',
+	      url: "/AgriTadka/pages/ajax/postAjaxData.jsp",
+	      data: postData, 
+	      dataType: 'json',
+	      success: function(resultData) {
+	    	  //alert("Save Complete" + resultData)
+	    	  
+	    	  $('#rightCell').LoadingOverlay("hide");
+	    	  if(resultData == 0){
+	    		  
+	    		  $('#saveOrder').hide();
+	    		  $('#cancelOrder').hide();
+	    		  $('#checkoutOrder').hide();
+	    		  
+	    		  var rtRow = $('#divBottom').find('table').find('tr:gt(0)');
+	    		  $(rtRow).append("<td></td>").append($('<input type="button" value="Print" name="page4" id="printOrder"></input>'));
+	    		  
+	    		  Lobibox.alert("success",{
+	    				msg : 'Order cheked out successfully!!'
+	    			});
+	    	  }else if(resultData == 2){
+	    		  Lobibox.alert("error",{
+	    				msg : 'Order is still in progress!!'
+	    			});
+	    	  }
+	    	 },
+	    	 error: function (xhr, status) { 
+	    		 console.log('ajax error = ' + xhr.statusText);
+	    		 $('#rightCell').LoadingOverlay("hide");	    		 
+	    		 	Lobibox.alert("error",{
+	    				msg : 'Something went wrong.'
+	    			});
+	            } 
+	});
+	
+}
+
 function openOrderPage(tableId, tableName, priceType){
 	
 	var form = $("<form></form>").attr('id', 'tableTransferForm')
@@ -160,4 +209,10 @@ jQuery(function ($) {
 		target.LoadingOverlay("show");
 		saveOrder();	    
 	  });
+	  
+	  $('#checkoutOrder').click(function () {
+			target.LoadingOverlay("show");
+			checkoutOrder();	    
+		});
+	  
 	});

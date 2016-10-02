@@ -11,6 +11,8 @@ public class OrderData {
 	private String tableName;
 	
 	private List<OrderMenu> selectedMenus;
+	
+	private String statusCode;
 
 	public Integer getOrderId() {
 		return orderId;
@@ -43,11 +45,20 @@ public class OrderData {
 	public void setSelectedMenus(List<OrderMenu> selectedMenus) {
 		this.selectedMenus = selectedMenus;
 	}
+	
+	public String getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(String statusCode) {
+		this.statusCode = statusCode;
+	}
 
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", tableTypeNameId="
+		return "OrderData [orderId=" + orderId + ", tableTypeNameId="
 				+ tableTypeNameId + ", tableName=" + tableName
-				+ ", selectedMenus=" + selectedMenus + "]";
+				+ ", selectedMenus=" + selectedMenus + ", statusCode="
+				+ statusCode + "]";
 	}
 }

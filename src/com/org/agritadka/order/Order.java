@@ -15,6 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.org.agritadka.generic.ConnectionsUtil;
+import com.org.agritadka.generic.Utils;
 import com.org.agritadka.transfer.Cooking;
 import com.org.agritadka.transfer.MainMenu;
 import com.org.agritadka.transfer.MenuMapper;
@@ -23,6 +24,11 @@ import com.org.agritadka.transfer.OrderMenu;
 import com.org.agritadka.transfer.SubMenu;
 
 public class Order {
+	
+	public static void main(String args[]) throws SQLException {
+		Order order = new Order();
+		order.getOrderedMenus("");
+	}
 
 	public LinkedHashMap<MainMenu, List<MenuMapper>> getMenus(String priceType) throws SQLException{
 		
@@ -99,7 +105,7 @@ public class Order {
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
 
 		String query = "insert into order_menu_map(order_id, main_sub_menu_map_id, quantity, unit_price, status_id, notes, created_by, order_price)" +
-					   "values(?,?,?,?, (select status_id from status_master where status_name = 'In Progress'),?,?,?)";
+					   "values(?,?,?,?, (select status_id from status_master where status_code = 'INQUEUE'),?,?,?)";
 		
 		String query1 = "update order_menu_map set quantity = ?, order_price = ?, notes = ? where order_menu_map_id = ? ";
 		
@@ -152,14 +158,15 @@ public class Order {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, om.order_price, sm.menu_name, om.notes "+ 
+		String query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
+						"om.order_price, sm.menu_name, om.notes, s.status_code "+ 
 						"from order_master o inner join status_master s on o.status_id = s.status_id "+ 
-						"and s.status_code = 'INPROGRESS' and o.table_id = "+tableId+" "+
+						"and s.status_code = 'INQUEUE' and o.table_id = "+tableId+" "+
 						"left join order_menu_map om on o.order_id = om.order_id "+
 						"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 						"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
 						"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
-		System.out.println("query==>" + query);
+		//System.out.println("query==>" + query);
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		int count = 0;
@@ -170,6 +177,7 @@ public class Order {
 		while(dataRS.next()){
 			if(count == 0){
 				orderData.setOrderId(dataRS.getInt("order_id"));
+				orderData.setStatusCode(dataRS.getString("status_code"));
 			}
 			
 			if(dataRS.getString("main_sub_menu_map_id") != null){
@@ -191,7 +199,7 @@ public class Order {
 		if(count == 0){
 			
 			query = "INSERT INTO `agri_tadka`.`order_master`(`table_id`,`status_id`,`created_by`) "+
-					"VALUES(?, (select status_id from status_master where status_code = 'INPROGRESS'), ?);";
+					"VALUES(?, (select status_id from status_master where status_code = 'INQUEUE'), ?);";
 			
 			PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			
@@ -203,6 +211,7 @@ public class Order {
 			
 			if(dataRS.next()){
 				orderData.setOrderId(dataRS.getInt(1));
+				orderData.setStatusCode("INQUEUE");
 			}
 		}
 		
@@ -212,21 +221,16 @@ public class Order {
 		
 		return orderData;
 	}
-
-	public static void main(String args[]) throws SQLException{
-		
-		Order order = new Order();
-		
-		order.getOrderedMenus("");
-	}
 	
 	public List<Cooking> getOrderedMenus(String data) throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		/*JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);*/
+		
+		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
 		
 		String timestamp = jsonObject.get("timestamp").getAsString();
 		String statusCode = jsonObject.get("statusCode").getAsString();
@@ -280,13 +284,15 @@ public class Order {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		JsonParser jsonParser = new JsonParser();
-		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		/*JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);*/
+		
+		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
 		
 		String operation = jsonObject.get("operation").getAsString();
 		Integer orderMenuMapId = jsonObject.get("orderMenuMapId").getAsInt();
 		
-		String statusCode = operation.equals("Cook") ? "COOKED" : "COMPLETED";
+		String statusCode = operation.equals("Cook") ? "COOKING" : "COMPLETED";
 		
 		String query = "update order_menu_map set status_id = (select status_id from status_master where status_code = ?) "+
 					   "where order_menu_map_id = ?";
@@ -300,4 +306,42 @@ public class Order {
 		
 		return 0;
 	}
+
+	public Integer checkoutOrder(String data) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		/*JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);*/
+		
+		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
+		
+		Integer orderId = jsonObject.get("orderId").getAsInt();
+		
+		String query = "select * from order_menu_map om "+
+						"inner join status_master s on om.status_id = s.status_id and status_code in('INQUEUE','COOKING') " +
+						"and om.order_id = ?";
+		
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setInt(1, orderId);
+		
+		ResultSet dataRS = psmt.executeQuery();
+		if(dataRS.next()){
+			return 2;
+		}
+		
+		query = "update order_master set status_id = (select status_id from status_master where status_code = ?) "+
+					   "where order_id = ?";
+
+		psmt = conn.prepareStatement(query);
+		
+		psmt.setString(1,"COMPLETED");
+		psmt.setInt(2, orderId);
+		
+		psmt.executeUpdate();
+		
+		return 0;
+	}
+	
 }
