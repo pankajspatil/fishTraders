@@ -82,7 +82,12 @@ Float subTotal = new Float(0);
 								<tr id="<%=mapper.getMainSubMenuId()%>" align="center">
 									<td width="80%" align="left" style=""><%=mapper.getSubMenu().getSubMenuName() %></td>
 									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
-									<td width="10%"><input type="button" value="ADD" onclick="addMenuToOrder(this)"></td>
+									<td width="10%">
+										<!-- <button type="button" class="btnPlus btn-success">
+					                  		<span class="glyphicon glyphicon-plus"><b>+</b></span>
+					              		</button> -->
+										<input type="button" value="ADD" onclick="addMenuToOrder(this)">
+									</td>
 								</tr>
 								<%} %>
 							</table><%
@@ -117,7 +122,7 @@ Float subTotal = new Float(0);
 						<td align="left">
 							<input type="hidden" id="<%=orderMenu.getOrderMenuMapId()%>">
 							<%=orderMenu.getSubMenuName() %></td>
-						<td><select onChange='updatePrice(this)'>
+						<td><select onChange='updatePrice(this)' onClick='setOldValue(this)'>
 							<%for(int i=1; i<=30; i++){
 								if(i == orderMenu.getQuantity()){
 									%><option value="<%=i%>" selected="selected"><%=i%></option><%
@@ -128,7 +133,7 @@ Float subTotal = new Float(0);
 						</td>
 						<td><%=orderMenu.getUnitPrice() %></td>
 						<td><%=orderMenu.getFinalPrice() %></td>
-						<td><input type='button' value="Del"></input></td>						
+						<td><img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" onclick="deleteRecord(this)"></td>						
 					</tr>
 					<%
 					subTotal += orderMenu.getFinalPrice();

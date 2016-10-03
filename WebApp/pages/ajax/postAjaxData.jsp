@@ -63,5 +63,35 @@ else if(action.equals("updateCookingStatus")){
 		out.println("1");
 	}
 	
+}else if(action.equals("checkIfMenuProcessed")){
+	try{
+		Integer returnValue = order.checkIfMenuProcessed(data);
+		out.println(returnValue);
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("1");
+	}
+	
+}else if(action.equals("deleteRecord")){
+	try{
+		Integer returnValue = order.deleteRecord(data);
+		out.println(returnValue);
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("1");
+	}
+	
+}else if(action.equals("cancelOrder")){
+	try{
+		Integer returnValue = order.cancelRecord(data);
+		out.println(returnValue);
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+		out.println("1");
+	}
+	
 }
 %>

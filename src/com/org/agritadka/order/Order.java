@@ -162,7 +162,7 @@ public class Order {
 						"om.order_price, sm.menu_name, om.notes, s.status_code "+ 
 						"from order_master o inner join status_master s on o.status_id = s.status_id "+ 
 						"and s.status_code = 'INQUEUE' and o.table_id = "+tableId+" "+
-						"left join order_menu_map om on o.order_id = om.order_id "+
+						"left join order_menu_map om on o.order_id = om.order_id and om.is_active = 1 "+
 						"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 						"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
 						"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
@@ -217,7 +217,7 @@ public class Order {
 		
 		connectionsUtil.closeConnection(conn);
 		
-		System.out.println("orderData===>" + orderData.toString());
+		//System.out.println("orderData===>" + orderData.toString());
 		
 		return orderData;
 	}
@@ -304,6 +304,8 @@ public class Order {
 		
 		psmt.executeUpdate();
 		
+		connectionsUtil.closeConnection(conn);
+		
 		return 0;
 	}
 
@@ -341,7 +343,120 @@ public class Order {
 		
 		psmt.executeUpdate();
 		
+		connectionsUtil.closeConnection(conn);
+		
 		return 0;
 	}
 	
+	public Integer checkIfMenuProcessed(String data) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		Integer returnVal = 0;
+		
+		/*JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);*/
+		
+		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
+		
+		Integer orderMenuMapId = jsonObject.get("orderMenuMapId").getAsInt();
+		
+		String query = "select * from order_menu_map om "+
+						"inner join status_master s on om.status_id = s.status_id and status_code not in('INQUEUE') " +
+						"and om.order_menu_map_id = ?";
+		
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setInt(1, orderMenuMapId);
+		
+		ResultSet dataRS = psmt.executeQuery();
+		if(dataRS.next()){
+			returnVal = 2;
+		}
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return returnVal;
+	}
+	
+	public Integer deleteRecord(String data) throws SQLException {
+
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+
+		Integer returnVal = 0;
+
+		JsonObject jsonObject = Utils.getJSONObjectFromString(data);
+
+		Integer orderMenuMapId = jsonObject.get("orderMenuMapId").getAsInt();
+
+		String query = "select * from order_menu_map om "
+				+ "inner join status_master s on om.status_id = s.status_id and status_code not in('INQUEUE') "
+				+ "and om.order_menu_map_id = ?";
+
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setInt(1, orderMenuMapId);
+
+		ResultSet dataRS = psmt.executeQuery();
+		if (dataRS.next()) {
+			returnVal = 2;
+		}
+		
+		query = "update order_menu_map set is_active = 0 where order_menu_map_id = ?";
+		psmt = conn.prepareStatement(query);
+		psmt.setInt(1, orderMenuMapId);
+		
+		psmt.executeUpdate();
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return returnVal;
+	}
+	
+	public Integer cancelRecord(String data) throws SQLException {
+
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+
+		Integer returnVal = 0;
+		
+		/*
+		 * JsonParser jsonParser = new JsonParser(); JsonObject jsonObject =
+		 * (JsonObject)jsonParser.parse(data);
+		 */
+
+		JsonObject jsonObject = Utils.getJSONObjectFromString(data);
+
+		Integer orderId = jsonObject.get("orderId").getAsInt();
+
+		String query = "select * from order_menu_map om "
+				+ "inner join status_master s on om.status_id = s.status_id and status_code not in('INQUEUE') "
+				+ "and om.order_id = ?";
+
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setInt(1, orderId);
+
+		ResultSet dataRS = psmt.executeQuery();
+		if (dataRS.next()) {
+			returnVal = 2;
+		}
+		
+		query = "update order_master o "+
+				"left join order_menu_map om on o.order_id = om.order_id "+
+				"set om.status_id = (select status_id from status_master where status_code = ?) , "+
+				"o.status_id = (select status_id from status_master where status_code = ?) where o.order_id = ?";
+
+		psmt = conn.prepareStatement(query);
+		
+		psmt.setString(1,"CANCELLED");
+		psmt.setString(2,"CANCELLED");
+		psmt.setInt(3, orderId);
+		
+		psmt.executeUpdate();
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return returnVal;
+	}
+
 }

@@ -115,7 +115,7 @@ td {
 }
 
 .deleteIcon {
-	width: 15%;
+	width: 20px;
 	height: 15%;
 	cursor: pointer;
 }
@@ -206,6 +206,50 @@ td {
 .btn-2g:active {
 	box-shadow: 0 0 #237294;
 	top: 6px;
+}
+
+.btnPlus {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+.glyphicon-plus:before {
+    content: "\2b"
 }
 
 /* table.dataTable tbody tr { background-color:  }
