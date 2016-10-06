@@ -13,7 +13,17 @@ public class OrderData {
 	private List<OrderMenu> selectedMenus;
 	
 	private String statusCode;
-
+	
+	private String statusName;
+	
+	private String dateTime;
+	
+	private String custName;
+	
+	private String mobileNumber;
+	
+	private String waiterName;
+	
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -53,12 +63,56 @@ public class OrderData {
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
 	}
+	
+	
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public String getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(String dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getWaiterName() {
+		return waiterName;
+	}
+
+	public void setWaiterName(String waiterName) {
+		this.waiterName = waiterName;
+	}
 
 	@Override
 	public String toString() {
 		return "OrderData [orderId=" + orderId + ", tableTypeNameId="
 				+ tableTypeNameId + ", tableName=" + tableName
 				+ ", selectedMenus=" + selectedMenus + ", statusCode="
-				+ statusCode + "]";
+				+ statusCode + ", statusName=" + statusName + ", dateTime="
+				+ dateTime + ", custName=" + custName + ", mobileNumber="
+				+ mobileNumber + ", waiterName=" + waiterName + "]";
 	}
 }

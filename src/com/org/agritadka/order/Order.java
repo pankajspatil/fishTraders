@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,7 +37,7 @@ public class Order {
 		Connection conn = connectionsUtil.getConnection();
 		
 		String query = "SELECT ms.main_sub_menu_map_id, m.main_menu_id, s.sub_menu_id, " +
-						"m.menu_name as main_menu, s.menu_name as sub_menu, s."+priceType+"_unit_price as unit_price "+
+						"m.menu_name as main_menu, s.menu_name as sub_menu, s."+ priceType +"_unit_price as unit_price "+
 						"FROM agri_tadka.main_sub_menu_map ms "+
 						"inner join main_menu_master m on m.main_menu_id = ms.main_menu_id and ms.is_active = 1 and m.is_active = 1 "+
 						"inner join sub_menu_master s on s.sub_menu_id = ms.sub_menu_id and s.is_active = 1 order by m.menu_name, s.menu_name";
@@ -153,24 +154,36 @@ public class Order {
 		return gson.toJson(jsonObject);
 	}
 	
-	public OrderData getOrderData(Integer tableId, String userId) throws SQLException{
+	public OrderData getOrderData(Integer tableId, String userId, Integer orderId) throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
+		int count = 0;
+		ResultSet dataRS = null;
+		String query = "";
+		OrderData orderData = new OrderData();
+		
+		if(tableId != null || orderId != null){
+		
+		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
 						"om.order_price, sm.menu_name, om.notes, s.status_code "+ 
-						"from order_master o inner join status_master s on o.status_id = s.status_id "+ 
-						"and s.status_code = 'INQUEUE' and o.table_id = "+tableId+" "+
-						"left join order_menu_map om on o.order_id = om.order_id and om.is_active = 1 "+
-						"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
-						"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
-						"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
+						"from order_master o inner join status_master s on o.status_id = s.status_id ";
+		
+		if(tableId != null){
+			query += "and s.status_code = 'INQUEUE' and o.table_id = "+ tableId +" ";
+		}else if(orderId != null){
+			query += "and o.order_id = "+ orderId +" ";
+		}
+						
+		query += "left join order_menu_map om on o.order_id = om.order_id and om.is_active = 1 "+
+				"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
+				"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
+				"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
 		//System.out.println("query==>" + query);
 		
-		ResultSet dataRS = conn.createStatement().executeQuery(query);
-		int count = 0;
-		OrderData orderData = new OrderData();
+		dataRS = conn.createStatement().executeQuery(query);
+		
 		OrderMenu orderMenu;
 		List<OrderMenu> orderMenus = new ArrayList<OrderMenu>();
 		
@@ -195,7 +208,7 @@ public class Order {
 			}
 			count ++;
 		}
-		
+		}
 		if(count == 0){
 			
 			query = "INSERT INTO `agri_tadka`.`order_master`(`table_id`,`status_id`,`created_by`) "+
@@ -203,7 +216,12 @@ public class Order {
 			
 			PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			
-			psmt.setInt(1, tableId);
+			if(tableId != null){
+				psmt.setInt(1, tableId);
+			}else{
+				psmt.setNull(1, Types.INTEGER);
+			}
+			
 			psmt.setString(2, userId);
 			psmt.executeUpdate();
 			
@@ -458,5 +476,55 @@ public class Order {
 		
 		return returnVal;
 	}
+	
+	public List<OrderData> getAllOrders() throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select o.order_id, o.created_on, t.table_name, status_code, status_name, "+
+						"customer_name, o.mobile_number,cusrtomer_address, concat(wfirst_name, ' ',wmiddle_name, ' ', wlast_name) as waiter_name "+
+						"from order_master o "+
+						"inner join status_master s on o.status_id = s.status_id "+
+						"left join table_type_name_map ttn on o.table_id = ttn.table_type_name_map_id "+
+						"left join table_master t on ttn.table_id = t.table_id "+
+						"left join waiter_master w on o.waiter_id = w.waiter_id "+
+						"order by o.created_on desc; ";
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		
+		OrderData orderData = new OrderData();
+		List<OrderData> orderList = new ArrayList<OrderData>();
+		
+		while(dataRS.next()){
+			orderData = new OrderData();
+			orderData.setOrderId(dataRS.getInt("order_id"));
+			orderData.setStatusCode(dataRS.getString("status_code"));
+			orderData.setStatusName(dataRS.getString("status_name"));
+			orderData.setCustName(dataRS.getString("customer_name"));
+			orderData.setMobileNumber(dataRS.getString("mobile_number"));
+			orderData.setDateTime(dataRS.getString("created_on"));
+			orderData.setWaiterName(dataRS.getString("waiter_name"));
+			orderData.setTableName(dataRS.getString("table_name"));
+			
+			orderList.add(orderData);
+		}
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return orderList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

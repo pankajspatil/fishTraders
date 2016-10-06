@@ -13,13 +13,11 @@
    <li>
    		<a href='#'><span>Order</span></a>
 	 	<ul>
-	 	<li class='first-child'><a href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
-	 	<li class='first-child'><a href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking Dashboard</span></a></li>
-         <li class='has-sub'><a href='#'><span>Reports</span></a>
+	 	<li class='first-child' onclick="openOrderPage()"><a href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
+	 	<li class='has-sub'><a href='#'><span>Dashboard</span></a>
             <ul>
-   			<li class='first-child'><a href='<%=request.getContextPath()%>/pages/reports/psdfReport.jsp'><span>PSDF Report</span></a></li>
-            <li class='last-child'><a href='<%=request.getContextPath()%>/pages/reports/baseData.jsp'><span>BaseData</span></a></li>
-            <!-- <li><a href='<%=request.getContextPath()%>/pages/reports/displayReports.jsp'><span>Resource Report</span></a></li> -->
+            <li class='first-child'><a href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking</span></a></li>
+   			<li><a href='<%=request.getContextPath()%>/pages/order/orderDashboard.jsp'><span>Order</span></a></li>
                         
         </ul>
    		</li>

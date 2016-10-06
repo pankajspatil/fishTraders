@@ -21,13 +21,19 @@
 <body>
 <%
 
-Integer tableId = Integer.parseInt(Utils.getString(request.getParameter("tableId")));
+System.out.println("OrderId" + request.getParameter("orderId"));
+
+Integer tableId = request.getParameter("tableId") == null ? null :  Integer.parseInt(request.getParameter("tableId"));
+Integer orderId = request.getParameter("orderId") == null ? null :  Integer.parseInt(request.getParameter("orderId"));
+
 String tableName = Utils.getString(request.getParameter("tableName"));
+String priceType = Utils.getString(request.getParameter("priceType")).equals("") ? "non_ac" 
+					: Utils.getString(request.getParameter("priceType"));
+
 String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
-String priceType = Utils.getString(request.getParameter("priceType"));
 
 Order order = new Order();
-OrderData orderData = order.getOrderData(tableId, userId);
+OrderData orderData = order.getOrderData(tableId, userId, orderId);
 LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 Float subTotal = new Float(0);
 
@@ -36,17 +42,18 @@ Float subTotal = new Float(0);
 
 <table width="99.5%" border="0" align="center">
 	<tr>
-		<td>
+		<td align="left" colspan="2">
 			<table width="100%" border="1">
-				<tr align="center">
+				<tr align="center" class="orderInfoRow">
 					<td width="35%" style="border-right: thick;">
-						<h1>Order No : <%=orderData.getOrderId() %></h1>
+						Order No : <%=orderData.getOrderId() %>
 						<input type="hidden" id="orderId" value="<%=orderData.getOrderId()%>">
 					</td>
-					<td width="32%"><h2>Table : <%=tableName %></h2></td>
+					<td width="32%">
+						Table : <%=tableName %>
+					</td>
 					<td width="33%">
-						<h2>Waiter :<input type="text"></h2>
-						 
+						Waiter : <input type="text" size="25">
 					</td>
 				</tr>
 			</table>
