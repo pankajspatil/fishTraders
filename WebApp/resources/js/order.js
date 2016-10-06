@@ -240,31 +240,47 @@ function wait(ms){
 	  }
 	}
 
-function openOrderPage(tableId, tableName, priceType){
+function openOrderPage(tableId, tableName, priceType, orderId){
 	
 	var form = $("<form></form>").attr('id', 'tableTransferForm')
 				.attr("name", "tableTransferForm")
 				.attr("action", "/AgriTadka/pages/order/orderPlacement.jsp")
 				.attr("method","post");
 	
-	var tableIdObj = $("<input></input>")
-				.attr("name","tableId")
-				.attr("id","tableId")
-				.attr("value", tableId);
+	if(tableId !== undefined && tableId != null){
+		var tableIdObj = $("<input></input>")
+		.attr("name","tableId")
+		.attr("id","tableId")
+		.attr("value", tableId);
+		
+		form.append(tableIdObj);
+	}
+	if(tableName !== undefined && tableName != null){
+		var tableNameObj = $("<input></input>")
+		.attr("name","tableName")
+		.attr("id","tableName")
+		.attr("value", tableName);
+		
+		form.append(tableNameObj);
+	}
 	
-	var tableNameObj = $("<input></input>")
-	.attr("name","tableName")
-	.attr("id","tableName")
-	.attr("value", tableName);
+	if(priceType !== undefined && priceType != null){
+		var tablePriceTypeObj = $("<input></input>")
+		.attr("name","priceType")
+		.attr("id","priceType")
+		.attr("value", priceType);
+		
+		form.append(tablePriceTypeObj);
+	}
 	
-	var tablePriceTypeObj = $("<input></input>")
-	.attr("name","priceType")
-	.attr("id","priceType")
-	.attr("value", priceType);
-	
-	form.append(tableIdObj);
-	form.append(tableNameObj);
-	form.append(tablePriceTypeObj);
+	if(orderId != null){
+		var orderIdObj = $("<input></input>")
+		.attr("name","orderId")
+		.attr("id","orderId")
+		.attr("value", orderId);
+		
+		form.append(orderIdObj);
+	}
 	
 	form.submit();	
 }
@@ -440,3 +456,12 @@ jQuery(function ($) {
 		});
 	  
 	});
+
+$(document).ready(function() {
+	   var orderDashboard = $('#orderDashboard').DataTable({
+	    	"bSort" : false,
+	    	"paging" : true/*,
+	    	"pageLength": 15,
+	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
+	    });
+	} );

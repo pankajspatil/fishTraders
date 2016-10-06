@@ -83,6 +83,7 @@
 				&& !Utils.getString(request.getParameter("menuRequired"))
 						.equals("false")) {
 	%><%@ include file="/pages/common/menu.jsp"%>
+	<%-- <%@ include file="/pages/common/menu1.jsp"%> --%>
 	<%
 		}
 	%>
