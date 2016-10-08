@@ -317,6 +317,7 @@ function deleteRecord(imgObj){
             		Lobibox.alert("success",{
 	    				msg : 'Record deleted successfully!!'
 	    			});
+            		$('#rightCell').LoadingOverlay("hide");
             		
             	}else {
             		var data = {
