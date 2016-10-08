@@ -22,7 +22,14 @@
 <script type="text/javascript">
 var w = window.print();
 //debugger;
-w.close();
+//this.close();
+
+window.onbeforeprint = function() {
+    alert('This will be called before the user prints.');
+};
+window.onafterprint = function() {
+	alert('This will be called after the user prints');   
+};
 </script>
 </body>
 </html>

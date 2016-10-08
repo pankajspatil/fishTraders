@@ -83,7 +83,7 @@ function openPage(oepration, tableMasterId,tableName,tableType,active){
 }
 }
 	
-function openWindow(paramsMap){
+/*function openWindow(paramsMap){
 	
 	var winName='MyWindow';
 	  var winURL = paramsMap.get(WIN_URL);
@@ -120,7 +120,7 @@ function openWindow(paramsMap){
 	  document.body.removeChild(form);
 	  
 	  dataMap = null;paramsMap = null;
-}
+}*/
 
 /*	
 function openWindowWithPostRequest() {

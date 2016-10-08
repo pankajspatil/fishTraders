@@ -41,9 +41,11 @@ List<OrderData> orderList = order.getAllOrders();
 				<td><%=Utils.getString(orderData.getMobileNumber()) %></td>
 				<td>
 					<% if(orderData.getStatusCode().equals("INQUEUE")){
-						%><input type="button" value="Edit"><%
+						%><img height="36%" src="/AgriTadka/resources/images/edit.png" 
+							onclick="openOrderPage(null,null,null,<%=orderData.getOrderId()%>)"> <%
 					}else{
-						%><input type="button" value="Print"><%
+						%><img height="31%" src="/AgriTadka/resources/images/print.png"
+							onclick="printOrder(<%=orderData.getOrderId()%>)"><%
 					}
 					%></td>
 			</tr><%

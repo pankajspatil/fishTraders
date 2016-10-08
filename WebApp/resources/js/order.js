@@ -210,8 +210,9 @@ function checkoutOrder(){
 	    		  Lobibox.alert("success",{
 	    				msg : 'Order cheked out successfully!!',
 	    				beforeClose: function(lobibox){
-	    					window.open('/AgriTadka/pages/order/printReceipt.jsp', '_blank');
-	    					wait(2000);
+	    					//window.open('/AgriTadka/pages/order/printReceipt.jsp', '_blank');
+	    					//wait(2000);
+	    					printOrder($('#orderId').val());
 	    					window.location.href = '/AgriTadka';
 	    		        }
 	    			});
@@ -239,6 +240,18 @@ function wait(ms){
 	     end = new Date().getTime();
 	  }
 	}
+
+function printOrder(orderId){
+	
+	var paramsMap = new Map();
+	var dataMap = new Map();
+
+	dataMap.put("orderId", orderId);
+	paramsMap.put(WIN_URL, '/AgriTadka/pages/order/printReceipt.jsp');
+	paramsMap.put(DATA, dataMap);
+	
+	openWindow(paramsMap);
+}
 
 function openOrderPage(tableId, tableName, priceType, orderId){
 	

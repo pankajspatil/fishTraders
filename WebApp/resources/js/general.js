@@ -51,6 +51,49 @@ function openURL(paramsMap){
 	formObj.submit();
 }
 
+
+function openWindow(paramsMap){
+	
+	var winName='MyWindow';
+	  var winURL = paramsMap.get(WIN_URL);
+	  var width = paramsMap.hasKey(WIDTH) ? paramsMap.get(WIDTH) : screen.width;
+	  var height = paramsMap.hasKey(HEIGHT) ? paramsMap.get(HEIGHT) : screen.height;
+	  
+	  //alert("width==>" + width + height);
+	  
+	  var left = (screen.width/2)-(width/2);
+	  var top = (screen.height/2)-(height/2);
+	  
+	  var windowoption='resizable=yes,height='+height+',width='+width+',top='+top+',left='+left+',location=0,menubar=0,scrollbars=1';
+	  var dataMap = paramsMap.get(DATA);         
+	  var form = document.createElement("form");
+	  form.setAttribute("method", "post");
+	  form.setAttribute("action", winURL);
+	  form.setAttribute("target",winName);
+	  
+	  if(dataMap && !dataMap.isEmpty()){
+		  dataMap.each(function(key, value){
+			  var input = document.createElement('input');
+		      input.type = 'hidden';
+		      input.name = key;
+		      input.id = key;
+		      input.value = value;
+		      form.appendChild(input);
+		  });
+	  }
+	              
+	  document.body.appendChild(form);                       
+	  window.open('', winName,windowoption);
+	  form.target = winName;
+	  form.submit();                 
+	  document.body.removeChild(form);
+	  
+	  dataMap = null;paramsMap = null;
+	  
+	  return window;
+}
+
+
 function displayNotification(paramMap){
 	
 	var msg = paramMap.get(MSG);

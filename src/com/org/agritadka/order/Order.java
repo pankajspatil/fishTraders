@@ -180,7 +180,7 @@ public class Order {
 				"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 				"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
 				"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
-		//System.out.println("query==>" + query);
+		System.out.println("query==>" + query);
 		
 		dataRS = conn.createStatement().executeQuery(query);
 		
