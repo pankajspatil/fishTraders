@@ -87,7 +87,15 @@ Float subTotal = new Float(0);
 							%><table width="100%" border="0">
 							<%for(MenuMapper mapper : mappers){ %>
 								<tr id="<%=mapper.getMainSubMenuId()%>" align="center">
-									<td width="80%" align="left" style=""><%=mapper.getSubMenu().getSubMenuName() %></td>
+									<td width="80%" align="left" style="">
+									<%if(mapper.getSubMenu().isVeg()){
+										%><img width="2%" height="1%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
+									}else{
+										%><img width="2%" height="1%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
+									}
+									%>
+									
+										<%=mapper.getSubMenu().getSubMenuName() %></td>
 									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
 									<td width="10%">
 										<!-- <button type="button" class="btnPlus btn-success">
@@ -168,6 +176,7 @@ Float subTotal = new Float(0);
 						<button class="btn btn-main btn-2g" name="page1" id="saveOrder">Save</button>
 						<button class="btn btn-main btn-2g" name="page2" id="cancelOrder">Cancel</button>
 						<button class="btn btn-main btn-2g" name="page3" id="checkoutOrder">Checkout</button>
+						<button class="btn btn-main btn-2g" name="page4" id="addCustomer">Customer</button>
 					</td>
 					<%
 				}else if(orderData.getStatusCode().equals("COMPLETED")){

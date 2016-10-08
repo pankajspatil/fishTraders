@@ -119,14 +119,28 @@ function callback() {
 	    		  
 	    		  var timeJson = timeDifference(new Date(), new Date(value.createdOn));
 	    		  
-	    		  var timeDiff = timeJson.days != 0 ? timeJson.days : "";
+	    		  /*var timeDiff = timeJson.days != 0 ? timeJson.days : "";
 	    		  timeDiff += timeJson.hours != 0 ? "<b>:</b>" + timeJson.hours : "";
-	    		  timeDiff += timeJson.minutes != 0 ? "<b>:</b>" +timeJson.minutes : "";
+	    		  timeDiff += timeJson.minutes != 0 ? "<b>:</b>" +timeJson.minutes : "";*/
+	    		  
+	    		  var timeDiff = ("0" + timeJson.days).slice(-2) + "<b>:</b>" + ("0" + timeJson.hours).slice(-2) 
+	    		  				 + "<b>:</b>" + ("0" + timeJson.minutes).slice(-2);
+	    		  
 	    		  
 	    		  timeDiff = timeDiff.replace(/^\s*<b>:<\/b>\s*/g,'');
 	    		  
 	    		  rowObj.append($("<td>"+value.orderData.orderId+"</td>"));
-	    		  rowObj.append($("<td>"+value.subMenuName+"</td>"));
+	    		  
+	    		  var menuStr = "<td>";
+	    		  if(value.isVeg){
+	    			  menuStr += "<img width='5%' height='1%' alt='Veg' src='/AgriTadka/resources/images/veg-icon.png'>";
+		  			}else{
+		  				menuStr += "<img width='5%' height='1%' alt='Non Veg' src='/AgriTadka/resources/images/nonveg-icon.png'>";
+		  			}
+	    		  
+	    		  menuStr += value.subMenuName + "</td>";
+	    		  
+	    		  rowObj.append($(menuStr));
 	    		  rowObj.append($("<td>"+value.quantity+"</td>"));
 	    		  rowObj.append($("<td>"+timeDiff+"</td>"));
 	    		  rowObj.append($("<td>"+value.orderData.tableName+"</td>"));

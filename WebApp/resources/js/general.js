@@ -198,3 +198,23 @@ function timeDifference(date1, date2) {
 
 	return timeJson;
 }
+
+function openFancyBox(obj, paramMap){
+	
+	var url = paramMap.get(URL);
+	var width = paramMap.get(WIDTH) ? paramMap.get(WIDTH) : '50%';
+	var height = paramMap.get(HEIGHT) ? paramMap.get(HEIGHT) : '50%';
+	
+	$(obj).fancybox({
+		'href' : url,
+		'autoSize' : false,
+		'autoDimensions': false,
+		'padding'       : 10,
+		'width'         : width,
+		'height'		: height,
+		'autoScale'     : false,
+		'transitionIn'  : 'none',
+		'transitionOut' : 'none',
+		 'type'          : 'iframe'
+		 });
+}

@@ -469,13 +469,31 @@ jQuery(function ($) {
 			cancelOrder(this);	    
 		});
 	  
+	  if($('#addCustomer') && $("#addCustomer").length > 0){
+			$('#addCustomer').click(function(){
+				var paramMap = new Map();
+				paramMap.put(URL, '/AgriTadka/pages/order/addCustomer.jsp?menuRequired=false');
+				paramMap.put(WIDTH, '70%');
+				paramMap.put(HEIGHT, '80%');
+				openFancyBox($("#addCustomer"), paramMap);
+			});
+		}
+	  
 	});
 
 $(document).ready(function() {
 	   var orderDashboard = $('#orderDashboard').DataTable({
-	    	"bSort" : false,
+	    	"bSort" : true,
 	    	"paging" : true/*,
 	    	"pageLength": 15,
 	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
 	    });
+	   
+	   var orderDashboard = $('#custTable').DataTable({
+	    	"bSort" : true,
+	    	"paging" : true/*,
+	    	"pageLength": 15,
+	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
+	    });
+	   
 	} );

@@ -16,7 +16,7 @@
 			<td width="10%">No</td>
 			<td>Name</td>
 			<td width="5%">Quantity</td>
-			<td width="10%">Time(Ago)</td>
+			<td width="15%">Time Ago d:h:m</td>
 			<td width="10%">Table</td>
 			<td width="10%">Notes</td>
 			<td width="5%">Action</td>
@@ -34,7 +34,7 @@
 			<td width="10%">No</td>
 			<td>Name</td>
 			<td width="5%">Quantity</td>
-			<td width="10%">Time</td>
+			<td width="15%">Time Ago d:h:m</td>
 			<td width="10%">Table</td>
 			<td width="10%">Notes</td>
 			<td width="5%">Action</td>

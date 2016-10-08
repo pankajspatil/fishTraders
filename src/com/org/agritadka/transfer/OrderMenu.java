@@ -17,6 +17,8 @@ public class OrderMenu {
 	private String subMenuName;
 	
 	private String createdOn;
+	
+	private boolean isVeg;
 
 	public Integer getOrderMenuMapId() {
 		return orderMenuMapId;
@@ -80,6 +82,14 @@ public class OrderMenu {
 
 	public void setCreatedOn(String createdOn) {
 		this.createdOn = createdOn;
+	}
+
+	public boolean isVeg() {
+		return isVeg;
+	}
+
+	public void setVeg(boolean isVeg) {
+		this.isVeg = isVeg;
 	}
 
 	@Override

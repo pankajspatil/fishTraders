@@ -39,12 +39,18 @@ List<OrderData> orderList = order.getAllOrders();
 				<td><%=Utils.getString(orderData.getStatusName()) %></td>
 				<td><%=Utils.getString(orderData.getCustName()) %></td>
 				<td><%=Utils.getString(orderData.getMobileNumber()) %></td>
-				<td>
+				<td align="left">
 					<% if(orderData.getStatusCode().equals("INQUEUE")){
-						%><img height="36%" src="/AgriTadka/resources/images/edit.png" 
-							onclick="openOrderPage(null,null,null,<%=orderData.getOrderId()%>)"> <%
+						%><img style="margin-left: 40%" height="36%" src="/AgriTadka/resources/images/edit.png" 
+							onclick="openOrderPage(null,null,null,<%=orderData.getOrderId()%>)">&nbsp;
+							<%if(Utils.getString(orderData.getTableName()).equals("")){
+								%>
+									<img height="31%" src="/AgriTadka/resources/images/print.png"
+							onclick="printOrder(<%=orderData.getOrderId()%>)">
+								<%
+							}
 					}else{
-						%><img height="31%" src="/AgriTadka/resources/images/print.png"
+						%><img height="31%" style="margin-left: 60%" src="/AgriTadka/resources/images/print.png"
 							onclick="printOrder(<%=orderData.getOrderId()%>)"><%
 					}
 					%></td>

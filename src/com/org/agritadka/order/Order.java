@@ -18,6 +18,7 @@ import com.google.gson.JsonParser;
 import com.org.agritadka.generic.ConnectionsUtil;
 import com.org.agritadka.generic.Utils;
 import com.org.agritadka.transfer.Cooking;
+import com.org.agritadka.transfer.Customer;
 import com.org.agritadka.transfer.MainMenu;
 import com.org.agritadka.transfer.MenuMapper;
 import com.org.agritadka.transfer.OrderData;
@@ -180,7 +181,7 @@ public class Order {
 				"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 				"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
 				"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
-		System.out.println("query==>" + query);
+		//System.out.println("query==>" + query);
 		
 		dataRS = conn.createStatement().executeQuery(query);
 		
@@ -254,8 +255,8 @@ public class Order {
 		String statusCode = jsonObject.get("statusCode").getAsString();
 		
 		String query = "select o.order_id, sm.menu_name, om.quantity, om.order_menu_map_id, om.created_on, "+
-				 		"tm.table_name, om.notes  from order_master o "+ 
-						"inner join order_menu_map om on o.order_id = om.order_id " ;
+				 		"tm.table_name, om.notes, sm.is_veg  from order_master o "+ 
+						"inner join order_menu_map om on o.order_id = om.order_id and om.is_active = 1 " ;
 		
 				 		if(timestamp != null && !timestamp.equals("")){
 				 			query += "and om.created_by >= '" + timestamp + "' ";
@@ -286,6 +287,7 @@ public class Order {
 				 			cooking.setCreatedOn(dataRS.getString("created_on"));
 				 			cooking.setQuantity(dataRS.getInt("quantity"));
 				 			cooking.setNotes(dataRS.getString("notes"));
+				 			cooking.setVeg(dataRS.getBoolean("is_veg"));
 				 			
 				 			cooking.setOrderData(orderData);				 			
 				 			orderedMenus.add(cooking);
@@ -420,7 +422,8 @@ public class Order {
 			returnVal = 2;
 		}
 		
-		query = "update order_menu_map set is_active = 0 where order_menu_map_id = ?";
+		//query = "update order_menu_map set is_active = 0 where order_menu_map_id = ?";
+		query = "delete from order_menu_map where order_menu_map_id = ?";
 		psmt = conn.prepareStatement(query);
 		psmt.setInt(1, orderMenuMapId);
 		
@@ -483,7 +486,7 @@ public class Order {
 		Connection conn = connectionsUtil.getConnection();
 		
 		String query = "select o.order_id, o.created_on, t.table_name, status_code, status_name, "+
-						"customer_name, o.mobile_number,cusrtomer_address, concat(wfirst_name, ' ',wmiddle_name, ' ', wlast_name) as waiter_name "+
+						"customer_name, o.mobile_number,customer_address, concat(wfirst_name, ' ',wmiddle_name, ' ', wlast_name) as waiter_name "+
 						"from order_master o "+
 						"inner join status_master s on o.status_id = s.status_id "+
 						"left join table_type_name_map ttn on o.table_id = ttn.table_type_name_map_id "+
@@ -512,6 +515,32 @@ public class Order {
 		connectionsUtil.closeConnection(conn);
 		
 		return orderList;
+	}
+	
+	public List<Customer> getCustomerData() throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select * from order_master where customer_name is not null and mobile_number is not null "+
+						"group by lower(customer_name), mobile_number order by customer_name;";
+		
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		
+		Customer customer;
+		List<Customer> customerList = new ArrayList<Customer>();
+		while(dataRS.next()){
+			customer = new Customer();
+			
+			customer.setCustName(dataRS.getString("customer_name"));
+			customer.setMobile(dataRS.getString("mobile_number"));
+			customer.setCustAddress(dataRS.getString("customer_address"));
+			
+			customerList.add(customer);
+		}
+		
+		connectionsUtil.closeConnection(conn);
+		return customerList;
 	}
 	
 	
