@@ -38,7 +38,7 @@ public class Order {
 		Connection conn = connectionsUtil.getConnection();
 		
 		String query = "SELECT ms.main_sub_menu_map_id, m.main_menu_id, s.sub_menu_id, " +
-						"m.menu_name as main_menu, s.menu_name as sub_menu, s."+ priceType +"_unit_price as unit_price "+
+						"m.menu_name as main_menu, s.menu_name as sub_menu, s."+ priceType +"_unit_price as unit_price, s.is_veg "+
 						"FROM agri_tadka.main_sub_menu_map ms "+
 						"inner join main_menu_master m on m.main_menu_id = ms.main_menu_id and ms.is_active = 1 and m.is_active = 1 "+
 						"inner join sub_menu_master s on s.sub_menu_id = ms.sub_menu_id and s.is_active = 1 order by m.menu_name, s.menu_name";
@@ -77,6 +77,7 @@ public class Order {
 			subMenuObj.setSubMenuId(subMenuId);
 			subMenuObj.setSubMenuName(subMenuName);
 			subMenuObj.setUnitPrice(unitPrice);
+			subMenuObj.setVeg(dataRS.getBoolean("is_veg"));
 			
 			menuMapper = new MenuMapper();
 			menuMapper.setMainMenu(mainMenuObj);
@@ -334,6 +335,8 @@ public class Order {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
+		Integer returnVal = 0;
+		
 		/*JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);*/
 		
@@ -350,22 +353,22 @@ public class Order {
 		
 		ResultSet dataRS = psmt.executeQuery();
 		if(dataRS.next()){
-			return 2;
+			returnVal = 2;
 		}
 		
-		query = "update order_master set status_id = (select status_id from status_master where status_code = ?) "+
+		if(returnVal != 2){
+			query = "update order_master set status_id = (select status_id from status_master where status_code = ?) "+
 					   "where order_id = ?";
-
-		psmt = conn.prepareStatement(query);
-		
-		psmt.setString(1,"COMPLETED");
-		psmt.setInt(2, orderId);
-		
-		psmt.executeUpdate();
+			psmt = conn.prepareStatement(query);
+			
+			psmt.setString(1,"COMPLETED");
+			psmt.setInt(2, orderId);
+			
+			psmt.executeUpdate();
+		}
 		
 		connectionsUtil.closeConnection(conn);
-		
-		return 0;
+		return returnVal;
 	}
 	
 	public Integer checkIfMenuProcessed(String data) throws SQLException{
@@ -374,7 +377,6 @@ public class Order {
 		Connection conn = connectionsUtil.getConnection();
 		
 		Integer returnVal = 0;
-		
 		/*JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);*/
 		
@@ -422,15 +424,16 @@ public class Order {
 			returnVal = 2;
 		}
 		
-		//query = "update order_menu_map set is_active = 0 where order_menu_map_id = ?";
-		query = "delete from order_menu_map where order_menu_map_id = ?";
-		psmt = conn.prepareStatement(query);
-		psmt.setInt(1, orderMenuMapId);
-		
-		psmt.executeUpdate();
-		
+		if(returnVal != 2){
+			//query = "update order_menu_map set is_active = 0 where order_menu_map_id = ?";
+			query = "delete from order_menu_map where order_menu_map_id = ?";
+			psmt = conn.prepareStatement(query);
+			psmt.setInt(1, orderMenuMapId);
+			
+			psmt.executeUpdate();
+		}
+
 		connectionsUtil.closeConnection(conn);
-		
 		return returnVal;
 	}
 	
@@ -459,24 +462,25 @@ public class Order {
 
 		ResultSet dataRS = psmt.executeQuery();
 		if (dataRS.next()) {
-			returnVal = 2;
+			returnVal =  2;
 		}
 		
-		query = "update order_master o "+
-				"left join order_menu_map om on o.order_id = om.order_id "+
-				"set om.status_id = (select status_id from status_master where status_code = ?) , "+
-				"o.status_id = (select status_id from status_master where status_code = ?) where o.order_id = ?";
+		if(returnVal != 2){
+			query = "update order_master o "+
+					"left join order_menu_map om on o.order_id = om.order_id "+
+					"set om.status_id = (select status_id from status_master where status_code = ?) , "+
+					"o.status_id = (select status_id from status_master where status_code = ?) where o.order_id = ?";
 
-		psmt = conn.prepareStatement(query);
-		
-		psmt.setString(1,"CANCELLED");
-		psmt.setString(2,"CANCELLED");
-		psmt.setInt(3, orderId);
-		
-		psmt.executeUpdate();
+			psmt = conn.prepareStatement(query);
+			
+			psmt.setString(1,"CANCELLED");
+			psmt.setString(2,"CANCELLED");
+			psmt.setInt(3, orderId);
+			
+			psmt.executeUpdate();
+		}
 		
 		connectionsUtil.closeConnection(conn);
-		
 		return returnVal;
 	}
 	
@@ -543,7 +547,34 @@ public class Order {
 		return customerList;
 	}
 	
-	
+	public Integer updateCustomerInOrder(String data) throws SQLException {
+
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+
+		Integer returnVal = 0;
+		JsonObject jsonObject = Utils.getJSONObjectFromString(data);
+
+		Integer orderId = jsonObject.get("orderId").getAsInt();
+		String custName = jsonObject.get("custName").getAsString();
+		String custAddress = jsonObject.get("custAddress").getAsString();
+		String mobile = jsonObject.get("mobile").getAsString();
+
+		String query = "update order_master o set customer_name = ?, mobile_number = ?, customer_address = ? "+
+						"where o.order_id = ?";
+
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setString(1, custName);
+		psmt.setString(2, mobile);
+		psmt.setString(3, custAddress);
+		psmt.setInt(4, orderId);
+		
+		psmt.executeUpdate();
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return returnVal;
+	}
 	
 	
 	

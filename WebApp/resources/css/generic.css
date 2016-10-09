@@ -28,6 +28,10 @@ tr td {
 	color: white;
 }
 
+img {
+	cursor: pointer;
+}
+
 .wrapper-dropdown {
 	/* Size and position */
 	/* position: relative; */

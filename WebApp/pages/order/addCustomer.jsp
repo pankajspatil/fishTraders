@@ -16,22 +16,24 @@ $(".headerTable").hide();
 <body>
 <center>
 <table width="100%">
-	<tr>
+	<tr valign="top">
 		<td><b>Cust. Name : </b></td>
-		<td align="left"><input type="text"> </td>
+		<td align="left"><input type="text" name="custName" id="custName"> </td>
 		<td><b>Mobile : </b></td>
-		<td align="left"><input type="text"> </td>
+		<td align="left"><input type="text" name="mobile" id="mobile"> </td>
 		<td><b>Address : </b></td>
-		<td align="left"><textarea cols="40" rows="4"></textarea></td>
+		<td align="left"><textarea cols="40" rows="4" name="custAddress" id="custAddress"></textarea></td>
 	</tr>
 	<tr>
-		<td align="center" colspan="6"><input type="button" value="Add"></td>
+		<td align="center" colspan="6"><input type="button" value="Add" id="addNewCustomer"></td>
 	</tr>
 </table>
 <%
 	Order order = new Order();
 	List<Customer> customerList = order.getCustomerData();
+	String orderId = Utils.getString(request.getParameter("orderId"));
 %>
+<input type="hidden" id="orderId" value="<%=orderId%>">
 <table width="100%" id="custTable" border="1">
 	<thead>
 		<tr class="headerTR">
@@ -47,7 +49,7 @@ $(".headerTable").hide();
 				<td width="30%"><%=customer.getCustName() %></td>
 				<td width="10%"><%=customer.getMobile() %></td>
 				<td><%=customer.getCustAddress() %></td>
-				<td width="10%"><img alt="Add Customer" src="/AgriTadka/resources/images/Add.png" width="25%"> </td>
+				<td width="10%"><img alt="Add Customer" id="updateExistingCustomer" src="/AgriTadka/resources/images/Add.png" width="25%"> </td>
 			</tr>
 			<%
 		}

@@ -12,86 +12,50 @@
 <%@page import="java.util.LinkedHashMap"%>
 
 <%
-response.setCharacterEncoding("UTF-8");
 
-String action = Utils.getString(request.getParameter("action"));
-String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
-String data = Utils.getString(request.getParameter("data"));
-
-Order order = new Order();
-
-if(action.equals("saveOrder")){
-	try{
-		String returnValue = order.saveOrder(data, userId);
-		out.println(returnValue);
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("error");
-	}
+try{
 	
-}else if(action.equals("fetchCookingData")){
+	response.setCharacterEncoding("UTF-8");
 	
-	try{
+	String action = Utils.getString(request.getParameter("action"));
+	String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
+	String data = Utils.getString(request.getParameter("data"));
+	
+	Order order = new Order();
+	Integer returnValue = new Integer(0);
+	
+	if(action.equals("saveOrder")){
+		String returnStr = order.saveOrder(data, userId);
+		out.println(returnStr);
+	}else if(action.equals("fetchCookingData")){
 		List<Cooking> returnList = order.getOrderedMenus(data);
 		Gson gson = new Gson();
 		
-		String returnValue = gson.toJson(returnList);
-		out.println(returnValue);
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("error");
+		String returnStr = gson.toJson(returnList);
+		out.println(returnStr);
 	}
-	
+	else if(action.equals("updateCookingStatus")){
+			returnValue = order.updateCookingStatus(data);
+			out.println(returnValue);
+	}else if(action.equals("checkoutOrder")){
+			returnValue = order.checkoutOrder(data);
+			out.println(returnValue);
+	}else if(action.equals("checkIfMenuProcessed")){
+			returnValue = order.checkIfMenuProcessed(data);
+			out.println(returnValue);
+	}else if(action.equals("deleteRecord")){
+			returnValue = order.deleteRecord(data);
+			out.println(returnValue);
+	}else if(action.equals("cancelOrder")){
+			returnValue = order.cancelRecord(data);
+			out.println(returnValue);
+	}else if(action.equals("updateCustomer")){
+			returnValue = order.updateCustomerInOrder(data);
+			out.println(returnValue);
+	}
+}catch (Exception ex){
+	ex.printStackTrace();
+	response.setStatus(503);
 }
-else if(action.equals("updateCookingStatus")){
-	try{
-		Integer returnValue = order.updateCookingStatus(data);
-		out.println(returnValue);
-		
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("1");
-	}
-	
-}else if(action.equals("checkoutOrder")){
-	try{
-		Integer returnValue = order.checkoutOrder(data);
-		out.println(returnValue);
-		
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("1");
-	}
-	
-}else if(action.equals("checkIfMenuProcessed")){
-	try{
-		Integer returnValue = order.checkIfMenuProcessed(data);
-		out.println(returnValue);
-		
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("1");
-	}
-	
-}else if(action.equals("deleteRecord")){
-	try{
-		Integer returnValue = order.deleteRecord(data);
-		out.println(returnValue);
-		
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("1");
-	}
-	
-}else if(action.equals("cancelOrder")){
-	try{
-		Integer returnValue = order.cancelRecord(data);
-		out.println(returnValue);
-		
-	}catch(Exception ex){
-		ex.printStackTrace();
-		out.println("1");
-	}
-	
-}
+
 %>

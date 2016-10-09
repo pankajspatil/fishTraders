@@ -451,6 +451,54 @@ function cancelOrder(buttonObj){
 	
 }
 
+function updateCustomer(orderId, custName, mobile, custAddress){
+	$('body').LoadingOverlay("show");
+	
+	var data = {
+			"orderId" : orderId,
+			"custName" : custName,
+			"mobile" : mobile,
+			"custAddress" : custAddress
+			
+	};
+		
+		var postData = {
+				"action" : "updateCustomer",
+				"data" : JSON.stringify(data)
+		};
+		
+		$.ajax({
+		      type: 'POST',
+		      url: "/AgriTadka/pages/ajax/postAjaxData.jsp",
+		      data: postData, 
+		      dataType: 'json',
+		      async : false,
+		      success: function(resultData) {
+		    	  
+		    	  if(resultData == 0){
+		    		  
+		    		  Lobibox.alert("success",{
+		    				msg : 'Customer added successfully!!',
+		    				beforeClose: function(lobibox){
+		    					if(parent.$.fancybox){
+		    						parent.$.fancybox.close();
+		    		        	}
+		    		        }
+		    			});
+		    		  
+		    	  }
+		    	  $('body').LoadingOverlay("hide");
+		    	 },
+		    	 error: function (xhr, status) { 
+		    		 console.log('ajax error = ' + xhr.statusText);
+		    		 Lobibox.alert("error",{
+		    				msg : 'Something went wrong.'
+		    			});
+		    		 $('body').LoadingOverlay("hide");
+		            } 
+		});
+}
+
 
 jQuery(function ($) {
 	  var target = $('#rightCell');
@@ -472,12 +520,46 @@ jQuery(function ($) {
 	  if($('#addCustomer') && $("#addCustomer").length > 0){
 			$('#addCustomer').click(function(){
 				var paramMap = new Map();
-				paramMap.put(URL, '/AgriTadka/pages/order/addCustomer.jsp?menuRequired=false');
+				
+				paramMap.put(URL, '/AgriTadka/pages/order/addCustomer.jsp?menuRequired=false&orderId=' + $("#orderId").val());
 				paramMap.put(WIDTH, '70%');
 				paramMap.put(HEIGHT, '80%');
+				
 				openFancyBox($("#addCustomer"), paramMap);
 			});
 		}
+	  
+	  $('#updateExistingCustomer').click(function () {
+			var rowObj = this.closest('tr');
+			var orderId = $('#orderId').val();
+			
+			var custName = $(rowObj).find('td').eq(0).text();
+			var mobile = $(rowObj).find('td').eq(1).text();
+			var custAddress = $(rowObj).find('td').eq(2).text();
+			
+			updateCustomer(orderId, custName, mobile, custAddress);
+		});
+	  $('#addNewCustomer').click(function () {
+		  
+		  var orderId = $('#orderId').val();
+		  var custName = $('#custName').val();
+		  var mobile = $('#mobile').val();
+		  var custAddress = $('#custAddress').val();
+		  
+		  var paramMap = new Map();
+		  if(custName == ''){
+			  paramMap.put(MSG, 'Please Enter Customer Name.');
+				displayNotification(paramMap);
+			  return false;
+		  }else if(mobile == ''){
+			  paramMap.put(MSG, 'Please Enter Customer Mobile Number.');
+				displayNotification(paramMap);
+			  return false;
+		  }
+		  
+		  updateCustomer(orderId, custName, mobile, custAddress);
+		  
+	  });
 	  
 	});
 
