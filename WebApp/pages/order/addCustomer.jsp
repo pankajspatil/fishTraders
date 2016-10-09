@@ -49,7 +49,7 @@ $(".headerTable").hide();
 				<td width="30%"><%=customer.getCustName() %></td>
 				<td width="10%"><%=customer.getMobile() %></td>
 				<td><%=customer.getCustAddress() %></td>
-				<td width="10%"><img alt="Add Customer" id="updateExistingCustomer" src="/AgriTadka/resources/images/Add.png" width="25%"> </td>
+				<td width="10%"><img alt="Add Customer" class="updateExistingCustomer" src="/AgriTadka/resources/images/Add.png" width="25%"> </td>
 			</tr>
 			<%
 		}

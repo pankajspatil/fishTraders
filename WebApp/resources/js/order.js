@@ -529,7 +529,7 @@ jQuery(function ($) {
 			});
 		}
 	  
-	  $('#updateExistingCustomer').click(function () {
+	  $('.updateExistingCustomer').click(function () {
 			var rowObj = this.closest('tr');
 			var orderId = $('#orderId').val();
 			
