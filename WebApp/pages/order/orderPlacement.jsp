@@ -1,3 +1,4 @@
+<%@page import="com.org.agritadka.transfer.Waiter"%>
 <%@page import="com.org.agritadka.transfer.OrderMenu"%>
 <%@page import="com.org.agritadka.transfer.OrderData"%>
 <%@page import="java.util.ArrayList"%>
@@ -16,7 +17,23 @@
 <link href="/AgriTadka/resources/css/order.css" rel="stylesheet" type="text/css">
 <!-- <link href="/AgriTadka/resources/css/demo.css" rel="stylesheet" type="text/css"> -->
 <script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
-
+<style>
+  .custom-combobox {
+    position: relative;
+    display: inline-block;
+  }
+  .custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+  }
+  .custom-combobox-input {
+    margin: 0;
+    padding: 5px 10px;
+  }
+  </style>
 </head>
 <body>
 <%
@@ -37,6 +54,10 @@ OrderData orderData = order.getOrderData(tableId, userId, orderId);
 LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 Float subTotal = new Float(0);
 
+List<Waiter> waiterList = order.getWaiterList();
+
+System.out.println("waiter Id ==> "+ orderData.getWaiterName());
+
 %>
 
 
@@ -53,7 +74,21 @@ Float subTotal = new Float(0);
 						Table : <%=tableName %>
 					</td>
 					<td width="33%">
-						Waiter : <input type="text" size="25">
+						Waiter : 
+						<select id="waiterName" style="width: 20%">
+							<option value="-1"></option>
+							<%for(Waiter waiter : waiterList){
+								
+								if(waiter.getWaiterId().toString().equals(orderData.getWaiterName())){
+									%><option selected="selected" value="<%=waiter.getWaiterId()%>"><%=waiter.getWaiterName() %></option> <%
+								}else{
+									%><option value="<%=waiter.getWaiterId()%>"><%=waiter.getWaiterName() %></option> <%
+								}
+								
+								
+								
+							}%>
+						</select>						
 					</td>
 				</tr>
 			</table>
@@ -136,6 +171,12 @@ Float subTotal = new Float(0);
 					<tr align="center">
 						<td align="left">
 							<input type="hidden" id="<%=orderMenu.getOrderMenuMapId()%>">
+							<%if(orderMenu.isVeg()){
+										%><img width="2%" height="1%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
+									}else{
+										%><img width="2%" height="1%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
+									}
+									%>
 							<%=orderMenu.getSubMenuName() %></td>
 						<td><select onChange='updatePrice(this)' onClick='setOldValue(this)'>
 							<%for(int i=1; i<=30; i++){
@@ -198,6 +239,152 @@ $("#accordion_1").bwlAccordion({
 	limit: 6,
 	toggle: true
 });
+
+$( function() {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            classes: {
+              "ui-tooltip": "ui-state-highlight"
+            }
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          //.removeClass( "ui-button-icon-only" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .on( "mousedown", function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .on( "click", function() {
+            input.trigger( "focus" );
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.autocomplete( "instance" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+ 
+    $( "#waiterName" ).combobox();
+    <%
+    if(orderData.getWaiterName() != null){
+  	  %>
+  	  debugger;
+  	  $("#waiterName").parent().find("input.ui-autocomplete-input").autocomplete("option", "disabled", true).prop("disabled",true);
+  	  $("#waiterName").parent().find("a.ui-button").button("disable");
+  	  <%
+    }
+    %>
+  } );
+  
+  
 </script>
 <!-- <div style="border: 1px solid black; width: 50%; height: 200px;display: inline-block;">Div1</div>
 <div style="border: 1px solid black;;margin-left: 52%; height: 200px;display: inline-block;">Div2</div> -->

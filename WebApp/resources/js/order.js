@@ -52,7 +52,11 @@ function addMenuToOrder(buttonObj){
 	
 	var subTotal = parseFloat($('#priceTotal').text()) + parseFloat(finalPrice);
 	$('#priceTotal').text(subTotal.toFixed(2));
-	$('#priceTotal').effect("bounce",{},3000);
+	
+	console.log($('#priceTotal').is(':animated'));
+	if(!$('#priceTotal').is(':animated')){
+		$('#priceTotal').effect("bounce",{},3000);
+	}
 	
 	//console.log(menuList);
 }
@@ -141,6 +145,21 @@ function checkIfProcessed(orderMenuMapId){
 
 function saveOrder(){
 	
+	var waiterId = $('#waiterName').val();
+	
+	/*if($(menuList).length > 0){
+		if(waiterId != '-1'){
+			var key = Object.keys($(menuList)[0])[0];
+			$(menuList)[0][key].waiterId = waiterId;
+		}
+	}*/
+	
+	if(waiterId != '-1'){
+		$(menuList)[0].waiterId = waiterId;
+		$(menuList)[0].orderId = $('#orderId').val();
+	}
+	
+	
 	var postData = {
 			"action" : "saveOrder",
 			"data" : JSON.stringify(menuList)
@@ -165,6 +184,11 @@ function saveOrder(){
 	    		  delete menuList[key];
 	    		  
 	    		  });
+	    	  
+	    	  if(waiterId != '-1'){
+	    		  $("#waiterName").parent().find("input.ui-autocomplete-input").autocomplete("option", "disabled", true).prop("disabled",true);
+	    		  $("#waiterName").parent().find("a.ui-button").button("disable");
+	    	  }
 	    	  
 	    	  $('#rightCell').LoadingOverlay("hide");
 	    	    Lobibox.alert("success",{

@@ -24,6 +24,7 @@ import com.org.agritadka.transfer.MenuMapper;
 import com.org.agritadka.transfer.OrderData;
 import com.org.agritadka.transfer.OrderMenu;
 import com.org.agritadka.transfer.SubMenu;
+import com.org.agritadka.transfer.Waiter;
 
 public class Order {
 	
@@ -106,14 +107,26 @@ public class Order {
 		
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		
+		String waiterId = null, orderId = null;
+		if(jsonObject.get("waiterId") != null){
+			waiterId = jsonObject.get("waiterId").getAsString();
+			jsonObject.remove("waiterId");
+			
+			orderId = jsonObject.get("orderId").getAsString();
+			jsonObject.remove("orderId");
+		}		
 
 		String query = "insert into order_menu_map(order_id, main_sub_menu_map_id, quantity, unit_price, status_id, notes, created_by, order_price)" +
 					   "values(?,?,?,?, (select status_id from status_master where status_code = 'INQUEUE'),?,?,?)";
 		
 		String query1 = "update order_menu_map set quantity = ?, order_price = ?, notes = ? where order_menu_map_id = ? ";
 		
+		String query2 = "update order_master set waiter_id = ? where order_id = ?";
+		
 		PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		PreparedStatement psmt1 = conn.prepareStatement(query1);
+		PreparedStatement psmt2 = conn.prepareStatement(query2);
 		
 		ResultSet dataRS;
 		
@@ -149,6 +162,14 @@ public class Order {
 		
 		//psmt.executeBatch();
 		psmt1.executeBatch();
+		
+		if(waiterId != null){
+	    	psmt2.setString(1, waiterId);
+	    	psmt2.setString(2, orderId);
+	    	
+	    	psmt2.executeUpdate();
+	    }
+		
 		Gson gson = new Gson();
 		
 		connectionsUtil.closeConnection(conn);
@@ -169,7 +190,7 @@ public class Order {
 		if(tableId != null || orderId != null){
 		
 		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
-						"om.order_price, sm.menu_name, om.notes, s.status_code "+ 
+						"om.order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id "+ 
 						"from order_master o inner join status_master s on o.status_id = s.status_id ";
 		
 		if(tableId != null){
@@ -193,6 +214,7 @@ public class Order {
 			if(count == 0){
 				orderData.setOrderId(dataRS.getInt("order_id"));
 				orderData.setStatusCode(dataRS.getString("status_code"));
+				orderData.setWaiterName(dataRS.getString("waiter_id"));
 			}
 			
 			if(dataRS.getString("main_sub_menu_map_id") != null){
@@ -574,6 +596,37 @@ public class Order {
 		connectionsUtil.closeConnection(conn);
 		
 		return returnVal;
+	}
+	
+	public List<Waiter> getWaiterList() throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select * from waiter_master where is_active = 1";
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		
+		List<Waiter> waiterList = new ArrayList<Waiter>();
+		Waiter waiter = null;
+		String waiterName ;
+		while(dataRS.next()){
+			waiter = new Waiter();
+			
+			waiterName = Utils.getString(dataRS.getString("wfirst_name")) + " ";
+			waiterName += Utils.getString(dataRS.getString("wmiddle_name")) + " ";
+			waiterName += Utils.getString(dataRS.getString("wlast_name"));
+			
+			waiterName = waiterName.trim();
+			
+			waiter.setWaiterName(waiterName);
+			waiter.setWaiterId(dataRS.getInt("waiter_id"));
+			
+			waiterList.add(waiter);
+		}
+		
+		
+		return waiterList;
+		
 	}
 	
 	
