@@ -3,7 +3,7 @@ function callHomePage(){
 	var dataMap = new Map();
 
 	//dataMap.put(MENU_REQUIRED,"false");
-	paramsMap.put(URL, '/AgriTadka/pages/home/home.jsp');
+	paramsMap.put(URL, '/AgriTadka/pages/common/home.jsp');
 	paramsMap.put(DATA, dataMap);
 	
 	openURL(paramsMap);
