@@ -190,7 +190,8 @@ public class Order {
 		if(tableId != null || orderId != null){
 		
 		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
-						"om.order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id "+ 
+						"om.order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id, "+ 
+						"o.customer_name, o.mobile_number, o.customer_address, o.tax "+
 						"from order_master o inner join status_master s on o.status_id = s.status_id ";
 		
 		if(tableId != null){
@@ -215,6 +216,10 @@ public class Order {
 				orderData.setOrderId(dataRS.getInt("order_id"));
 				orderData.setStatusCode(dataRS.getString("status_code"));
 				orderData.setWaiterName(dataRS.getString("waiter_id"));
+				orderData.setCustName(dataRS.getString("customer_name"));
+				orderData.setMobileNumber(dataRS.getString("mobile_number"));
+				orderData.setCustAddress(dataRS.getString("customer_address"));
+				orderData.setTaxRate(dataRS.getFloat("tax"));
 			}
 			
 			if(dataRS.getString("main_sub_menu_map_id") != null){
@@ -628,6 +633,8 @@ public class Order {
 		return waiterList;
 		
 	}
+	
+	
 	
 	
 	

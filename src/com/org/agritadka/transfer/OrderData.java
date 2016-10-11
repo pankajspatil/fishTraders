@@ -24,6 +24,10 @@ public class OrderData {
 	
 	private String waiterName;
 	
+	private String custAddress;
+	
+	private Float taxRate;
+	
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -63,8 +67,6 @@ public class OrderData {
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
 	}
-	
-	
 
 	public String getStatusName() {
 		return statusName;
@@ -105,6 +107,22 @@ public class OrderData {
 	public void setWaiterName(String waiterName) {
 		this.waiterName = waiterName;
 	}
+	
+	public String getCustAddress() {
+		return custAddress;
+	}
+
+	public void setCustAddress(String custAddress) {
+		this.custAddress = custAddress;
+	}
+
+	public Float getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Float taxRate) {
+		this.taxRate = taxRate;
+	}
 
 	@Override
 	public String toString() {
@@ -113,6 +131,7 @@ public class OrderData {
 				+ ", selectedMenus=" + selectedMenus + ", statusCode="
 				+ statusCode + ", statusName=" + statusName + ", dateTime="
 				+ dateTime + ", custName=" + custName + ", mobileNumber="
-				+ mobileNumber + ", waiterName=" + waiterName + "]";
+				+ mobileNumber + ", waiterName=" + waiterName
+				+ ", custAddress=" + custAddress + ", taxRate=" + taxRate + "]";
 	}
 }

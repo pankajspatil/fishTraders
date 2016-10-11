@@ -1,3 +1,6 @@
+<%@page import="com.org.agritadka.transfer.OrderMenu"%>
+<%@page import="com.org.agritadka.transfer.OrderData"%>
+<%@page import="com.org.agritadka.order.Order"%>
 <%@page import="com.org.agritadka.generic.Utils"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -16,9 +19,12 @@
 </head>
 <body>
 <%
-String orderId = Utils.getString(request.getParameter("orderId"));
+Integer orderId = Utils.getInt(request.getParameter("orderId"));
 //out.println("orderId" + orderId);
 
+if(orderId != 0){
+	Order order = new Order();
+	OrderData orderData = order.getOrderData(null, null, orderId);
 %>
 
 <table width="100%">
@@ -35,59 +41,72 @@ String orderId = Utils.getString(request.getParameter("orderId"));
 </table>
 <table width="100%">
 	<tr>
-		<td width="60%"><b>Order No : </b>1</td>
+		<td width="60%"><b>Order No : </b><%=orderData.getOrderId()%></td>
 		<td><b>Date : </b>2016-10-11 12:53:57</td>
 	</tr>
-	<tr>
-		<td width="60%"><b>Cust Name : </b>Kiran Vijay Kadav</td>
-		<td><b>Cust Mobile : </b>09773102909</td>
-	</tr>
+	<%if(orderData.getCustName() != null){
+		%><tr>
+			<td width="60%"><b>Cust. Name : </b><%=orderData.getCustName() %></td>
+			<td><b>Cust. Mobile : </b><%=orderData.getMobileNumber() %></td>
+		</tr><%
+	}
+	%>
+	
 </table>
+<%if(orderData.getSelectedMenus().size() > 0){
+	
+	float subTotal = 0, finalTotal = 0;
+	Float tax = orderData.getTaxRate() == null ? 0 : orderData.getTaxRate(); 	
+%>
+
 <table width="100%" border="0" style="border-collapse: collapse;" cellpadding="0" cellspacing="">
 	<tr style="background-color: #D3D3D3; -webkit-print-color-adjust: exact;">
-		<td><b>Item</b></td>
-		<td><b>Qty.</b></td>
-		<td><b>Unit Price</b></td>
-		<td><b>Amount</b></td>
+		<td width="55%"><b>Item</b></td>
+		<td width="15%"><b>Qty.</b></td>
+		<td width="15%"><b>Unit Price</b></td>
+		<td width="15%"><b>Amount</b></td>
 	</tr>
-	<tr>
+	<%for(OrderMenu orderMenu : orderData.getSelectedMenus()){
+		subTotal += orderMenu.getFinalPrice();
+		%><tr>
+			<td><%=orderMenu.getSubMenuName() %></td>
+			<td><%=orderMenu.getQuantity()%></td>
+			<td><%=orderMenu.getUnitPrice()%></td>
+			<td><%=orderMenu.getFinalPrice() %></td>
+		</tr><%
+	}
+
+	finalTotal = (subTotal * tax) + subTotal;
+	
+	%>
+	
+	<!-- <tr>
 		<td>Chicken Biryani Hydrabadi Kabab</td>
 		<td>100</td>
 		<td>9999.99</td>
 		<td>9999.99</td>
-	</tr>
+	</tr> -->
 	<tr>
-		<td>Chicken Biryani Hydrabadi Kabab</td>
-		<td>100</td>
-		<td>9999.99</td>
-		<td>9999.99</td>
+		<td colspan="2" valign="top">
+			<hr/>
+		</td>
+		<td width="30%" colspan="2" valign="top"><hr/>
+			<table width="100%" style="background: #D3D3D3; -webkit-print-color-adjust: exact;">
+				<tr>
+					<td><b>Sub Total : </b><%=subTotal %></td>
+				</tr>
+				<tr>
+					<td><b>Tax Rate : </b><%=tax %></td>
+				</tr>
+				<tr>
+					<td><b>Final Total : </b><%=finalTotal %></td>
+				</tr>
+			</table>
+		</td>
 	</tr>
+	<%}%>
 	<tr>
-		<td>Chicken Biryani Hydrabadi Kabab</td>
-		<td>100</td>
-		<td>9999.99</td>
-		<td>9999.99</td>
-	</tr>
-	<tr>
-		<td>Chicken Biryani Hydrabadi Kabab</td>
-		<td>100</td>
-		<td>9999.99</td>
-		<td>9999.99</td>
-	</tr>
-	<tr>
-		<td>Chicken Biryani Hydrabadi Kabab</td>
-		<td>100</td>
-		<td>9999.99</td>
-		<td>9999.99</td>
-	</tr>
-	<tr>
-		<td>Chicken Biryani Hydrabadi Kabab</td>
-		<td>100</td>
-		<td>9999.99</td>
-		<td>9999.99</td>
-	</tr>
-	<tr>
-		<td colspan="4" align="center"><h3>Thanks For Visiting!!!</h3></td>
+		<td colspan="4" align="center"><h3>**** Visit Again ****</h3></td>
 	</tr>
 </table>
 <script type="text/javascript">
@@ -102,5 +121,6 @@ window.onafterprint = function() {
 	alert('This will be called after the user prints');   
 };
 </script>
+<% } %>
 </body>
 </html>

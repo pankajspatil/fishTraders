@@ -15,6 +15,10 @@ public class Utils {
 		
 	}
 	
+	public static Integer getInt(Object param){
+		return param == null ? new Integer(0) : Integer.parseInt(param.toString());
+	}
+	
 	public static String[] getStringArray(Object param){
 		return param == null ? new String[0] : (String[])param;
 		
