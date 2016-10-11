@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+<input type="hidden" id="contextPath" value="<%=request.getContextPath()%>"/>
 <div id='cssmenu'>
 <ul>
    <li><a href='<%=request.getContextPath()%>/pages/common/home.jsp'><span>Home</span></a></li>

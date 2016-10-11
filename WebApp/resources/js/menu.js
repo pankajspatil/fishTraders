@@ -23,7 +23,9 @@ function logout(){
 		msg: "Do you want to logout?",
 		callback: function ($this, type) {
             if (type === 'yes') {
-            	location.href = '/ResourcePlan/pages/login/logout.jsp';
+            	
+            	var contextPath = document.getElementById("contextPath").value; 
+            	location.href =contextPath + '/pages/login/logout.jsp';
             }
         }
 		});
