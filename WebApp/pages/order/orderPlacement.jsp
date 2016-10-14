@@ -131,7 +131,11 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 									%>
 									
 										<%=mapper.getSubMenu().getSubMenuName() %></td>
+										<% if (mapper.getSubMenu().getUnitPrice()!=0) {%>
 									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
+									<% } else {
+										%><td width="20%"><input type="text" id="input<%=mapper.getMainSubMenuId()%>"> </td>
+									<% }%>
 									<td width="10%">
 										<!-- <button type="button" class="btnPlus btn-success">
 					                  		<span class="glyphicon glyphicon-plus"><b>+</b></span>

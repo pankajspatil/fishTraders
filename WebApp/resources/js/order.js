@@ -11,6 +11,9 @@ function addMenuToOrder(buttonObj){
 	var menuId = menuRow.attr('id');
 	var quantity = 1;
 	var unitPrice = $(menuRow).find('td:nth-child(2)').text();
+	if (unitPrice==' '){
+		unitPrice = document.getElementById('input'+menuId).value;
+	}
 	var finalPrice = parseFloat(quantity * unitPrice);
 	
 	var menu = {};
