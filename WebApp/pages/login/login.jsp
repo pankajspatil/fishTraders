@@ -30,8 +30,10 @@
 		userId = login.verifyUser(userName, password);	
 		if(userId != 0){
 			session.setAttribute(Constants.USER_ID, userId);
+			session.setAttribute(Constants.USER_NAME, userName);
 			response.sendRedirect(request.getContextPath()+"/pages/common/home.jsp");
-		}		
+		}
+		login = null;
 	}
 %>
 

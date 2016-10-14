@@ -293,8 +293,8 @@ public class Order {
 				 		query += "inner join status_master s on om.status_id = s.status_id and status_code = '"+statusCode+"' "+
 						"inner join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 						"inner join sub_menu_master sm on sm.sub_menu_id = msm.sub_menu_id "+
-						"inner join table_type_name_map ttn on ttn.table_type_name_map_id = o.table_id "+
-						"inner join table_master tm on tm.table_id = ttn.table_id order by om.created_on asc";
+						"Left Outer JOIN table_type_name_map ttn on ttn.table_type_name_map_id = o.table_id "+
+						"Left Outer JOIN table_master tm on tm.table_id = ttn.table_id order by om.created_on asc";
 				 		
 				 		//System.out.println("query==>" + query);
 				 		
