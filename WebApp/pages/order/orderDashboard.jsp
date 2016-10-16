@@ -4,7 +4,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-<%@ include file="/pages/common/header.jsp"%>    
+<%@ include file="/pages/common/header.jsp"%>  
+    <%@ include file="/pages/common/validateSession.jsp"%>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -33,9 +34,17 @@ List<OrderData> orderList = order.getAllOrders();
 	<tbody>
 		<%for(OrderData orderData : orderList){
 			%><tr align="center">
-				<td><%=orderData.getOrderId() %></td>
-				<td><%=Utils.getString(orderData.getDateTime()) %></td>
-				<td><%=Utils.getString(orderData.getTableName()) %></td>
+					<td><%=orderData.getOrderId()%></td>
+					<td><%=Utils.getString(orderData.getDateTime())%></td>
+					<%
+						String tableName = Utils.getString(orderData.getTableName());
+
+							if (tableName.equals("")) {
+								tableName = "Parcel";
+							}
+					%>
+
+					<td> <%=tableName %></td>
 				<td><%=Utils.getString(orderData.getStatusName()) %></td>
 				<td><%=Utils.getString(orderData.getCustName()) %></td>
 				<td><%=Utils.getString(orderData.getMobileNumber()) %></td>

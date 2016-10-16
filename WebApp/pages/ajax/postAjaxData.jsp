@@ -12,12 +12,12 @@
 <%@page import="java.util.LinkedHashMap"%>
 
 <%
-
+String action = null;
 try{
 	
 	response.setCharacterEncoding("UTF-8");
 	
-	String action = Utils.getString(request.getParameter("action"));
+	action = Utils.getString(request.getParameter("action"));
 	String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
 	String data = Utils.getString(request.getParameter("data"));
 	
@@ -49,11 +49,13 @@ try{
 	}else if(action.equals("cancelOrder")){
 			returnValue = order.cancelRecord(data);
 			out.println(returnValue);
+			System.out.println("returnValue"+returnValue);
 	}else if(action.equals("updateCustomer")){
 			returnValue = order.updateCustomerInOrder(data);
 			out.println(returnValue);
 	}
 }catch (Exception ex){
+	System.out.println("Error while processing data for "+action);
 	ex.printStackTrace();
 	response.setStatus(503);
 }
