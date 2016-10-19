@@ -13,9 +13,9 @@
 		<ul>
 			<li><a
 				href='<%=request.getContextPath()%>/pages/common/home.jsp'><span>Home</span></a></li>
-			<li><a href='#'><span>Order</span></a>
+			<li class="has-sub"><a href='#'><span>Order</span></a>
 				<ul>
-					<li class='first-child'><a href='#'><span>Dashboard</span></a>
+					<li class='has-sub'><a href='#'><span>Dashboard</span></a>
 						<ul>
 							<li class='first-child'><a
 								href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking</span></a></li>
@@ -31,8 +31,8 @@
 								Master</span></a></li>
 				</ul></li>
 			<li onclick="openOrderPage()"><a
-				href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></li>
-
+				href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
+				
 			<li style="float: right; padding-right: 10px;"><a href='#'><span>Account</span></a>
 				<ul>
 					<li><a
