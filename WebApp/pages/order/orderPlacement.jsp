@@ -17,7 +17,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="/AgriTadka/resources/css/order.css" rel="stylesheet" type="text/css">
 <!-- <link href="/AgriTadka/resources/css/demo.css" rel="stylesheet" type="text/css"> -->
-<script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
 <style>
   .custom-combobox {
     position: relative;
@@ -39,7 +38,7 @@
 <body>
 <%
 
-System.out.println("OrderId" + request.getParameter("orderId"));
+//System.out.println("OrderId" + request.getParameter("orderId"));
 
 Integer tableId = request.getParameter("tableId") == null ? null :  Integer.parseInt(request.getParameter("tableId"));
 Integer orderId = request.getParameter("orderId") == null ? null :  Integer.parseInt(request.getParameter("orderId"));
@@ -47,13 +46,15 @@ Integer orderId = request.getParameter("orderId") == null ? null :  Integer.pars
 String tableName = Utils.getString(request.getParameter("tableName"));
 String priceType = Utils.getString(request.getParameter("priceType")).equals("") ? "non_ac" 
 					: Utils.getString(request.getParameter("priceType"));
-
 String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
 
-Order order = new Order();
-OrderData orderData = order.getOrderData(tableId, userId, orderId);
-LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 Float subTotal = new Float(0);
+Order order = new Order();
+
+OrderData orderData = order.getOrderData(tableId, userId, orderId);
+String statusCode = orderData.getStatusCode() == null ? "INQUEUE" : orderData.getStatusCode();
+
+LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
 
 List<Waiter> waiterList = order.getWaiterList();
 
@@ -68,11 +69,12 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 			<table width="100%" border="1">
 				<tr align="center" class="orderInfoRow">
 					<td width="35%" style="border-right: thick;">
-						Order No : <%=orderData.getOrderId() %>
-						<input type="hidden" id="orderId" value="<%=orderData.getOrderId()%>">
+						Order No : <span id="orderNumber"><%=orderData.getOrderId() == null ? "": orderData.getOrderId()%></span>
+						<input type="hidden" id="orderId" value="<%=orderData.getOrderId() == null ? 0: orderData.getOrderId()%>">
 					</td>
 					<td width="32%">
 						Table : <%=tableName %>
+						<input type="hidden" id="tableId" value="<%=tableId == null ? 0 : tableId%>">
 					</td>
 					<td width="33%">
 						Waiter : 
@@ -85,9 +87,6 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 								}else{
 									%><option value="<%=waiter.getWaiterId()%>"><%=waiter.getWaiterName() %></option> <%
 								}
-								
-								
-								
 							}%>
 						</select>						
 					</td>
@@ -135,7 +134,7 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 										<% if (mapper.getSubMenu().getUnitPrice()!=0) {%>
 									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
 									<% } else {
-										%><td width="20%"><input type="text" id="input<%=mapper.getMainSubMenuId()%>"> </td>
+										%><td width="20%"><input type="text" size="4" id="input<%=mapper.getMainSubMenuId()%>"> </td>
 									<% }%>
 									<td width="10%">
 										<!-- <button type="button" class="btnPlus btn-success">
@@ -200,6 +199,13 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 					subTotal += orderMenu.getFinalPrice();
 					}
 				}
+				
+				Float advanceAmt = orderData.getAdvanceAmt() == null ? 0 : orderData.getAdvanceAmt();
+				Float discountAmt = orderData.getDiscountAmt() == null ? 0 : orderData.getDiscountAmt();
+				
+				Float finalAmt = subTotal - discountAmt;
+				Float balanceAmt = finalAmt - advanceAmt;
+				
 				%>
 				<tr>
 					<td>
@@ -212,20 +218,32 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 			<div id="divBottom">
 				<table width="100%">
 					<tr>
-					<td width="14%"><div style="font-size: 25px;">Sub total : </div></td>
-					<td><div id="priceTotal" style="font-size: 50px;"><%=String.format("%.2f", subTotal) %></div></td>
-				</tr>
+						<td width="15%"><div style="font-size: 25px;">Sub total : </div></td>
+						<td width="20%"><div id="priceTotal" style="font-size: 50px;"><%=String.format("%.2f", subTotal) %></div></td>
+						
+					<!-- </tr>
+					<tr> -->
+						<td width="15%"><div style="font-size: 25px;">Final total : </div></td>
+						<td width="20%"><div id="priceFinal" style="font-size: 50px;"><%=String.format("%.2f", finalAmt) %></div></td>
+					<!-- </tr>
+					<tr> -->
+						<td width="13%"><div style="font-size: 25px;">Balance : </div></td>
+						<td width="20%"><div id="priceBalance" style="font-size: 50px;"><%=String.format("%.2f", balanceAmt) %></div></td>
+					</tr>
 				<tr>
-				<%	if(orderData.getStatusCode().equals("INQUEUE")){
+				<%	if(statusCode.equals("INQUEUE")){
 					%>
-					<td width="100%" colspan="5">
+					<td width="100%" colspan="6">
 						<button class="btn btn-main btn-2g" name="page1" id="saveOrder">Save</button>
 						<button class="btn btn-main btn-2g" name="page2" id="cancelOrder">Cancel</button>
 						<button class="btn btn-main btn-2g" name="page3" id="checkoutOrder">Checkout</button>
 						<button class="btn btn-main btn-2g" name="page4" id="addCustomer">Customer</button>
+						&nbsp;
+							<b>Advc : </b><input type="text" name="advance" value="<%=advanceAmt %>" id="advance" size="5"> &nbsp;
+							<b>Discount : </b><input type="text" name="discount" value="<%=discountAmt %>" id="discount" size="5"> 
 					</td>
 					<%
-				}else if(orderData.getStatusCode().equals("COMPLETED")){
+				}else if(statusCode.equals("COMPLETED")){
 					%><td><button class="btn btn-main btn-2g" name="page4" id="printOrder">Print</button></td><%
 				}
 				%>
@@ -236,160 +254,16 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 	</tr>
 </table>
 
-
+<script type="text/javascript" src="<%=contextPath%>/resources/js/order.js"></script>
 <script>
-$("#accordion_1").bwlAccordion({
-	theme:'theme-blue',
-	pagination: true,
-	limit: 6,
-	toggle: true
-});
-
-$( function() {
-    $.widget( "custom.combobox", {
-      _create: function() {
-        this.wrapper = $( "<span>" )
-          .addClass( "custom-combobox" )
-          .insertAfter( this.element );
- 
-        this.element.hide();
-        this._createAutocomplete();
-        this._createShowAllButton();
-      },
- 
-      _createAutocomplete: function() {
-        var selected = this.element.children( ":selected" ),
-          value = selected.val() ? selected.text() : "";
- 
-        this.input = $( "<input>" )
-          .appendTo( this.wrapper )
-          .val( value )
-          .attr( "title", "" )
-          .addClass( "custom-combobox-input ui-widget-content ui-state-default ui-corner-left" )
-          .autocomplete({
-            delay: 0,
-            minLength: 0,
-            source: $.proxy( this, "_source" )
-          })
-          .tooltip({
-            classes: {
-              "ui-tooltip": "ui-state-highlight"
-            }
-          });
- 
-        this._on( this.input, {
-          autocompleteselect: function( event, ui ) {
-            ui.item.option.selected = true;
-            this._trigger( "select", event, {
-              item: ui.item.option
-            });
-          },
- 
-          autocompletechange: "_removeIfInvalid"
-        });
-      },
- 
-      _createShowAllButton: function() {
-        var input = this.input,
-          wasOpen = false;
- 
-        $( "<a>" )
-          .attr( "tabIndex", -1 )
-          .attr( "title", "Show All Items" )
-          .tooltip()
-          .appendTo( this.wrapper )
-          .button({
-            icons: {
-              primary: "ui-icon-triangle-1-s"
-            },
-            text: false
-          })
-          .removeClass( "ui-corner-all" )
-          //.removeClass( "ui-button-icon-only" )
-          .addClass( "custom-combobox-toggle ui-corner-right" )
-          .on( "mousedown", function() {
-            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
-          })
-          .on( "click", function() {
-            input.trigger( "focus" );
- 
-            // Close if already visible
-            if ( wasOpen ) {
-              return;
-            }
- 
-            // Pass empty string as value to search for, displaying all results
-            input.autocomplete( "search", "" );
-          });
-      },
- 
-      _source: function( request, response ) {
-        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-        response( this.element.children( "option" ).map(function() {
-          var text = $( this ).text();
-          if ( this.value && ( !request.term || matcher.test(text) ) )
-            return {
-              label: text,
-              value: text,
-              option: this
-            };
-        }) );
-      },
- 
-      _removeIfInvalid: function( event, ui ) {
- 
-        // Selected an item, nothing to do
-        if ( ui.item ) {
-          return;
-        }
- 
-        // Search for a match (case-insensitive)
-        var value = this.input.val(),
-          valueLowerCase = value.toLowerCase(),
-          valid = false;
-        this.element.children( "option" ).each(function() {
-          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
-            this.selected = valid = true;
-            return false;
-          }
-        });
- 
-        // Found a match, nothing to do
-        if ( valid ) {
-          return;
-        }
- 
-        // Remove invalid value
-        this.input
-          .val( "" )
-          .attr( "title", value + " didn't match any item" )
-          .tooltip( "open" );
-        this.element.val( "" );
-        this._delay(function() {
-          this.input.tooltip( "close" ).attr( "title", "" );
-        }, 2500 );
-        this.input.autocomplete( "instance" ).term = "";
-      },
- 
-      _destroy: function() {
-        this.wrapper.remove();
-        this.element.show();
-      }
-    });
- 
-    $( "#waiterName" ).combobox();
     <%
     if(orderData.getWaiterName() != null){
   	  %>
-  	  debugger;
   	  $("#waiterName").parent().find("input.ui-autocomplete-input").autocomplete("option", "disabled", true).prop("disabled",true);
   	  $("#waiterName").parent().find("a.ui-button").button("disable");
   	  <%
     }
     %>
-  } );
-  
-  
 </script>
 <!-- <div style="border: 1px solid black; width: 50%; height: 200px;display: inline-block;">Div1</div>
 <div style="border: 1px solid black;;margin-left: 52%; height: 200px;display: inline-block;">Div2</div> -->

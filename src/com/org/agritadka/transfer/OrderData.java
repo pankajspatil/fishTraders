@@ -28,6 +28,10 @@ public class OrderData {
 	
 	private Float taxRate;
 	
+	private Float advanceAmt;
+	
+	private Float discountAmt;
+	
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -124,6 +128,22 @@ public class OrderData {
 		this.taxRate = taxRate;
 	}
 
+	public Float getAdvanceAmt() {
+		return advanceAmt;
+	}
+
+	public void setAdvanceAmt(Float advanceAmt) {
+		this.advanceAmt = advanceAmt;
+	}
+
+	public Float getDiscountAmt() {
+		return discountAmt;
+	}
+
+	public void setDiscountAmt(Float discountAmt) {
+		this.discountAmt = discountAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "OrderData [orderId=" + orderId + ", tableTypeNameId="
@@ -132,6 +152,8 @@ public class OrderData {
 				+ statusCode + ", statusName=" + statusName + ", dateTime="
 				+ dateTime + ", custName=" + custName + ", mobileNumber="
 				+ mobileNumber + ", waiterName=" + waiterName
-				+ ", custAddress=" + custAddress + ", taxRate=" + taxRate + "]";
+				+ ", custAddress=" + custAddress + ", taxRate=" + taxRate
+				+ ", advanceAmt=" + advanceAmt + ", discountAmt=" + discountAmt
+				+ "]";
 	}
 }

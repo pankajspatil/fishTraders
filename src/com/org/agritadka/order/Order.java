@@ -108,27 +108,68 @@ public class Order {
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
 		
-		String waiterId = null, orderId = null;
+		Integer waiterId = null, orderId = null, tableId = null;
+		Float advanceAmt = new Float(0), discountAmt = new Float(0);
+		
 		if(jsonObject.get("waiterId") != null){
-			waiterId = jsonObject.get("waiterId").getAsString();
+			waiterId = jsonObject.get("waiterId").getAsInt();
 			jsonObject.remove("waiterId");
-			
-			orderId = jsonObject.get("orderId").getAsString();
+		}	
+		
+		if(jsonObject.get("orderId") != null){
+			orderId = jsonObject.get("orderId").getAsInt();
 			jsonObject.remove("orderId");
-		}		
+		}
+		
+		if(jsonObject.get("tableId") != null){
+			tableId = jsonObject.get("tableId").getAsInt();
+			jsonObject.remove("tableId");
+		}
+		if(jsonObject.get("advance") != null){
+			advanceAmt = jsonObject.get("advance").getAsFloat();
+			jsonObject.remove("advance");
+		}
+		if(jsonObject.get("discount") != null){
+			discountAmt = jsonObject.get("discount").getAsFloat();
+			jsonObject.remove("discount");
+		}
 
+		ResultSet dataRS;
+		
+		if(orderId == null || orderId == 0){
+			
+			String query3 = "INSERT INTO `agri_tadka`.`order_master`(`table_id`,`status_id`,`created_by`) "+
+					"VALUES(?, (select status_id from status_master where status_code = 'INQUEUE'), ?);";
+			
+			PreparedStatement psmt3 = conn.prepareStatement(query3,
+					Statement.RETURN_GENERATED_KEYS);
+
+			if (tableId != null) {
+				psmt3.setInt(1, tableId);
+			} else {
+				psmt3.setNull(1, Types.INTEGER);
+			}
+
+			psmt3.setString(2, userId);
+			psmt3.executeUpdate();
+
+			dataRS = psmt3.getGeneratedKeys();
+
+			if (dataRS.next()) {
+				orderId = dataRS.getInt(1);
+			}
+		}
+		
 		String query = "insert into order_menu_map(order_id, main_sub_menu_map_id, quantity, unit_price, status_id, notes, created_by, order_price)" +
-					   "values(?,?,?,?, (select status_id from status_master where status_code = 'INQUEUE'),?,?,?)";
-		
+				   "values(?,?,?,?, (select status_id from status_master where status_code = 'INQUEUE'),?,?,?)";
+	
 		String query1 = "update order_menu_map set quantity = ?, order_price = ?, notes = ? where order_menu_map_id = ? ";
-		
-		String query2 = "update order_master set waiter_id = ? where order_id = ?";
-		
+
+		String query2 = "update order_master set waiter_id = ?, advance_amt = ?, discount_amt = ? where order_id = ?";
+
 		PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		PreparedStatement psmt1 = conn.prepareStatement(query1);
 		PreparedStatement psmt2 = conn.prepareStatement(query2);
-		
-		ResultSet dataRS;
 		
 		for (Map.Entry<String,JsonElement> entry : jsonObject.entrySet()) {
 		    JsonObject jObject = entry.getValue().getAsJsonObject();
@@ -141,7 +182,10 @@ public class Order {
 		    	
 		    	psmt1.addBatch();
 		    }else{
-		    	psmt.setInt(1, jObject.get("orderId").getAsInt());
+		    	
+		    	//orderId = (jObject.get("orderId") == null ? orderId : jObject.get("orderId").getAsInt();
+		    	
+		    	psmt.setInt(1, orderId);
 			    psmt.setInt(2, jObject.get("menuId").getAsInt());
 			    psmt.setInt(3, jObject.get("quantity").getAsInt());
 			    psmt.setFloat(4, jObject.get("unitPrice").getAsFloat());
@@ -163,14 +207,26 @@ public class Order {
 		//psmt.executeBatch();
 		psmt1.executeBatch();
 		
+		psmt2.setNull(1, Types.INTEGER);
+		psmt2.setFloat(2, advanceAmt);
+		psmt2.setFloat(3, discountAmt);
+		psmt2.setInt(4, orderId);
+		
 		if(waiterId != null){
-	    	psmt2.setString(1, waiterId);
-	    	psmt2.setString(2, orderId);
+			psmt2.setInt(1, waiterId);
+		}
+		psmt2.executeUpdate();
+		
+		/*
+		if(waiterId != null){
+	    	psmt2.setInt(1, waiterId);
+	    	psmt2.setInt(2, orderId);
 	    	
 	    	psmt2.executeUpdate();
-	    }
+	    }*/
 		
 		Gson gson = new Gson();
+		jsonObject.addProperty("orderId", orderId);
 		
 		connectionsUtil.closeConnection(conn);
 		
@@ -191,7 +247,7 @@ public class Order {
 		
 		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
 						"om.order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id, "+ 
-						"o.customer_name, o.mobile_number, o.customer_address, o.tax "+
+						"o.customer_name, o.mobile_number, o.customer_address, o.tax, o.advance_amt, o.discount_amt "+
 						"from order_master o inner join status_master s on o.status_id = s.status_id ";
 		
 		if(tableId != null){
@@ -220,6 +276,8 @@ public class Order {
 				orderData.setMobileNumber(dataRS.getString("mobile_number"));
 				orderData.setCustAddress(dataRS.getString("customer_address"));
 				orderData.setTaxRate(dataRS.getFloat("tax"));
+				orderData.setAdvanceAmt(dataRS.getFloat("advance_amt"));
+				orderData.setDiscountAmt(dataRS.getFloat("discount_amt"));
 			}
 			
 			if(dataRS.getString("main_sub_menu_map_id") != null){
@@ -238,7 +296,7 @@ public class Order {
 			count ++;
 		}
 		}
-		if(count == 0){
+		/*if(count == 0){
 			
 			query = "INSERT INTO `agri_tadka`.`order_master`(`table_id`,`status_id`,`created_by`) "+
 					"VALUES(?, (select status_id from status_master where status_code = 'INQUEUE'), ?);";
@@ -260,7 +318,7 @@ public class Order {
 				orderData.setOrderId(dataRS.getInt(1));
 				orderData.setStatusCode("INQUEUE");
 			}
-		}
+		}*/
 		
 		connectionsUtil.closeConnection(conn);
 		

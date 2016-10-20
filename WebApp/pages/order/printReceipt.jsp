@@ -53,7 +53,7 @@ if(orderId != 0){
 	%>
 	
 </table>
-<%if(orderData.getSelectedMenus().size() > 0){
+<%if(orderData.getSelectedMenus()!= null && orderData.getSelectedMenus().size() > 0){
 	
 	float subTotal = 0, finalTotal = 0;
 	Float tax = orderData.getTaxRate() == null ? 0 : orderData.getTaxRate(); 	

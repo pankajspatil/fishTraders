@@ -11,9 +11,19 @@ function addMenuToOrder(buttonObj){
 	var menuId = menuRow.attr('id');
 	var quantity = 1;
 	var unitPrice = $(menuRow).find('td:nth-child(2)').text();
-	if (unitPrice==' '){
+	if (unitPrice.trim() == ''){
 		unitPrice = document.getElementById('input'+menuId).value;
 	}
+	
+	if(unitPrice.trim() == ''){
+		var paramMap = new Map();
+		paramMap.put(MSG, 'Please Enter Qantity.');
+		displayNotification(paramMap);
+		
+		$(menuRow).effect("highlight",{},3000);
+		return false;
+	}
+	
 	var finalPrice = parseFloat(quantity * unitPrice);
 	
 	var menu = {};
@@ -46,7 +56,7 @@ function addMenuToOrder(buttonObj){
     newRow.append("<td>"+finalPrice+"</td>");
     newRow.append($("<img class='deleteIcon' src='/AgriTadka/resources/images/Delete.png' onclick='deleteRecord(this)'>"));
    
-    console.log(newRow);
+    //console.log(newRow);
 	
 	var table2 = $('#orderedTable');
 	table2.append(newRow);
@@ -54,12 +64,29 @@ function addMenuToOrder(buttonObj){
 	$(newRow).effect("highlight",{},3000);
 	
 	var subTotal = parseFloat($('#priceTotal').text()) + parseFloat(finalPrice);
-	$('#priceTotal').text(subTotal.toFixed(2));
 	
-	console.log($('#priceTotal').is(':animated'));
+	/*var discountAmt = $('#discount').val();
+	var advanceAmt = $('#advance').val();
+	
+	var totalAmount = subTotal - discountAmt;	
+	var balance = totalAmount - advanceAmt;
+	
+	$('#priceTotal').text(subTotal.toFixed(2));
+	$('#priceFinal').text(totalAmount.toFixed(2));
+	$('#priceBalance').text(balance.toFixed(2));
+	
+	//console.log($('#priceTotal').is(':animated'));
 	if(!$('#priceTotal').is(':animated')){
 		$('#priceTotal').effect("bounce",{},3000);
 	}
+	if(!$('#priceFinal').is(':animated')){
+		$('#priceFinal').effect("bounce",{},3000);
+	}
+	if(!$('#priceBalance').is(':animated')){
+		$('#priceBalance').effect("bounce",{},3000);
+	}*/
+	
+	updateAllPrices(subTotal);
 	
 	//console.log(menuList);
 }
@@ -90,8 +117,11 @@ function updatePrice(selectObj){
 		var subTotal = parseFloat($('#priceTotal').text());
 		
 		subTotal = (subTotal - existingFinalPrice) + finalPrice;
-		$('#priceTotal').text(subTotal.toFixed(2));
-		$('#priceTotal').effect("bounce",{},3000);
+		
+		updateAllPrices(subTotal);
+		
+		/*$('#priceTotal').text(subTotal.toFixed(2));
+		$('#priceTotal').effect("bounce",{},3000);*/
 		
 		menu.quantity = quantity;
 		menu.finalPrice = finalPrice;
@@ -157,11 +187,29 @@ function saveOrder(){
 		}
 	}*/
 	
-	if(waiterId != '-1'){
-		$(menuList)[0].waiterId = waiterId;
-		$(menuList)[0].orderId = $('#orderId').val();
+	var count = 0; 
+	$.each(menuList, function(key, value) {
+		  count++;
+	});
+	
+	if(count == 0){
+		if($('#orderId').val() == 0 ){
+			Lobibox.alert("warning",{
+				msg : 'Please add item before saving the order.'
+			});
+			$('#rightCell').LoadingOverlay("hide");
+			return false;
+		}
 	}
 	
+	if(waiterId != '-1'){
+		$(menuList)[0].waiterId = waiterId;		
+	}
+	
+	$(menuList)[0].orderId = $('#orderId').val();
+	$(menuList)[0].tableId = $('#tableId').val();
+	$(menuList)[0].discount = $('#discount').val() == '' ? 0 : $('#discount').val();
+	$(menuList)[0].advance = $('#advance').val() == '' ? 0 : $('#advance').val();
 	
 	var postData = {
 			"action" : "saveOrder",
@@ -176,6 +224,13 @@ function saveOrder(){
 	      success: function(resultData) {
 	    	  //alert("Save Complete" + resultData)
 	    	  
+	    	  menuList = resultData;
+	    	  
+	    	  if(resultData.orderId){
+	    		  $('#orderNumber').text(resultData.orderId);
+	    		  $('#orderId').val(resultData.orderId);
+	    	  }
+	    	  
 	    	  $.each(resultData, function(key, value) {
 	    		  
 	    		  var trRow = ('#'+key);
@@ -187,6 +242,13 @@ function saveOrder(){
 	    		  delete menuList[key];
 	    		  
 	    		  });
+	    	  
+	    	  if(menuList["waiterId"]){
+	    		  delete menuList["waiterId"];
+	    	  }
+	    	  if(menuList["tableId"]){
+	    		  delete menuList["tableId"];
+	    	  }
 	    	  
 	    	  if(waiterId != '-1'){
 	    		  $("#waiterName").parent().find("input.ui-autocomplete-input").autocomplete("option", "disabled", true).prop("disabled",true);
@@ -210,6 +272,19 @@ function saveOrder(){
 }
 
 function checkoutOrder(){
+	
+	var count = 0; 
+	$.each(menuList, function(key, value) {
+		  count++;
+		  });
+	
+	if( count > 0){
+		Lobibox.alert("warning",{
+			msg : 'Some data from the order is not saved. Please save or delete using the respective buttons.'
+		});
+		$('#rightCell').LoadingOverlay("hide");
+		return false;		
+	}
 	
 	var data = {
 			"orderId" : $('#orderId').val()
@@ -347,8 +422,22 @@ function deleteRecord(imgObj){
             		var subTotal = parseFloat($('#priceTotal').text());
             		
             		subTotal = (subTotal - finalPrice);
+            		
+            		/*var discountAmt = $('#discount').val();
+            		var advanceAmt = $('#advance').val();
+            		
+            		var totalAmount = subTotal - discountAmt;	
+            		var balance = totalAmount - advanceAmt;
+            		
             		$('#priceTotal').text(subTotal.toFixed(2));
+            		$('#priceFinal').text(totalAmount.toFixed(2));
+            		$('#priceBalance').text(balance.toFixed(2));
+            		
             		$('#priceTotal').effect("bounce",{},3000);
+            		$('#priceFinal').effect("bounce",{},3000);
+            		$('#priceBalance').effect("bounce",{},3000);*/
+            		
+            		updateAllPrices(subTotal);
             		
             		$(rowObj).find('td').fadeOut(500, function() {
             			$(this).parents('tr:first').remove();
@@ -383,8 +472,9 @@ function deleteRecord(imgObj){
             	            		var subTotal = parseFloat($('#priceTotal').text());
             	            		
             	            		subTotal = (subTotal - finalPrice);
-            	            		$('#priceTotal').text(subTotal.toFixed(2));
-            	            		$('#priceTotal').effect("bounce",{},3000);
+            	            		updateAllPrices(subTotal);
+            	            		/*$('#priceTotal').text(subTotal.toFixed(2));
+            	            		$('#priceTotal').effect("bounce",{},3000);*/
             		    		  
             		    		  $(rowObj).find('td').fadeOut(500, function() {
             	            			$(this).parents('tr:first').remove();
@@ -418,6 +508,29 @@ function deleteRecord(imgObj){
         }
 		});
 	
+}
+
+function updateAllPrices(subTotal){
+	
+	var discountAmt = $('#discount').val();
+	var advanceAmt = $('#advance').val();
+	
+	var totalAmount = subTotal - discountAmt;	
+	var balance = totalAmount - advanceAmt;
+	
+	$('#priceTotal').text(subTotal.toFixed(2));
+	$('#priceFinal').text(totalAmount.toFixed(2));
+	$('#priceBalance').text(balance.toFixed(2));
+	
+	if(!$('#priceTotal').is(':animated')){
+		$('#priceTotal').effect("bounce",{},300);
+	}
+	if(!$('#priceFinal').is(':animated')){
+		$('#priceFinal').effect("bounce",{},300);
+	}
+	if(!$('#priceBalance').is(':animated')){
+		$('#priceBalance').effect("bounce",{},300);
+	}
 }
 
 function cancelOrder(buttonObj){
@@ -605,4 +718,291 @@ $(document).ready(function() {
 	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
 	    });
 	   
+	   $("#discount").keydown(function (event) {
+		   var inputCode = event.which;
+		   var currentValue = $(this).val();
+		   if(inputCode === 8 || inputCode == 46){
+			   var discountAmt = currentValue.substr(0, getCursorPosition(this) - 1) + currentValue.substr(getCursorPosition(this), currentValue.length);
+			   if(inputCode == 46){
+				   discountAmt = currentValue.substr(0, getCursorPosition(this)) + currentValue.substr(getCursorPosition(this) + 1, currentValue.length);
+			   }
+			    var finalAmt = $("#priceTotal").text();
+			    
+			    finalAmt = finalAmt - discountAmt;
+			    
+			    if(finalAmt < 0){
+			    	
+			    	var paramMap = new Map();
+					paramMap.put(MSG, 'Discount Can not be greater than sub total.');
+					displayNotification(paramMap);
+					
+			    	return false;
+			    }
+			    $("#priceFinal").text(finalAmt.toFixed(2));
+			    
+			    if(!$('#priceFinal').is(':animated')){
+					$('#priceFinal').effect("bounce",{},300);
+				}
+		   }
+	   });
+	   
+	   $("#discount").keypress(function (event) {
+			    var inputCode = event.which;
+			    var currentValue = $(this).val();
+			    if (inputCode > 0 && (inputCode < 48 || inputCode > 57)) {
+			        if (inputCode == 46) {
+			        	
+			        	if (getCursorPosition(this) == 0 && currentValue.charAt(0) == '-') return false;
+			            if (currentValue.match(/[.]/)) return false;
+			        } 
+			        else if (inputCode == 45) {
+			            if (currentValue.charAt(0) == '-') return false;
+			            if (getCursorPosition(this) != 0) return false;
+			        } 
+			        else if (inputCode == 8){
+			        	return true;
+			        }
+			        else return false;
+			
+			    } 
+			    else if (inputCode > 0 && (inputCode >= 48 && inputCode <= 57)) {
+			        if (currentValue.charAt(0) == '-' && getCursorPosition(this) == 0) return false;
+			    }
+			    
+		    	var discountAmt = currentValue + event.key;
+			    var finalAmt = $("#priceTotal").text();
+			    
+			    finalAmt = finalAmt - discountAmt;
+			    
+			    if(finalAmt < 0){
+			    	
+			    	var paramMap = new Map();
+					paramMap.put(MSG, 'Discount Can not be greater than sub total.');
+					displayNotification(paramMap);
+					
+			    	return false;
+			    }
+			    
+			    $("#priceFinal").text(finalAmt.toFixed(2));
+			    
+			    if(!$('#priceFinal').is(':animated')){
+					$('#priceFinal').effect("bounce",{},300);
+				}
+		});
+	   
+	   $("#advance").keydown(function (event) {
+		   var inputCode = event.which;
+		   var currentValue = $(this).val();
+		   if(inputCode === 8 || inputCode == 46){
+			   var advanceAmt = currentValue.substr(0, getCursorPosition(this) - 1) + currentValue.substr(getCursorPosition(this), currentValue.length);
+			   if(inputCode == 46){
+				   advanceAmt = currentValue.substr(0, getCursorPosition(this)) + currentValue.substr(getCursorPosition(this) + 1, currentValue.length);
+			   }
+			   
+			   var balanceAmt = $("#priceFinal").text();
+			   balanceAmt = balanceAmt - advanceAmt;
+			    if(balanceAmt < 0){
+			    	
+			    	var paramMap = new Map();
+					paramMap.put(MSG, 'Advance can not be greater than sub total.');
+					displayNotification(paramMap);
+					
+			    	return false;
+			    }
+			    
+			    $("#priceBalance").text(balanceAmt.toFixed(2));
+			    
+			    if(!$('#priceBalance').is(':animated')){
+					$('#priceBalance').effect("bounce",{},300);
+				}
+		   }
+	   });
+	   
+	   $("#advance").keypress(function (event) {
+			    var inputCode = event.which;
+			    var currentValue = $(this).val();
+			    if (inputCode > 0 && (inputCode < 48 || inputCode > 57)) {
+			        if (inputCode == 46) {
+			            if (getCursorPosition(this) == 0 && currentValue.charAt(0) == '-') return false;
+			            if (currentValue.match(/[.]/)) return false;
+			        } 
+			        else if (inputCode == 45) {
+			            if (currentValue.charAt(0) == '-') return false;
+			            if (getCursorPosition(this) != 0) return false;
+			        } 
+			        else if (inputCode == 8) return true;
+			        else return false;
+			
+			    } 
+			    else if (inputCode > 0 && (inputCode >= 48 && inputCode <= 57)) {
+			        if (currentValue.charAt(0) == '-' && getCursorPosition(this) == 0) return false;
+			    }
+			    
+			    var advanceAmt = currentValue + event.key;
+			    var balanceAmt = $("#priceFinal").text();
+			    
+			    balanceAmt = balanceAmt - advanceAmt;
+			    
+			    if(balanceAmt < 0){
+			    	
+			    	var paramMap = new Map();
+					paramMap.put(MSG, 'Advance can not be greater than sub total.');
+					displayNotification(paramMap);
+					
+			    	return false;
+			    }
+			    
+			    $("#priceBalance").text(balanceAmt.toFixed(2));
+			    
+			    if(!$('#priceBalance').is(':animated')){
+					$('#priceBalance').effect("bounce",{},300);
+				}
+		});
 	} );
+
+$("#accordion_1").bwlAccordion({
+	theme:'theme-blue',
+	pagination: true,
+	limit: 6,
+	toggle: true
+});
+
+$( function() {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            classes: {
+              "ui-tooltip": "ui-state-highlight"
+            }
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          //.removeClass( "ui-button-icon-only" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .on( "mousedown", function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .on( "click", function() {
+            input.trigger( "focus" );
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.autocomplete( "instance" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+ 
+    $( "#waiterName" ).combobox();
+    if($('#waiterName').val() != -1){
+    	$("#waiterName").parent().find("input.ui-autocomplete-input").autocomplete("option", "disabled", true).prop("disabled",true);
+    	$("#waiterName").parent().find("a.ui-button").button("disable");
+    }
+} );
+
