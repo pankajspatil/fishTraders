@@ -539,7 +539,7 @@ public class Order {
 		Integer orderId = jsonObject.get("orderId").getAsInt();
 
 		String query = "select * from order_menu_map om "
-				+ "inner join status_master s on om.status_id = s.status_id and status_code in ('COMPLETE') "
+				+ "inner join status_master s on om.status_id = s.status_id and status_code not in ('INQUEUE') "
 				+ "and om.order_id = ?";
 
 		PreparedStatement psmt = conn.prepareStatement(query);
