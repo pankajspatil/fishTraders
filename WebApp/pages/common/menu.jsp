@@ -33,6 +33,17 @@
 			<li onclick="openOrderPage()"><a
 				href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
 				
+			<li><a href='#'><span>Reports</span></a>
+				<ul>
+					<li class='first-child'>
+						<a href='<%=request.getContextPath()%>/pages/reports/orderRevenue.jsp'><span>Revenue</span></a>
+					</li>
+					<li>
+						<a href='<%=request.getContextPath()%>/pages/reports/orderStatus.jsp'><span>Order Status</span></a>
+					</li>
+				</ul>
+			</li>
+				
 			<li style="float: right; padding-right: 10px;"><a href='#'><span>Account</span></a>
 				<ul>
 					<li><a

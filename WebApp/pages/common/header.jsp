@@ -60,6 +60,15 @@
 
 <script src="/AgriTadka/resources/js/loadingoverlay.js" type="text/javascript"></script>
 
+<!-- Easy Tabs -->
+<script src="/AgriTadka/resources/js/jquery.easytabs.min.js" type="text/javascript"></script>
+<!-- <script src="/AgriTadka/resources/js/jquery.hashchange.min.js" type="text/javascript"></script> -->
+
+<!-- Charts -->
+<script src="/AgriTadka/resources/js/fusioncharts.js" type="text/javascript"></script>
+<script src="/AgriTadka/resources/js/fusioncharts.charts.js" type="text/javascript"></script>
+<script src="/AgriTadka/resources/js/fusioncharts.theme.fint.js" type="text/javascript"></script>
+
 </head>
 
 <body>
