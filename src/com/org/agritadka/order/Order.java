@@ -581,7 +581,7 @@ public class Order {
 						"left join table_type_name_map ttn on o.table_id = ttn.table_type_name_map_id "+
 						"left join table_master t on ttn.table_id = t.table_id "+
 						"left join waiter_master w on o.waiter_id = w.waiter_id "+
-						"order by o.created_on desc; ";
+						"order by o.order_id desc; ";
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		
 		OrderData orderData = new OrderData();

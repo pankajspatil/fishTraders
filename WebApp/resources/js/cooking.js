@@ -143,7 +143,13 @@ function callback() {
 	    		  rowObj.append($(menuStr));
 	    		  rowObj.append($("<td>"+value.quantity+"</td>"));
 	    		  rowObj.append($("<td>"+timeDiff+"</td>"));
-	    		  rowObj.append($("<td>"+value.orderData.tableName+"</td>"));
+	    		  if (value.orderData.tableName==null){
+	    			  rowObj.append($("<td> Parcel </td>"));
+		    		  
+	    		  }else{
+	    			  rowObj.append($("<td>"+value.orderData.tableName+"</td>"));
+		    		    
+	    		  }
 	    		  rowObj.append($("<td>"+value.notes+"</td>"));
 	    		  
 	    		  var btnObj = buttonObj.clone(true);

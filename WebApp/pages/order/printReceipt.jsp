@@ -44,15 +44,21 @@ if(orderId != 0){
 		<td width="60%"><b>Order No : </b><%=orderData.getOrderId()%></td>
 		<td><b>Date : </b>2016-10-11 12:53:57</td>
 	</tr>
-	<%if(orderData.getCustName() != null){
+		<%
+			if (orderData.getCustName() != null) {
 		%><tr>
-			<td width="60%"><b>Cust. Name : </b><%=orderData.getCustName() %></td>
-			<td><b>Cust. Mobile : </b><%=orderData.getMobileNumber() %></td>
-		</tr><%
-	}
-	%>
-	
-</table>
+			<td width="60%"><b>Cust. Name : </b><%=orderData.getCustName()%></td>
+			<td><b>Cust. Mobile : </b><%=orderData.getMobileNumber()%></td>
+		</tr>
+		<tr>
+			<td colspan=2><b>Address : </b><%=orderData.getCustAddress()%>
+			</td>
+		</tr>
+		<%
+			}
+		%>
+
+	</table>
 <%if(orderData.getSelectedMenus()!= null && orderData.getSelectedMenus().size() > 0){
 	
 	float subTotal = 0, finalTotal = 0;
@@ -105,10 +111,20 @@ if(orderId != 0){
 		</td>
 	</tr>
 	<%}%>
-	<tr>
-		<td colspan="4" align="center"><h3>**** Visit Again ****</h3></td>
-	</tr>
-</table>
+		<tr>
+			<td colspan="4" align="center"><h4>We do not use msg
+					(aginomotto).Veg and Non-Veg are prepared Separately.</h4></td>
+		</tr>
+		<tr>
+			<td colspan="4" align="center"><h4>Please guive us atleast
+					45 min to deliver order at home. It takes tima & efforts to make
+					good food so bare with us.</h4></td>
+		</tr>
+
+		<tr>
+			<td colspan="4" align="center"><h3>**** Visit Again ****</h3></td>
+		</tr>
+	</table>
 <script type="text/javascript">
 var w = window.print();
 //debugger;

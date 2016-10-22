@@ -216,40 +216,64 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 			</table>
 			</div>
 			<div id="divBottom">
-				<table width="100%">
-					<tr>
-						<td width="15%"><div style="font-size: 25px;">Sub total : </div></td>
-						<td width="20%"><div id="priceTotal" style="font-size: 50px;"><%=String.format("%.2f", subTotal) %></div></td>
-						
-					<!-- </tr>
+					<table width="100%">
+
+						<%
+							if (statusCode.equals("INQUEUE")) {
+						%>
+						<tr>
+							<td colspan=6><b>Advc : <input type="text"
+									name="advance" value="<%=advanceAmt%>" id="advance" size="5">
+									&nbsp; <b>Discount : </b><input type="text" name="discount"
+									value="<%=discountAmt%>" id="discount" size="5">&nbsp;
+							</td>
+						</tr>
+
+						<%
+							} else if (statusCode.equals("COMPLETED")) {
+						%><tr>
+							<td><button class="btn btn-main btn-2g" name="page4"
+									id="printOrder">Print</button></td>
+						</tr>
+						<%
+							}
+						%>
+						<tr>
+							<td width="15%"><div style="font-size: 20px;">Sub
+									total :</div></td>
+							<td width="20%"><div id="priceTotal"
+									style="font-size: 50px;"><%=String.format("%.2f", subTotal)%></div></td>
+
+							<!-- </tr>
 					<tr> -->
-						<td width="15%"><div style="font-size: 25px;">Final total : </div></td>
-						<td width="20%"><div id="priceFinal" style="font-size: 50px;"><%=String.format("%.2f", finalAmt) %></div></td>
-					<!-- </tr>
+							<td width="15%"><div style="font-size: 20px;">Final
+									total :</div></td>
+							<td width="20%"><div id="priceFinal"
+									style="font-size: 50px;"><%=String.format("%.2f", finalAmt)%></div></td>
+							<!-- </tr>
 					<tr> -->
-						<td width="13%"><div style="font-size: 25px;">Balance : </div></td>
-						<td width="20%"><div id="priceBalance" style="font-size: 50px;"><%=String.format("%.2f", balanceAmt) %></div></td>
-					</tr>
-				<tr>
-				<%	if(statusCode.equals("INQUEUE")){
-					%>
-					<td width="100%" colspan="6">
-						<button class="btn btn-main btn-2g" name="page1" id="saveOrder">Save</button>
-						<button class="btn btn-main btn-2g" name="page2" id="cancelOrder">Cancel</button>
-						<button class="btn btn-main btn-2g" name="page3" id="checkoutOrder">Checkout</button>
-						<button class="btn btn-main btn-2g" name="page4" id="addCustomer">Customer</button>
-						&nbsp;
-							<b>Advc : </b><input type="text" name="advance" value="<%=advanceAmt %>" id="advance" size="5"> &nbsp;
-							<b>Discount : </b><input type="text" name="discount" value="<%=discountAmt %>" id="discount" size="5"> 
-					</td>
-					<%
-				}else if(statusCode.equals("COMPLETED")){
-					%><td><button class="btn btn-main btn-2g" name="page4" id="printOrder">Print</button></td><%
-				}
-				%>
-				</tr>
-				</table>
-			</div>	
+							<td width="13%"><div style="font-size: 20px;">Balance
+									:</div></td>
+							<td width="20%"><div id="priceBalance"
+									style="font-size: 50px;"><%=String.format("%.2f", balanceAmt)%></div></td>
+						</tr>
+						<tr>
+							<br>
+							<td width="100%" colspan="6">
+
+								<button class="btn btn-main btn-2g" name="page1" id="saveOrder">Save</button>
+								<button class="btn btn-main btn-2g" name="page2"
+									id="cancelOrder">Cancel</button>
+								<button class="btn btn-main btn-2g" name="page3"
+									id="checkoutOrder">Checkout</button>
+								<button class="btn btn-main btn-2g" name="page4"
+									id="addCustomer">Customer</button>
+							</td>
+						</tr>
+
+
+					</table>
+				</div>	
 		</td>
 	</tr>
 </table>
