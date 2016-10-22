@@ -7,6 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<script src="<%=contextPath%>/resources/js/reports.js" type="text/javascript"></script>
 </head>
 <body>
 <%
@@ -42,7 +43,7 @@ String page1 = Utils.getString(request.getParameter("page1"));
 		</tr>
 		<tr align="center">
 			<td colspan="2">
-				<input class="btn btn-main btn-2g" type="submit" name="page1" id="page1" value="Submit">
+				<input class="btn btn-main btn-2g" type="submit" name="page1" id="page1" value="Submit" onclick="return validateStatusForm()">
 			</td>
 		</tr>
 	</table>
@@ -103,7 +104,7 @@ if(!page1.equals("")){
 							chartString += "<category label='" + key + "' labeltooltext='' />";
 							orderCountMap = dateMap.get(key);
 							%>
-								<tr>
+								<tr align="center">
 									<td><%=key %></td>
 									<%
 									for(String statusKey : statusMap.keySet()){

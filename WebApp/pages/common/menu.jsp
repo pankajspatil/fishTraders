@@ -33,7 +33,7 @@
 			<li onclick="openOrderPage()"><a
 				href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
 				
-			<li><a href='#'><span>Reports</span></a>
+			<li class='has-sub'><a href='#'><span>Reports</span></a>
 				<ul>
 					<li class='first-child'>
 						<a href='<%=request.getContextPath()%>/pages/reports/orderRevenue.jsp'><span>Revenue</span></a>
