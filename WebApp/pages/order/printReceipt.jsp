@@ -82,7 +82,12 @@ if(orderId != 0){
 		</tr><%
 	}
 
-	finalTotal = (subTotal * tax) + subTotal;
+	float advTotal = orderData.getAdvanceAmt();
+	float discTotal = orderData.getDiscountAmt();
+	
+	float balTotal = subTotal- advTotal - discTotal ;
+	
+	finalTotal = (balTotal * tax) + balTotal;
 	
 	%>
 	
@@ -100,6 +105,15 @@ if(orderId != 0){
 			<table width="100%" style="background: #D3D3D3; -webkit-print-color-adjust: exact;">
 				<tr>
 					<td><b>Sub Total : </b><%=subTotal %></td>
+				</tr>
+				<tr>
+					<td><b>Advance  : </b><%=advTotal %></td>
+				</tr>
+				<tr>
+					<td><b>Discount  : </b><%=discTotal %></td>
+				</tr>
+				<tr>
+					<td><b>Balance  : </b><%=balTotal %></td>
 				</tr>
 				<tr>
 					<td><b>Tax Rate : </b><%=tax %></td>
