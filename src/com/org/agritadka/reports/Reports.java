@@ -50,6 +50,38 @@ public class Reports {
 		return dateMap;
 	}
 	
+public LinkedHashMap<String, String> getRevenueData(String fromDate, String toDate, String reportType) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String format = reportType.equalsIgnoreCase("month") ? "%b-%y" : "%d-%b-%y";
+		String orderByFormat = reportType.equalsIgnoreCase("month") ? "%Y-%m" : "%Y-%m-%d";
+		
+		String query = "select s.status_id, sum(ifnull(unit_price,0)) - sum(ifnull(discount_amt,0)) as amount, "
+					+ "date_format(o.created_on, '"+ format +"') as reportKey "
+					+ "from order_master o inner join status_master s on o.status_id = s.status_id "
+					+ "inner join order_menu_map om on om.order_id = o.order_id and om.is_active = 1 "
+					+ "and o.created_on between ? AND ? and status_code = 'COMPLETED'group by reportKey "
+					+ "order by date_format(o.created_on, '"+orderByFormat+"') desc";
+		
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setString(1, fromDate + " 00:00:00");
+		psmt.setString(2, toDate + " 23:59:59");
+		
+		ResultSet dataRS = psmt.executeQuery();
+		LinkedHashMap<String, String> revenueMap = new LinkedHashMap<String, String>();
+		
+		while(dataRS.next()){
+
+			revenueMap.put(dataRS.getString("reportKey"), dataRS.getString("amount"));
+			
+		}
+
+		connectionsUtil.closeConnection(conn);
+		return revenueMap;
+	}
+	
 	public LinkedHashMap<String, String> getActiveStatus() throws SQLException{
 		
 		LinkedHashMap<String, String> statusMap = new LinkedHashMap<String, String>();

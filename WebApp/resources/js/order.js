@@ -273,6 +273,14 @@ function saveOrder(){
 
 function checkoutOrder(){
 	
+	if($('#orderId').val() == 0){
+		Lobibox.alert("warning",{
+			msg : 'Order without order ID cannot be checked out.'
+		});
+		$('#rightCell').LoadingOverlay("hide");
+		return false;
+	}
+	
 	var count = 0; 
 	$.each(menuList, function(key, value) {
 		  count++;
@@ -540,6 +548,14 @@ function cancelOrder(buttonObj){
             if (type === 'yes') {
             	
             	$('#rightCell').LoadingOverlay("show");
+            	
+            	if($('#orderId').val() === 0){
+            		Lobibox.alert("warning",{
+            			msg : 'Order without order ID cannot be cancelled.'
+            		});
+            		$('#rightCell').LoadingOverlay("hide");
+            		return false;
+            	}
             	
             	var data = {
             			"orderId" : $('#orderId').val()
