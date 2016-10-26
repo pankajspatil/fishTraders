@@ -59,7 +59,7 @@ function moveRow(buttonObj) {
 	    	 error: function (xhr, status) { 
 	    		 console.log('ajax error = ' + xhr.statusText);
 	    		 	Lobibox.alert("error",{
-	    				msg : 'Something went wrong.'
+	    				msg : 'Something went wrong. Please relogin again.'
 	    			});
 	            } 
 	});
@@ -168,7 +168,7 @@ function callback() {
 	    		 $('#' + divId).LoadingOverlay("hide");
 	    		 console.log('ajax error = ' + xhr.statusText);
 	    		 	Lobibox.alert("error",{
-	    				msg : 'Something went wrong.'
+	    				msg : 'Something went wrong. Please relogin again.'
 	    			});
 	            } 
 	});

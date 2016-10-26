@@ -24,7 +24,7 @@ Integer orderId = Utils.getInt(request.getParameter("orderId"));
 
 if(orderId != 0){
 	Order order = new Order();
-	OrderData orderData = order.getOrderData(null, null, orderId);
+	OrderData orderData = order.getPrintOrderData(null, null, orderId);
 %>
 
 <table width="100%">
@@ -42,7 +42,7 @@ if(orderId != 0){
 <table width="100%">
 	<tr>
 		<td width="60%"><b>Order No : </b><%=orderData.getOrderId()%></td>
-		<td><b>Date : </b>2016-10-11 12:53:57</td>
+		<td><b>Date : </b><%=orderData.getDateTime()%></td>
 	</tr>
 		<%
 			if (orderData.getCustName() != null) {

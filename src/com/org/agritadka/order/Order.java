@@ -260,7 +260,7 @@ public class Order {
 				"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 				"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
 				"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id";
-		//System.out.println("query==>" + query);
+		System.out.println("query==>" + query);
 		
 		dataRS = conn.createStatement().executeQuery(query);
 		
@@ -323,6 +323,77 @@ public class Order {
 		connectionsUtil.closeConnection(conn);
 		
 		//System.out.println("orderData===>" + orderData.toString());
+		
+		return orderData;
+	}
+	
+public OrderData getPrintOrderData(Integer tableId, String userId, Integer orderId) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		int count = 0;
+		ResultSet dataRS = null;
+		String query = "";
+		OrderData orderData = new OrderData();
+		
+		if(tableId != null || orderId != null){
+		
+		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, sum(om.quantity) quantity, sum(om.unit_price) unit_price, "+
+						"sum(om.order_price) order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id, "+ 
+						"o.customer_name, o.mobile_number, o.customer_address, o.tax, o.advance_amt, o.discount_amt, o.created_on "+
+						"from order_master o inner join status_master s on o.status_id = s.status_id ";
+		
+		if(tableId != null){
+			query += "and s.status_code = 'INQUEUE' and o.table_id = "+ tableId +" ";
+		}else if(orderId != null){
+			query += "and o.order_id = "+ orderId +" ";
+		}
+						
+		query += "left join order_menu_map om on o.order_id = om.order_id and om.is_active = 1 "+
+				"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
+				"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
+				"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id group by om.main_sub_menu_map_id";
+		//System.out.println("query==>" + query);
+		
+		dataRS = conn.createStatement().executeQuery(query);
+		
+		OrderMenu orderMenu;
+		List<OrderMenu> orderMenus = new ArrayList<OrderMenu>();
+		
+		while(dataRS.next()){
+			if(count == 0){
+				orderData.setOrderId(dataRS.getInt("order_id"));
+				orderData.setStatusCode(dataRS.getString("status_code"));
+				orderData.setWaiterName(dataRS.getString("waiter_id"));
+				orderData.setCustName(dataRS.getString("customer_name"));
+				orderData.setMobileNumber(dataRS.getString("mobile_number"));
+				orderData.setCustAddress(dataRS.getString("customer_address"));
+				orderData.setTaxRate(dataRS.getFloat("tax"));
+				orderData.setAdvanceAmt(dataRS.getFloat("advance_amt"));
+				orderData.setDiscountAmt(dataRS.getFloat("discount_amt"));
+				orderData.setDateTime(dataRS.getString("created_on"));
+			}
+			
+			if(dataRS.getString("main_sub_menu_map_id") != null){
+				orderMenu = new OrderMenu();
+				orderMenu.setMainSubMenuMapId(dataRS.getInt("main_sub_menu_map_id"));
+				orderMenu.setOrderMenuMapId(dataRS.getInt("order_menu_map_id"));
+				orderMenu.setQuantity(dataRS.getInt("quantity"));
+				orderMenu.setUnitPrice(dataRS.getFloat("unit_price"));
+				orderMenu.setFinalPrice(dataRS.getFloat("order_price"));
+				orderMenu.setNotes(dataRS.getString("notes"));
+				orderMenu.setSubMenuName(dataRS.getString("menu_name"));
+				
+				orderMenus.add(orderMenu);
+				orderData.setSelectedMenus(orderMenus);
+			}
+			count ++;
+		}
+		}
+			
+		connectionsUtil.closeConnection(conn);
+		
 		
 		return orderData;
 	}

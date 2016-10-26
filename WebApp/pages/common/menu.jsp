@@ -30,6 +30,9 @@
 						href='<%=request.getContextPath()%>/pages/master/tableMaster.jsp'><span>Table
 								Master</span></a></li>
 				</ul></li>
+			<li><a
+				href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking</span></a></li>
+			
 			<li onclick="openOrderPage()"><a
 				href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
 				
