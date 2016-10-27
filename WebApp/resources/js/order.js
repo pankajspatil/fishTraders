@@ -56,7 +56,7 @@ function addMenuToOrder(buttonObj){
     var quantityCell = $("<td></td>");
     quantityCell.append(combo);
     
-    var newRow = $("<tr id='"+randomNumber+"' align='center'></tr>");
+    var newRow = $("<tr id='"+randomNumber+"' title='random' align='center'></tr>");
     
     newRow.append($(clonedRow).find('td:nth-child(1)').removeAttr('width').attr("align","left"));
     if (notes.trim() == ''){
@@ -68,7 +68,7 @@ function addMenuToOrder(buttonObj){
     newRow.append(quantityCell);
     newRow.append("<td>"+unitPrice+"</td>");
     newRow.append("<td>"+finalPrice+"</td>");
-    newRow.append($("<img class='deleteIcon' src='/AgriTadka/resources/images/Delete.png' onclick='deleteRecord(this)'>"));
+    newRow.append($("<img class='deleteIcon' src='/AgriTadka/resources/images/Delete.png' onclick='deleteRecord(this,"+randomNumber+")'>"));
    
     //console.log(newRow);
 	
@@ -426,7 +426,7 @@ function setOldValue(selectObj){
 	oldSelectVal = $(selectObj).val();
 }
 
-function deleteRecord(imgObj){
+function deleteRecord(imgObj,randomnumber){
 	var lobibox = Lobibox.confirm({
 		msg: "Are you sure you want to delete this record?",
 		callback: function ($this, type) {
@@ -459,6 +459,7 @@ function deleteRecord(imgObj){
             		$('#priceFinal').effect("bounce",{},3000);
             		$('#priceBalance').effect("bounce",{},3000);*/
             		
+            		delete menuList[randomnumber]
             		updateAllPrices(subTotal);
             		
             		$(rowObj).find('td').fadeOut(500, function() {
