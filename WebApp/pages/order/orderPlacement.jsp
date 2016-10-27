@@ -131,6 +131,7 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 									%>
 									
 										<%=mapper.getSubMenu().getSubMenuName() %></td>
+										<td width="20%"><input type="text" title="Please enter text" id="note<%=mapper.getMainSubMenuId()%>"/></td>
 										<% if (mapper.getSubMenu().getUnitPrice()!=0) {%>
 									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
 									<% } else {
@@ -164,6 +165,7 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 			<table width="98%;" height="100%" border="0" align="center" id="orderedTable">
 				<tr class="headerTR">
 					<td>Menu</td>
+					<td>Note</td>
 					<td width="10%" style="border-right: thin;">Quantity</td>
 					<td width="15%">Unit Price</td>
 					<td width="15%">Total Price</td>
@@ -182,6 +184,7 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 									}
 									%>
 							<%=orderMenu.getSubMenuName() %></td>
+						<td>dsfdsfd<%=orderMenu.getNotes() %></td>
 						<td><select onChange='updatePrice(this)' onClick='setOldValue(this)'>
 							<%for(int i=1; i<=30; i++){
 								if(i == orderMenu.getQuantity()){

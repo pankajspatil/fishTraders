@@ -10,10 +10,11 @@ function addMenuToOrder(buttonObj){
 	
 	var menuId = menuRow.attr('id');
 	var quantity = 1;
-	var unitPrice = $(menuRow).find('td:nth-child(2)').text();
+	var unitPrice = $(menuRow).find('td:nth-child(3)').text();
 	if (unitPrice.trim() == ''){
 		unitPrice = document.getElementById('input'+menuId).value;
 	}
+	
 	
 	if(unitPrice.trim() == ''){
 		var paramMap = new Map();
@@ -24,6 +25,7 @@ function addMenuToOrder(buttonObj){
 		return false;
 	}
 	
+	
 	var finalPrice = parseFloat(quantity * unitPrice);
 	
 	var menu = {};
@@ -31,9 +33,15 @@ function addMenuToOrder(buttonObj){
 	menu.quantity = quantity;
 	menu.unitPrice = unitPrice;
 	menu.finalPrice = finalPrice;
-	menu.notes = '';
+	var  notes = document.getElementById('note'+menuId).value;
+	if (notes.trim() == ''){
+		notes = ' - ';
+	}
+	
+	menu.notes = notes;
 	menu.orderId = $('#orderId').val();
 	
+	 	
 	var randomNumber = (Math.floor(1000 + Math.random() * 9000)).toString();
 	randomNumber = randomNumber.substring(-2);
 	
@@ -51,6 +59,7 @@ function addMenuToOrder(buttonObj){
     var newRow = $("<tr id='"+randomNumber+"' align='center'></tr>");
     
     newRow.append($(clonedRow).find('td:nth-child(1)').removeAttr('width').attr("align","left"));
+    newRow.append(notes);
     newRow.append(quantityCell);
     newRow.append("<td>"+unitPrice+"</td>");
     newRow.append("<td>"+finalPrice+"</td>");
