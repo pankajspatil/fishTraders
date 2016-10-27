@@ -35,7 +35,7 @@ function addMenuToOrder(buttonObj){
 	menu.finalPrice = finalPrice;
 	var  notes = document.getElementById('note'+menuId).value;
 	if (notes.trim() == ''){
-		notes = ' - ';
+		//notes = ' - ';
 	}
 	
 	menu.notes = notes;
@@ -59,7 +59,12 @@ function addMenuToOrder(buttonObj){
     var newRow = $("<tr id='"+randomNumber+"' align='center'></tr>");
     
     newRow.append($(clonedRow).find('td:nth-child(1)').removeAttr('width').attr("align","left"));
-    newRow.append(notes);
+    if (notes.trim() == ''){
+    	newRow.append('-');
+     }else{
+		newRow.append(notes);
+	    	
+	}
     newRow.append(quantityCell);
     newRow.append("<td>"+unitPrice+"</td>");
     newRow.append("<td>"+finalPrice+"</td>");

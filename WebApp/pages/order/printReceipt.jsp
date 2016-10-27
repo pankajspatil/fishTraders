@@ -75,7 +75,7 @@ if(orderId != 0){
 	<%for(OrderMenu orderMenu : orderData.getSelectedMenus()){
 		subTotal += orderMenu.getFinalPrice();
 		%><tr>
-			<td><%=orderMenu.getSubMenuName() %></td>
+			<td><%=orderMenu.getSubMenuName() %>&nbsp<%=orderMenu.getNotes() %></td>
 			<td><%=orderMenu.getQuantity()%></td>
 			<td><%=orderMenu.getUnitPrice()%></td>
 			<td><%=orderMenu.getFinalPrice() %></td>
