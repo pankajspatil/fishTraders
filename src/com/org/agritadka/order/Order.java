@@ -341,7 +341,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		
 		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, sum(om.quantity) quantity, sum(om.unit_price) unit_price, "+
 						"sum(om.order_price) order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id, "+ 
-						"o.customer_name, o.mobile_number, o.customer_address, o.tax, o.advance_amt, o.discount_amt, o.created_on "+
+						"o.customer_name, o.mobile_number, o.customer_address, o.tax, o.advance_amt, o.discount_amt, DATE_FORMAT(o.created_on,'%d %b %Y %T') created_on "+
 						"from order_master o inner join status_master s on o.status_id = s.status_id ";
 		
 		if(tableId != null){
@@ -354,7 +354,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 				"left join main_sub_menu_map msm on msm.main_sub_menu_map_id = om.main_sub_menu_map_id "+
 				"left join main_menu_master mm on mm.main_menu_id = msm.main_menu_id "+
 				"left join sub_menu_master sm on msm.sub_menu_id = sm.sub_menu_id group by om.main_sub_menu_map_id";
-		//System.out.println("query==>" + query);
+		System.out.println("query==>" + query);
 		
 		dataRS = conn.createStatement().executeQuery(query);
 		
