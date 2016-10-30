@@ -10,7 +10,7 @@
 <% String Contextpath = request.getContextPath();
     	ArrayList<String> menulist = session.getAttribute("menu") != null ? (ArrayList<String>) session.getAttribute("menu") : new ArrayList<String>();
     	
-    	System.out.println("menulist===>" + menulist);
+    	//System.out.println("menulist===>" + menulist);
 	%>
 <body>
 	<input type="hidden" id="contextPath"
@@ -43,11 +43,22 @@
 			<%
 				if (menulist.contains("Master")) {
 			%>
-			<li><a href='#'><span>Master</span></a>
+			<li class='has-sub'><a href='#'><span>Master</span></a>
 				<ul>
 					<li class='first-child'><a
 						href='<%=request.getContextPath()%>/pages/master/tableMaster.jsp'><span>Table
 								Master</span></a></li>
+					<li class='has-sub'><a href='#'><span>Food Menu</span></a>
+						<ul>
+							<li class='first-child'><a
+								href='<%=request.getContextPath()%>/pages/master/addFoodCategories.jsp'><span>Categories</span></a></li>
+							<li>
+								<a href='<%=request.getContextPath()%>/pages/master/addFoodDishes.jsp'>
+									<span>Dishes</span>
+								</a>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</li>
 			<% } %>
