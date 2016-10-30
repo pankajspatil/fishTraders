@@ -31,6 +31,8 @@
 		if(userId != 0){
 			session.setAttribute(Constants.USER_ID, userId);
 			session.setAttribute(Constants.USER_NAME, userName);
+			List<String> list = login.getUserMenu(userName);
+			session.setAttribute("menu", list);
 			response.sendRedirect(request.getContextPath()+"/pages/common/home.jsp");
 		}
 		login = null;

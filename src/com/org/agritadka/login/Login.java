@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 
 import com.org.agritadka.generic.ConnectionsUtil;
@@ -342,5 +344,38 @@ public Boolean isValidUserPassword(LinkedHashMap<String, String> paramMap){
 	
 	return false;
 }
+
+public List<String> getUserMenu(String username) {
+
+	PreparedStatement psm = null;
+	List<String> menuList = new ArrayList<String>();
+	try {
+		connectionsUtil = new ConnectionsUtil();
+		conn = connectionsUtil.getConnection();
+
+		String query = "select mm.menu_description from role_master rm,"
+				+ "role_menu_map rmm,user_menu_master mm,user_master um 	where 	 "
+				+ "rm.role_id = rmm.role_id and 	 um.Role_Id = rm.role_id and 	 "
+				+ "mm.menu_id = rmm.menu_id and "
+				+ " ucase(um.user_name)=ucase(?)";
+		
+		System.out.println(query);
+		psm = conn.prepareStatement(query);
+		psm.setString(1, username);
+
+		rs = psm.executeQuery();
+		while (rs.next()) {
+			menuList.add(rs.getString(1));
+		}
+
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	} finally {
+		connectionsUtil.closeConnection(psm);
+	}
+
+	return menuList;
+}
+
 
 }
