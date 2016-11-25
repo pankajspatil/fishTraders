@@ -12,7 +12,8 @@
 </head>
 <body>
 <%
-//out.println("MenuId" + request.getParameter("mainMenuId"));
+
+System.out.println("FoodCategories Page");
 
 Master master = new Master();
 Integer mainMenuId = Utils.getInt(request.getParameter("mainMenuId"));
@@ -22,9 +23,9 @@ String userId = session.getAttribute(Constants.USER_ID).toString();
 MainMenu mainMenu = null;
 String menuName = "", descritpion = "";
 Boolean foodType, active;
-String submitText = mainMenuId.equals("0") ? "ADD" : "UPDATE";
+String submitText = mainMenuId == 0 ? "ADD" : "UPDATE";
 
-if(page1.equals("") && !mainMenuId.equals("0")){
+if(page1.equals("") && mainMenuId != 0){
 	mainMenu = master.getMainMenu(mainMenuId);
 	
 	menuName = Utils.getString(mainMenu.getMainMenuName());
@@ -54,7 +55,8 @@ if(page1.equals("") && !mainMenuId.equals("0")){
 		master.updateMainMenu(mainMenu, userId);
 		message = "Record Updated Successfully.";
 	}
-	
+	if(!page1.equals("")){
+		
 	%>
 	<script type="text/javascript">
 	Lobibox.alert("success",{
@@ -64,7 +66,8 @@ if(page1.equals("") && !mainMenuId.equals("0")){
         }
 	});
 	</script>
-	<%	
+	<%
+	}
 }
 
 %>

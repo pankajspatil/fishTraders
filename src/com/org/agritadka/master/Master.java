@@ -122,6 +122,38 @@ public class Master {
 		return mainMenu;
 	}
 	
+	
+public List<SubMenu> getAllSubMenus(boolean onlyActive) throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select * from sub_menu_master ";
+		if(onlyActive){
+			query += "where is_active = 1";
+		}
+		
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		List<SubMenu> subMenuList = new ArrayList<SubMenu>();
+		SubMenu subMenu = null;
+		
+		while(dataRS.next()){
+			subMenu = new SubMenu();
+			
+			subMenu.setSubMenuId(dataRS.getInt("sub_menu_id"));
+			subMenu.setSubMenuName(dataRS.getString("menu_name"));
+			subMenu.setVeg(dataRS.getBoolean("is_veg"));
+			subMenu.setMenuDescription(Utils.getString(dataRS.getString("menu_description")));
+			subMenu.setActive(dataRS.getBoolean("is_active"));
+			subMenu.setAcUnitPrice(dataRS.getFloat("ac_unit_price"));
+			subMenu.setNonAcUnitPrice(dataRS.getFloat("non_ac_unit_price"));
+			
+			subMenuList.add(subMenu);
+		}
+		
+		return subMenuList;
+	}
+	
 public List<MenuMapper> getMenuMappings(boolean onlyActive) throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
@@ -170,7 +202,7 @@ public List<MenuMapper> getMenuMappings(boolean onlyActive) throws SQLException{
 		return menuMapperList;
 	}
 
-public List<MenuMapper> getAllSubMenus(boolean onlyActive) throws SQLException{
+public List<MenuMapper> getAllSubMenus1(boolean onlyActive) throws SQLException{
 	
 	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 	Connection conn = connectionsUtil.getConnection();

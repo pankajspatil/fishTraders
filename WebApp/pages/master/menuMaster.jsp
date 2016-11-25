@@ -1,3 +1,5 @@
+<%@page import="com.org.agritadka.order.Order"%>
+<%@page import="java.util.LinkedHashMap"%>
 <%@page import="com.org.agritadka.transfer.MenuMapper"%>
 <%@page import="com.org.agritadka.transfer.SubMenu"%>
 <%@page import="com.org.agritadka.master.Master"%>
@@ -143,7 +145,15 @@
 <%
 	Master master = new Master();
 	List<MainMenu> mainMenuList = master.getAllMainMenus(false);
-	List<MenuMapper> menuMapperList = master.getAllSubMenus(false);
+	List<SubMenu> subMenuList = master.getAllSubMenus(false);
+	
+	String priceType = Utils.getString(request.getParameter("priceType")).equals("") ? "non_ac" 
+			: Utils.getString(request.getParameter("priceType"));
+	
+	Order order = new Order();
+	LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
+	
+	//List<MenuMapper> menuMapperList = master.getAllSubMenus(false);
 %>
 
 <div style="float: right; margin-right: 1%">
@@ -195,7 +205,7 @@
 			<table id="subMenuTable" border="0" width="100%">
 				<thead>
 					<tr class="headerTR">
-						<td width="15%">Category</td>
+						<!-- <td width="15%">Category</td> -->
 						<td width="15%">Menu Name</td>
 						<td width="25%">Description</td>
 						<td width="10%">Veg/Non Veg</td>
@@ -207,20 +217,20 @@
 				</thead>
 				<tbody>
 					<%
-						for(MenuMapper menuMapper : menuMapperList){
+						for(SubMenu subMenu : subMenuList){
 							%><tr style="font-size: 15px;">
-								<td><%=menuMapper.getMainMenu().getMainMenuName() %></td>
-								<td><%=menuMapper.getSubMenu().getSubMenuName() %></td>
-								<td><%=menuMapper.getSubMenu().getMenuDescription() %></td>
-								<td align="center"><%=menuMapper.getSubMenu().isVeg() ? "Veg" : "Non Veg" %></td>
-								<td align="center"><%=menuMapper.getSubMenu().getAcUnitPrice() %></td>
-								<td align="center"><%=menuMapper.getSubMenu().getNonAcUnitPrice() %></td>
-								<td align="center"><%=menuMapper.getSubMenu().isActive() ? "True" : "False" %></td>
+								<%-- <td><%=menuMapper.getMainMenu().getMainMenuName() %></td> --%>
+								<td><%=subMenu.getSubMenuName() %></td>
+								<td><%=subMenu.getMenuDescription() %></td>
+								<td align="center"><%=subMenu.isVeg() ? "Veg" : "Non Veg" %></td>
+								<td align="center"><%=subMenu.getAcUnitPrice() %></td>
+								<td align="center"><%=subMenu.getNonAcUnitPrice() %></td>
+								<td align="center"><%=subMenu.isActive() ? "True" : "False" %></td>
 								<td>
 									<img style="margin-left: 40%" height="22%" src="/AgriTadka/resources/images/edit.png" 
-									id="subMenu_<%=menuMapper.getMainSubMenuId()%>" name="editMenu">
+									id="subMenu_<%=subMenu.getSubMenuId()%>" name="editMenu">
 									<img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" 
-									id="subMenu_<%=menuMapper.getMainSubMenuId()%>" name="deleteMenu">
+									id="subMenu_<%=subMenu.getSubMenuId()%>" name="deleteMenu">
 								</td>		
 							</tr><%
 						}
@@ -231,9 +241,75 @@
 		</div>
 		<div id="menuMapping">
 			<div class="ui-widget ui-helper-clearfix">
+			
+
+			
  
 <ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
-  <li class="ui-widget-content ui-corner-tr">
+
+<div class="bwl_acc_container scroll accordionDiv" id="accordion_1" style="width: 98%; /* border:1px solid black; */">
+    			<div class="accordion_search_container">
+        				<input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
+        		</div>
+
+			<div class="search_result_container"></div>
+		<%
+			//out.println(menuMap.size());
+			if(menuMap.size() > 0){
+				List<MenuMapper> mappers = new ArrayList();
+				for(MainMenu mainMenu : menuMap.keySet()){
+					mappers = menuMap.get(mainMenu);
+					
+					
+					%>
+					<section>
+					<h2 class="acc_title_bar">
+						<a href="#"><%=mainMenu.getMainMenuName() %></a>
+					</h2>
+					<div class="acc_container">
+						<div class="block" style="overflow: auto;">
+						<%if(mappers.size() > 0){
+							%><table width="100%" border="0">
+							<%for(MenuMapper mapper : mappers){ %>
+								<tr id="<%=mapper.getMainSubMenuId()%>" align="center">
+									<td width="80%" align="left" style="">
+									<%if(mapper.getSubMenu().isVeg()){
+										%><img width="2%" height="1%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
+									}else{
+										%><img width="2%" height="1%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
+									}
+									%>
+									
+										<%=mapper.getSubMenu().getSubMenuName() %></td>
+										<td width="20%"><input type="text" title="Please enter text" id="note<%=mapper.getMainSubMenuId()%>"/></td>
+										<% if (mapper.getSubMenu().getUnitPrice()!=0) {%>
+									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
+									<% } else {
+										%><td width="20%"><input type="text" size="4" id="input<%=mapper.getMainSubMenuId()%>"> </td>
+									<% }%>
+									<td width="10%">
+										<!-- <button type="button" class="btnPlus btn-success">
+					                  		<span class="glyphicon glyphicon-plus"><b>+</b></span>
+					              		</button> -->
+										<input type="button" value="ADD" onclick="addMenuToOrder(this)">
+									</td>
+								</tr>
+								<%} %>
+							</table><%
+						}%>
+							
+						</div>
+					</div>
+					</section>
+					<%
+						}
+						}
+					%>
+
+			
+		</div>
+
+  <!-- <li class="ui-widget-content ui-corner-tr">
     <h5 class="ui-widget-header">High Tatras</h5>
     <img src="images/high_tatras_min.jpg" alt="The peaks of High Tatras" width="96" height="72">
     <a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
@@ -256,7 +332,7 @@
     <img src="images/high_tatras4_min.jpg" alt="On top of Kozi kopka" width="96" height="72">
     <a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
     <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-  </li>
+  </li> -->
 </ul>
  
 <div id="trash" class="ui-widget-content ui-state-default">
@@ -267,5 +343,6 @@
 		</div>
 	</div>
 <script src="<%=contextPath%>/resources/js/masters.js" type="text/javascript"></script>
+<script type="text/javascript" src="<%=contextPath%>/resources/js/order.js"></script>
 </body>
 </html>

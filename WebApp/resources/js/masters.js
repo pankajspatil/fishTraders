@@ -39,6 +39,7 @@ $(document).ready(function() {
 	   $('img[name=deleteMenu]').click(function(e){
 		   deleteMenuRecord(this);
 		});
+	   
 });
 
 function openMenuFancyBox(menuId, menuType, obj){
