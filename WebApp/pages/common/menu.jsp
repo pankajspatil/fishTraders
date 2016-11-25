@@ -51,7 +51,7 @@
 					<li class='has-sub'><a href='#'><span>Food Menu</span></a>
 						<ul>
 							<li class='first-child'><a
-								href='<%=request.getContextPath()%>/pages/master/addFoodCategories.jsp'><span>Categories</span></a></li>
+								href='<%=request.getContextPath()%>/pages/master/menuMaster.jsp'><span>Food Menu</span></a></li>
 							<li>
 								<a href='<%=request.getContextPath()%>/pages/master/addFoodDishes.jsp'>
 									<span>Dishes</span>

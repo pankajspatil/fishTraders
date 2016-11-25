@@ -23,6 +23,11 @@ tr td {
 .mainTR{
 	text-align: center;
 } */
+
+.rowBorder tr td {
+	border: 1px solid black;
+}
+
 .mainBGnFont {
 	background-color: #2d97af;
 	color: white;
@@ -299,7 +304,7 @@ table.dataTable tbody tr:nth-child(2n) { background-color:#c0c0c0 } */
 }
 
 .tab a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .tab.active {
@@ -320,4 +325,7 @@ table.dataTable tbody tr:nth-child(2n) { background-color:#c0c0c0 } */
 	padding: 10px;
 	-moz-border-radius: 0 4px 4px 4px;
 	-webkit-border-radius: 0 4px 4px 4px;
+}
+.ui-tabs-selected{
+	background: #2d9fd0;
 }

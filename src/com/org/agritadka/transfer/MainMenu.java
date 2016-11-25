@@ -6,8 +6,12 @@ public class MainMenu {
 
 	private String mainMenuName;
 	
+	private String menuDescription;
+	
 	private boolean isVeg;
 	
+	private boolean isActive;
+
 	public Integer getMainMenuId() {
 		return mainMenuId;
 	}
@@ -24,6 +28,14 @@ public class MainMenu {
 		this.mainMenuName = mainMenuName;
 	}
 
+	public String getMenuDescription() {
+		return menuDescription;
+	}
+
+	public void setMenuDescription(String menuDescription) {
+		this.menuDescription = menuDescription;
+	}
+
 	public boolean isVeg() {
 		return isVeg;
 	}
@@ -32,12 +44,18 @@ public class MainMenu {
 		this.isVeg = isVeg;
 	}
 
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public String toString() {
 		return "MainMenu [mainMenuId=" + mainMenuId + ", mainMenuName="
-				+ mainMenuName + ", isVeg=" + isVeg + "]";
+				+ mainMenuName + ", menuDescription=" + menuDescription
+				+ ", isVeg=" + isVeg + ", isActive=" + isActive + "]";
 	}
-	
-	
-	
 }

@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<!-- <link rel="stylesheet" type="text/css" href="/AgriTadka/resources/css/print.css" media="print"> -->
+<link rel="stylesheet" type="text/css" href="/AgriTadka/resources/css/print.css" media="print">
 <style type="text/css" media="print">
 @page {
     size: auto;   /* auto is the initial value */

@@ -6,10 +6,18 @@ public class SubMenu {
 	
 	private String subMenuName;
 	
+	private String menuDescription;
+	
+	private Float acUnitPrice;
+	
+	private Float nonAcUnitPrice;
+	
 	private boolean isVeg;
 	
-	private Float unitPrice;
+	private boolean isActive;
 	
+	private Float unitPrice;
+
 	public Integer getSubMenuId() {
 		return subMenuId;
 	}
@@ -26,6 +34,30 @@ public class SubMenu {
 		this.subMenuName = subMenuName;
 	}
 
+	public String getMenuDescription() {
+		return menuDescription;
+	}
+
+	public void setMenuDescription(String menuDescription) {
+		this.menuDescription = menuDescription;
+	}
+
+	public Float getAcUnitPrice() {
+		return acUnitPrice;
+	}
+
+	public void setAcUnitPrice(Float acUnitPrice) {
+		this.acUnitPrice = acUnitPrice;
+	}
+
+	public Float getNonAcUnitPrice() {
+		return nonAcUnitPrice;
+	}
+
+	public void setNonAcUnitPrice(Float nonAcUnitPrice) {
+		this.nonAcUnitPrice = nonAcUnitPrice;
+	}
+
 	public boolean isVeg() {
 		return isVeg;
 	}
@@ -33,7 +65,7 @@ public class SubMenu {
 	public void setVeg(boolean isVeg) {
 		this.isVeg = isVeg;
 	}
-	
+
 	public Float getUnitPrice() {
 		return unitPrice;
 	}
@@ -42,9 +74,20 @@ public class SubMenu {
 		this.unitPrice = unitPrice;
 	}
 
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public String toString() {
 		return "SubMenu [subMenuId=" + subMenuId + ", subMenuName="
-				+ subMenuName + ", isVeg=" + isVeg + ", unit_price=" + unitPrice + "]";
+				+ subMenuName + ", menuDescription=" + menuDescription
+				+ ", acUnitPrice=" + acUnitPrice + ", nonAcUnitPrice="
+				+ nonAcUnitPrice + ", isVeg=" + isVeg + ", isActive="
+				+ isActive + ", unitPrice=" + unitPrice + "]";
 	}
 }

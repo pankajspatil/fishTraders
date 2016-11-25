@@ -1,3 +1,4 @@
+<%@page import="com.org.agritadka.master.Master"%>
 <%@page import="com.org.agritadka.transfer.Cooking"%>
 <%@page import="java.util.List"%>
 <%@page import="com.org.agritadka.generic.Constants"%>
@@ -22,6 +23,7 @@ try{
 	String data = Utils.getString(request.getParameter("data"));
 	
 	Order order = new Order();
+	Master master = new Master();
 	Integer returnValue = new Integer(0);
 	
 	if(action.equals("saveOrder")){
@@ -53,7 +55,11 @@ try{
 	}else if(action.equals("updateCustomer")){
 			returnValue = order.updateCustomerInOrder(data);
 			out.println(returnValue);
+	}else if(action.equals("deleteMenu")){
+		returnValue = order.updateCustomerInOrder(data);
+		out.println(returnValue);
 	}
+	
 }catch (Exception ex){
 	System.out.println("Error while processing data for "+action);
 	ex.printStackTrace();
