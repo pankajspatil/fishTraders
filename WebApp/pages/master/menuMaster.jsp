@@ -309,7 +309,7 @@
 			
 		</div>
 
-  <!-- <li class="ui-widget-content ui-corner-tr">
+  <li class="ui-widget-content ui-corner-tr">
     <h5 class="ui-widget-header">High Tatras</h5>
     <img src="images/high_tatras_min.jpg" alt="The peaks of High Tatras" width="96" height="72">
     <a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
@@ -332,7 +332,7 @@
     <img src="images/high_tatras4_min.jpg" alt="On top of Kozi kopka" width="96" height="72">
     <a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
     <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-  </li> -->
+  </li>
 </ul>
  
 <div id="trash" class="ui-widget-content ui-state-default">
