@@ -103,37 +103,37 @@ if(orderId != 0){
 		</td>
 		<td width="30%" colspan="2" valign="top"><hr/>
 			<table width="100%" style="background: #D3D3D3; -webkit-print-color-adjust: exact;">
-				<tr>
-					<td><b>Sub Total : </b><%=subTotal %></td>
-				</tr>
-				<tr>
-					<td><b>Advance  : </b><%=advTotal %></td>
-				</tr>
-				<tr>
-					<td><b>Discount  : </b><%=discTotal %></td>
-				</tr>
-				<tr>
-					<td><b>Balance  : </b><%=balTotal %></td>
-				</tr>
-				<tr>
-					<td><b>Tax Rate : </b><%=tax %></td>
-				</tr>
-				<tr>
+<!-- 				<tr> -->
+<%-- 					<td><b>Sub Total : </b><%=subTotal %></td> --%>
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<%-- 					<td><b>Advance  : </b><%=advTotal %></td> --%>
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<%-- 					<td><b>Discount  : </b><%=discTotal %></td> --%>
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<%-- 					<td><b>Balance  : </b><%=balTotal %></td> --%>
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<%-- 					<td><b>Tax Rate : </b><%=tax %></td> --%>
+<!-- 				</tr> -->
+<!-- 				<tr> -->
 					<td><b>Final Total : </b><%=finalTotal %></td>
 				</tr>
 			</table>
 		</td>
 	</tr>
 	<%}%>
-		<tr>
-			<td colspan="4" align="center"><h4>We do not use msg
-					(aginomotto).Veg and Non-Veg are prepared Separately.</h4></td>
-		</tr>
-		<tr>
-			<td colspan="4" align="center"><h4>Please guive us atleast
-					45 min to deliver order at home. It takes tima & efforts to make
-					good food so bare with us.</h4></td>
-		</tr>
+<!-- 		<tr> -->
+<!-- 			<td colspan="4" align="center"><h4>We do not use msg -->
+<!-- 					(aginomotto).Veg and Non-Veg are prepared Separately.</h4></td> -->
+<!-- 		</tr> -->
+<!-- 		<tr> -->
+<!-- 			<td colspan="4" align="center"><h4>Please guive us atleast -->
+<!-- 					45 min to deliver order at home. It takes tima & efforts to make -->
+<!-- 					good food so bare with us.</h4></td> -->
+<!-- 		</tr> -->
 
 		<tr>
 			<td colspan="4" align="center"><h3>**** Visit Again ****</h3></td>

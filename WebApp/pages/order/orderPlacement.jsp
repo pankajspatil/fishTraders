@@ -184,7 +184,7 @@ System.out.println("waiter Id ==> "+ orderData.getWaiterName());
 									}
 									%>
 							<%=orderMenu.getSubMenuName() %></td>
-						<td>dsfdsfd<%=orderMenu.getNotes() %></td>
+						<td><%=orderMenu.getNotes() %></td>
 						<td><select onChange='updatePrice(this)' onClick='setOldValue(this)'>
 							<%for(int i=1; i<=30; i++){
 								if(i == orderMenu.getQuantity()){

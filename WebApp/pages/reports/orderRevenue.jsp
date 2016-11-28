@@ -1,4 +1,4 @@
-<%@page import="java.util.LinkedHashMap"%>
+<%@page import="java.util.LinkedHashMap,java.text.*,java.util.Date"%>
 <%@page import="com.org.agritadka.reports.Reports"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -16,6 +16,13 @@ String toDate = Utils.getString(request.getParameter("toDate"));
 String reportType = Utils.getString(request.getParameter("reportType"));
 
 String page1 = Utils.getString(request.getParameter("page1"));
+if (fromDate.equals("") && page1.equals("")){
+	 String pattern = "yyyy-MM-dd"; 
+	 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern); 
+	 String date = simpleDateFormat.format(new Date());
+	 fromDate = date;
+	 toDate = date;
+	}
 %>
 
 <h2 align="center">Revenue Report</h2>
@@ -34,7 +41,7 @@ String page1 = Utils.getString(request.getParameter("page1"));
 		</tr>
 		<tr align="center">
 			<td colspan="2">
-				<input type="radio" name="reportType" id="day" value="day" 
+				<input type="radio" name="reportType" id="day" value="day"  
 				<%=reportType.equals("day") ? "checked = checked" : "" %>> Day Wise
 				&nbsp;
 				<input type="radio" name="reportType" id="day" value="month"

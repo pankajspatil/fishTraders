@@ -106,7 +106,7 @@ function addMenuToOrder(buttonObj){
 }
 
 function updatePrice(selectObj){
-	
+	//alert("Pankaj");
 	var rowObj = $(selectObj).closest('tr');
 	var id = $(rowObj).attr("id");	
 	var orderMenuMapId = rowObj.find("input:hidden").attr("id");
@@ -440,7 +440,7 @@ function deleteRecord(imgObj,randomnumber){
             	
             	if(orderMenuMapId === undefined){
             		
-            		var finalPrice = parseFloat($(rowObj).find('td:nth-child(4)').text());
+            		var finalPrice = parseFloat($(rowObj).find('td:nth-child(5)').text());
             		var subTotal = parseFloat($('#priceTotal').text());
             		
             		subTotal = (subTotal - finalPrice);

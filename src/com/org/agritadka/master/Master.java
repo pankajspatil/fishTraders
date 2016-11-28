@@ -73,6 +73,35 @@ public class Master {
 		return mainMenu;
 	}
 	
+	public SubMenu getSubMenu(Integer subMenuId) throws SQLException{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select * from sub_menu_master where sub_menu_id = ?";
+		
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setInt(1, subMenuId);
+				
+		ResultSet dataRS = psmt.executeQuery();
+		SubMenu subMenu = null;
+		
+		while(dataRS.next()){
+			subMenu = new SubMenu();
+			
+			subMenu.setSubMenuId(dataRS.getInt("sub_menu_id"));
+			subMenu.setSubMenuName(dataRS.getString("menu_name"));
+			subMenu.setAcUnitPrice(dataRS.getFloat("ac_unit_price"));
+			subMenu.setNonAcUnitPrice(dataRS.getFloat("non_ac_unit_price"));
+			subMenu.setVeg(dataRS.getBoolean("is_veg"));
+			subMenu.setMenuDescription(Utils.getString(dataRS.getString("menu_description")));
+			subMenu.setActive(dataRS.getBoolean("is_active"));
+			
+		}
+		
+		connectionsUtil.closeConnection(dataRS);
+		return subMenu;
+	}
+	
 	public MainMenu insertMainMenu(MainMenu mainMenu, String userId) throws SQLException{
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
@@ -120,6 +149,31 @@ public class Master {
 		connectionsUtil.closeConnection(conn);
 		
 		return mainMenu;
+	}
+	
+	
+	public SubMenu updateSubMenu(SubMenu subMenu, String userId) throws SQLException{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "update sub_menu_master set menu_name = ?, menu_description = ?, is_veg =  ?,non_ac_unit_price=?,ac_unit_price=?, is_active = ?, created_by = ? where sub_menu_id = ?";
+		
+		PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		
+		
+		psmt.setString(1, subMenu.getSubMenuName());
+		psmt.setString(2, subMenu.getMenuDescription());
+		psmt.setBoolean(3, subMenu.isVeg());
+		psmt.setFloat(4, subMenu.getNonAcUnitPrice());
+		psmt.setFloat(5, subMenu.getAcUnitPrice());
+		psmt.setBoolean(6, subMenu.isActive());
+		psmt.setString(7, userId);
+		psmt.setInt(8, subMenu.getSubMenuId());
+		
+		psmt.executeUpdate();
+		connectionsUtil.closeConnection(conn);
+		
+		return subMenu;
 	}
 	
 	

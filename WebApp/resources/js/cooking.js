@@ -49,6 +49,7 @@ function moveRow(buttonObj) {
 	    		
 	    	  if(operation == 'Cook'){
 	    		  var btnObj = $(orderingRow).find('input:button').attr("value","Finish");
+	    		  btnObj.disabled=true;
 	    		  
 	    		  $('#cookedTable').DataTable().row.add(
 	    				 orderingRow
