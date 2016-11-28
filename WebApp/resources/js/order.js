@@ -737,7 +737,8 @@ jQuery(function ($) {
 $(document).ready(function() {
 	   var orderDashboard = $('#orderDashboard').DataTable({
 	    	"bSort" : true,
-	    	"paging" : true/*,
+	    	"paging" : true,
+	    	"order": [[ 1, "desc" ]]/*,
 	    	"pageLength": 15,
 	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
 	    });

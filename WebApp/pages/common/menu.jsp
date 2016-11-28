@@ -27,19 +27,12 @@
 			<%
 				if (menulist.contains("Order")) {
 			%>
-			<li class="has-sub"><a href='#'><span>Order</span></a>
-				<ul>
-					<li class='has-sub'><a href='#'><span>Dashboard</span></a>
-						<ul>
-							<li class='first-child'><a
-								href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking</span></a></li>
-							<li><a
-								href='<%=request.getContextPath()%>/pages/order/orderDashboard.jsp'><span>Order</span></a></li>
-
-						</ul></li>
-				</ul>
+			<li><a
+				href='<%=request.getContextPath()%>/pages/order/orderDashboard.jsp'><span>Order</span></a>
 			</li>
-			<% } %>
+			<%
+				}
+			%>
 			<%
 				if (menulist.contains("Master")) {
 			%>
