@@ -129,6 +129,35 @@ public class Master {
 		return mainMenu;
 	}
 	
+	public SubMenu insertSubMenu(SubMenu subMenu, String userId) throws SQLException{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "insert into sub_menu_master(menu_name, menu_description, is_veg,non_ac_unit_price,ac_unit_price, is_active, created_by) values(?,?,?,?,?,?,?)";
+		
+		PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		
+		
+		psmt.setString(1, subMenu.getSubMenuName());
+		psmt.setString(2, subMenu.getMenuDescription());
+		psmt.setBoolean(3, subMenu.isVeg());
+		psmt.setFloat(4, subMenu.getNonAcUnitPrice());
+		psmt.setFloat(5,subMenu.getAcUnitPrice());
+		psmt.setBoolean(6, subMenu.isActive());
+		psmt.setString(7, userId);
+		
+		psmt.executeUpdate();
+		
+		ResultSet dataRS = psmt.getGeneratedKeys();
+		if(dataRS.next()){
+			subMenu.setSubMenuId(dataRS.getInt(1));
+		}
+		
+		connectionsUtil.closeConnection(dataRS);
+		
+		return subMenu;
+	}
+	
 	public MainMenu updateMainMenu(MainMenu mainMenu, String userId) throws SQLException{
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();

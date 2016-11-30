@@ -41,13 +41,13 @@
 		subName = Utils.getString(request.getParameter("subName"));
 		descritpion = Utils.getString(request.getParameter("description"));
 		foodType = Boolean.parseBoolean(Utils.getString(request.getParameter("foodType")));
-		active = Boolean.parseBoolean(Utils.getString(request.getParameter("active")));
+		active = Boolean.parseBoolean(Utils.getInt(request.getParameter("active")).toString());
 		
 		System.out.print("foodType " +Utils.getString(request.getParameter("foodType")));
 		System.out.print("active " +request.getParameter("active"));
 		
-		acUnitPrice = Float.parseFloat(Utils.getString(request.getParameter("acUnitPrice")));
-		nonAcUnitPrice = Float.parseFloat(Utils.getString(request.getParameter("nonAcUnitPrice")));
+		acUnitPrice = Float.parseFloat(Utils.getFloat(request.getParameter("acUnitPrice")).toString());
+		nonAcUnitPrice = Float.parseFloat(Utils.getFloat(request.getParameter("nonAcUnitPrice")).toString());
 		
 		subMenu = new SubMenu();
 		subMenu.setSubMenuName(subName);
@@ -59,7 +59,7 @@
 		subMenu.setSubMenuId(subMenuId); 
 		
 		if(page1.equals("ADD")){
-			//master.insertSubMenu(subMenu, userId);
+			master.insertSubMenu(subMenu, userId);
 		}else if(page1.equals("UPDATE")){
 			master.updateSubMenu(subMenu, userId);
 			message = "Record Updated Successfully.";

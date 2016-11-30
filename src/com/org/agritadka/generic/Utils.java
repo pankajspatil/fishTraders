@@ -16,7 +16,12 @@ public class Utils {
 	}
 	
 	public static Integer getInt(Object param){
-		return param == null ? new Integer(0) : Integer.parseInt(param.toString());
+		return (param == null || param =="") ? new Integer(0) : Integer.parseInt(param.toString());
+	}
+	
+	
+	public static Double getFloat(Object param){
+		return (param == null || param =="") ? new Double(0) : Double.parseDouble(param.toString());
 	}
 	
 	public static String[] getStringArray(Object param){
