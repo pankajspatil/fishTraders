@@ -79,3 +79,60 @@ function deleteMenuRecord(imgObj){
 function displaySuccess(){
 	
 }
+
+var options = {
+		  valueNames: [ 'name' ],
+		  // Since there are no elements in the list, this will be used as template.
+		  item: '<li><h3 class="name ui-widget-content" style="font-size:large"></h3></li>'
+		};
+
+var userList = new List('allSubMenu', options);
+userList.clear();
+
+function updateSubMenus(divObj){
+	//console.log(divObj);
+	$('#allSubMenu').LoadingOverlay("show");
+	
+	/*var allSubMenu = $('#allSubMenu');
+	allSubMenu.find('ul').empty();*/
+	
+	userList.clear();
+	
+	if(!$(divObj).hasClass('theme-blue-title-active')){
+		
+	var divId = divObj.id.split('_')[1];
+	var addedMenus = new Array();
+	
+	var listFound = false;
+	
+	$.each(menuMap, function(key, value) {
+		if(listFound){
+			return false;
+		}
+		$.each(value, function(key, value) {
+			var mainMenuId = value.mainMenu.mainMenuId;
+			if(divId == mainMenuId){
+				//console.log('ID found == >' + mainMenuId);
+				addedMenus.push(value.subMenu.subMenuId);
+				listFound = true;
+			}
+		}); 
+	});
+	
+	var ulObj = $("<ul class='selectable bwl_acc_container list' style='font-weight:normal;'></ul>");
+	
+	$.each(subMenuList, function(key, value) {
+		if(!addedMenus.includes(value.subMenuId)){
+			//console.log('Not Found' + value.subMenuName);
+			//ulObj.append('<li class="ui-widget-content">' + value.subMenuName + '</li>');
+			
+			userList.add({
+				  name: value.subMenuName
+				});
+		}
+	});
+	
+	//allSubMenu.append(ulObj);
+	}
+	$('#allSubMenu').LoadingOverlay("hide");
+}		

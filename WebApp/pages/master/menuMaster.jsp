@@ -1,3 +1,5 @@
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonParser"%>
 <%@page import="com.org.agritadka.order.Order"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="com.org.agritadka.transfer.MenuMapper"%>
@@ -13,131 +15,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<script>
-  $( function() {
- 
-    // There's the gallery and the trash
-    var $gallery = $( "#gallery" ),
-      $trash = $( "#trash" );
- 
-    // Let the gallery items be draggable
-    $( "li", $gallery ).draggable({
-      cancel: "a.ui-icon", // clicking an icon won't initiate dragging
-      revert: "invalid", // when not dropped, the item will revert back to its initial position
-      containment: "document",
-      helper: "clone",
-      cursor: "move"
-    });
- 
-    // Let the trash be droppable, accepting the gallery items
-    $trash.droppable({
-      accept: "#gallery > li",
-      classes: {
-        "ui-droppable-active": "ui-state-highlight"
-      },
-      drop: function( event, ui ) {
-        deleteImage( ui.draggable );
-      }
-    });
- 
-    // Let the gallery be droppable as well, accepting items from the trash
-    $gallery.droppable({
-      accept: "#trash li",
-      classes: {
-        "ui-droppable-active": "custom-state-active"
-      },
-      drop: function( event, ui ) {
-        recycleImage( ui.draggable );
-      }
-    });
- 
-    // Image deletion function
-    var recycle_icon = "<a href='link/to/recycle/script/when/we/have/js/off' title='Recycle this image' class='ui-icon ui-icon-refresh'>Recycle image</a>";
-    function deleteImage( $item ) {
-      $item.fadeOut(function() {
-        var $list = $( "ul", $trash ).length ?
-          $( "ul", $trash ) :
-          $( "<ul class='gallery ui-helper-reset'/>" ).appendTo( $trash );
- 
-        $item.find( "a.ui-icon-trash" ).remove();
-        $item.append( recycle_icon ).appendTo( $list ).fadeIn(function() {
-          $item
-            .animate({ width: "48px" })
-            .find( "img" )
-              .animate({ height: "36px" });
-        });
-      });
-    }
- 
-    // Image recycle function
-    var trash_icon = "<a href='link/to/trash/script/when/we/have/js/off' title='Delete this image' class='ui-icon ui-icon-trash'>Delete image</a>";
-    function recycleImage( $item ) {
-      $item.fadeOut(function() {
-        $item
-          .find( "a.ui-icon-refresh" )
-            .remove()
-          .end()
-          .css( "width", "96px")
-          .append( trash_icon )
-          .find( "img" )
-            .css( "height", "72px" )
-          .end()
-          .appendTo( $gallery )
-          .fadeIn();
-      });
-    }
- 
-    // Image preview function, demonstrating the ui.dialog used as a modal window
-    function viewLargerImage( $link ) {
-      var src = $link.attr( "href" ),
-        title = $link.siblings( "img" ).attr( "alt" ),
-        $modal = $( "img[src$='" + src + "']" );
- 
-      if ( $modal.length ) {
-        $modal.dialog( "open" );
-      } else {
-        var img = $( "<img alt='" + title + "' width='384' height='288' style='display: none; padding: 8px;' />" )
-          .attr( "src", src ).appendTo( "body" );
-        setTimeout(function() {
-          img.dialog({
-            title: title,
-            width: 400,
-            modal: true
-          });
-        }, 1 );
-      }
-    }
- 
-    // Resolve the icons behavior with event delegation
-    $( "ul.gallery > li" ).on( "click", function( event ) {
-      var $item = $( this ),
-        $target = $( event.target );
- 
-      if ( $target.is( "a.ui-icon-trash" ) ) {
-        deleteImage( $item );
-      } else if ( $target.is( "a.ui-icon-zoomin" ) ) {
-        viewLargerImage( $target );
-      } else if ( $target.is( "a.ui-icon-refresh" ) ) {
-        recycleImage( $item );
-      }
- 
-      return false;
-    });
-  } );
-  </script>
+<link href="/AgriTadka/resources/css/order.css" rel="stylesheet" type="text/css">
 <style>
-  #gallery { float: left; width: 65%; min-height: 12em; }
-  .gallery.custom-state-active { background: #eee; }
-  .gallery li { float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center; }
-  .gallery li h5 { margin: 0 0 0.4em; cursor: move; }
-  .gallery li a { float: right; }
-  .gallery li a.ui-icon-zoomin { float: left; }
-  .gallery li img { width: 100%; cursor: move; }
+  #feedback { font-size: 1.4em; }
+  .selectable .ui-selecting { background: #FECA40; }
+  .selectable .ui-selected { background: #F39814; color: white; }
+  .selectable, .subMenuList { list-style-type: none; margin: 0; padding: 0; width: 99%; }
+  .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+  .subMenuList h3 { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
  
-  #trash { float: right; width: 32%; min-height: 18em; padding: 1%; }
-  #trash h4 { line-height: 16px; margin: 0 0 0.4em; }
-  #trash h4 .ui-icon { float: left; }
-  #trash .gallery h5 { display: none; }
   </style>
 </head>
 <body>
@@ -240,109 +126,101 @@
 			</table>
 		</div>
 		<div id="menuMapping">
-			<div class="ui-widget ui-helper-clearfix">
-			
+		<table width="100%">
+			<tr>
+				<td width="50%" valign="top">
+					<div class="bwl_acc_container scroll" id="accordion_1" style="width: 98%; /* border:1px solid black; */ height: 600px; max-height: 600px; overflow: auto;">
+		    			<div class="accordion_search_container">
+		        				<input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
+		        		</div>
 
-			
- 
-<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
-
-<div class="bwl_acc_container scroll accordionDiv" id="accordion_1" style="width: 98%; /* border:1px solid black; */">
-    			<div class="accordion_search_container">
-        				<input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
-        		</div>
-
-			<div class="search_result_container"></div>
-		<%
-			//out.println(menuMap.size());
-			if(menuMap.size() > 0){
-				List<MenuMapper> mappers = new ArrayList();
-				for(MainMenu mainMenu : menuMap.keySet()){
-					mappers = menuMap.get(mainMenu);
-					
-					
-					%>
-					<section>
-					<h2 class="acc_title_bar">
-						<a href="#"><%=mainMenu.getMainMenuName() %></a>
-					</h2>
-					<div class="acc_container">
-						<div class="block" style="overflow: auto;">
-						<%if(mappers.size() > 0){
-							%><table width="100%" border="0">
-							<%for(MenuMapper mapper : mappers){ %>
-								<tr id="<%=mapper.getMainSubMenuId()%>" align="center">
-									<td width="80%" align="left" style="">
-									<%if(mapper.getSubMenu().isVeg()){
-										%><img width="2%" height="1%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
-									}else{
-										%><img width="2%" height="1%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
-									}
-									%>
-									
-										<%=mapper.getSubMenu().getSubMenuName() %></td>
-										<td width="20%"><input type="text" title="Please enter text" id="note<%=mapper.getMainSubMenuId()%>"/></td>
-										<% if (mapper.getSubMenu().getUnitPrice()!=0) {%>
-									<td width="20%"><%=mapper.getSubMenu().getUnitPrice() %></td>
-									<% } else {
-										%><td width="20%"><input type="text" size="4" id="input<%=mapper.getMainSubMenuId()%>"> </td>
-									<% }%>
-									<td width="10%">
-										<!-- <button type="button" class="btnPlus btn-success">
-					                  		<span class="glyphicon glyphicon-plus"><b>+</b></span>
-					              		</button> -->
-										<input type="button" value="ADD" onclick="addMenuToOrder(this)">
-									</td>
-								</tr>
-								<%} %>
-							</table><%
-						}%>
-							
-						</div>
-					</div>
-					</section>
+						<div class="search_result_container"></div>
 					<%
-						}
-						}
-					%>
-
+						//out.println(menuMap.size());
+						if(menuMap.size() > 0){
+							List<MenuMapper> mappers = new ArrayList();
+							for(MainMenu mainMenu : menuMap.keySet()){
+								mappers = menuMap.get(mainMenu);
+								%><section>
+								<h2 class="acc_title_bar" onclick="updateSubMenus(this)" id="header_<%=mainMenu.getMainMenuId()%>">
+									<a href="#"><%=mainMenu.getMainMenuName() %></a>
+								</h2>
+								<div class="acc_container">
+									<div class="block" style="overflow: auto;">
+									<%if(mappers.size() > 0){
+										%><ul class="selectable" id="content_<%=mainMenu.getMainMenuId()%>">
+										<%for(MenuMapper mapper : mappers){ %>
+											<li class="ui-widget-content">
+												<%if(mapper.getSubMenu().isVeg()){
+													%><img width="2%" height="85%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
+												}else{
+													%><img width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
+												}
+												%><%=mapper.getSubMenu().getSubMenuName() %>
+												<img style="float: right;" alt="" src="/AgriTadka/resources/images/Delete.png" height="85%" width="2%">
+												</li>
+											<%} %>
+										</ul><%
+									}%>
+										
+									</div>
+								</div></section>
+								<%
+									}
+							Gson gson = new Gson();
+							%><script type="text/javascript">
+								var subMenuList = <%=gson.toJson(subMenuList)%>;
+								var menuMap = <%=gson.toJson(menuMap)%>;
+							</script>
+							<%
+									}
+								%>
 			
-		</div>
+						
+					</div>
+				</td>
+				<td width="50%" valign="top">
+				<%-- <div class="bwl_acc_container scroll" id="accordion_2" style="width: 98%; /* border:1px solid black; */ height: 600px; max-height: 600px; overflow: auto;">
+		    			<div class="accordion_search_container">
+		        				<input type="text" class="accordion_search_input_box search_icon" value="" placeholder="Search ..."/>
+		        		</div>
 
-  <li class="ui-widget-content ui-corner-tr">
-    <h5 class="ui-widget-header">High Tatras</h5>
-    <img src="images/high_tatras_min.jpg" alt="The peaks of High Tatras" width="96" height="72">
-    <a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-  </li>
-  <li class="ui-widget-content ui-corner-tr">
-    <h5 class="ui-widget-header">High Tatras 2</h5>
-    <img src="images/high_tatras2_min.jpg" alt="The chalet at the Green mountain lake" width="96" height="72">
-    <a href="images/high_tatras2.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-  </li>
-  <li class="ui-widget-content ui-corner-tr">
-    <h5 class="ui-widget-header">High Tatras 3</h5>
-    <img src="images/high_tatras3_min.jpg" alt="Planning the ascent" width="96" height="72">
-    <a href="images/high_tatras3.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-  </li>
-  <li class="ui-widget-content ui-corner-tr">
-    <h5 class="ui-widget-header">High Tatras 4</h5>
-    <img src="images/high_tatras4_min.jpg" alt="On top of Kozi kopka" width="96" height="72">
-    <a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-  </li>
-</ul>
- 
-<div id="trash" class="ui-widget-content ui-state-default">
-  <h4 class="ui-widget-header"><span class="ui-icon ui-icon-trash">Trash</span> Trash</h4>
-</div>
- 
-</div>
+						<div class="search_result_container"></div>
+					<%
+						//out.println(menuMap.size());
+								%><section>
+								<h2 class="acc_title_bar">
+									<a href="#">Sub Menus</a>
+								</h2>
+								<div class="acc_container">
+									<div id="allSubMenu" class="ui-widget-content ui-state-default scroll">
+									</div>
+								</div></section>
+											
+					</div>
+				 --%>
+				 
+				 <div id="allSubMenu" class="scroll" style="height: 600px; max-height: 600px; overflow: auto;">
+				 
+				 <!-- <div class="accordion_search_container">
+		        				<input class="search accordion_search_input_box search_icon" value="" placeholder="Search"/>
+		        		</div> -->
+				 <input class="search search_icon" placeholder="Search" style="width: 98%; padding:9px 5px;background-color: white" />
+				 <ul class="list subMenuList" style="border : 1px solid #aed0ea; color: #2779aa">
+				    		    
+				  </ul>
+				  
+				</div>
+				 	
+				</td>
+			</tr>
+		</table>
 		</div>
 	</div>
+	
+<script type="text/javascript" src="<%=contextPath%>/resources/js/list.js"></script>	
 <script src="<%=contextPath%>/resources/js/masters.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/order.js"></script>
+
 </body>
 </html>

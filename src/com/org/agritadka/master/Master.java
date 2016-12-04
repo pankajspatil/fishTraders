@@ -216,6 +216,8 @@ public List<SubMenu> getAllSubMenus(boolean onlyActive) throws SQLException{
 			query += "where is_active = 1";
 		}
 		
+		query += "order by menu_name";
+		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		List<SubMenu> subMenuList = new ArrayList<SubMenu>();
 		SubMenu subMenu = null;
