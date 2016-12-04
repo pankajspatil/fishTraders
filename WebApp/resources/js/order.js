@@ -732,6 +732,21 @@ jQuery(function ($) {
 		  
 	  });
 	  
+	  $('.editExistingCustomer').click(function () {
+		  
+		  alert('Pankaj');
+			var rowObj = this.closest('tr');
+			var orderId = $('#orderId').val();
+			
+			var custName = $(rowObj).find('td').eq(0).text();
+			var mobile = $(rowObj).find('td').eq(1).text();
+			var custAddress = $(rowObj).find('td').eq(2).text();
+	
+			$('#custName').val(custName);
+			$('#mobile').val(mobile);
+			$('#custAddress').val(custAddress);
+	  });
+	  
 	});
 
 $(document).ready(function() {

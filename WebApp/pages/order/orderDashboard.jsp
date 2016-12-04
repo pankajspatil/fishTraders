@@ -23,6 +23,7 @@ List<OrderData> orderList = order.getAllOrders();
 	<thead>
 		<tr class="headerTR">
 			<td>Order No</td>
+			<td>Order Sequence</td>
 			<td>Date/Time</td>
 			<td>Table No</td>
 			<td>Status</td>
@@ -35,6 +36,7 @@ List<OrderData> orderList = order.getAllOrders();
 		<%for(OrderData orderData : orderList){
 			%><tr align="center">
 					<td><%=orderData.getOrderId()%></td>
+					<td><%=orderData.getOrder_sequence()%></td>
 					<td><%=Utils.getString(orderData.getDateTime())%></td>
 					<%
 						String tableName = Utils.getString(orderData.getTableName());

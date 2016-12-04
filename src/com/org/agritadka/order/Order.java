@@ -138,8 +138,8 @@ public class Order {
 		
 		if(orderId == null || orderId == 0){
 			
-			String query3 = "INSERT INTO `agri_tadka`.`order_master`(`table_id`,`status_id`,`created_by`) "+
-					"VALUES(?, (select status_id from status_master where status_code = 'INQUEUE'), ?);";
+			String query3 = "INSERT INTO `agri_tadka`.`order_master`(`order_sequence`,`table_id`,`status_id`,`created_by`) "+
+					"VALUES(getNextCustomSeq(),?, (select status_id from status_master where status_code = 'INQUEUE'), ?);";
 			
 			PreparedStatement psmt3 = conn.prepareStatement(query3,
 					Statement.RETURN_GENERATED_KEYS);
@@ -245,7 +245,7 @@ public class Order {
 		
 		if(tableId != null || orderId != null){
 		
-		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
+		query = "select o.order_id,o.order_sequence, om.order_menu_map_id , msm.main_sub_menu_map_id, om.quantity, om.unit_price, "+
 						"om.order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id, "+ 
 						"o.customer_name, o.mobile_number, o.customer_address, o.tax, o.advance_amt, o.discount_amt "+
 						"from order_master o inner join status_master s on o.status_id = s.status_id ";
@@ -270,6 +270,7 @@ public class Order {
 		while(dataRS.next()){
 			if(count == 0){
 				orderData.setOrderId(dataRS.getInt("order_id"));
+				orderData.setOrder_sequence(dataRS.getString("order_sequence"));
 				orderData.setStatusCode(dataRS.getString("status_code"));
 				orderData.setWaiterName(dataRS.getString("waiter_id"));
 				orderData.setCustName(dataRS.getString("customer_name"));
@@ -339,7 +340,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		
 		if(tableId != null || orderId != null){
 		
-		query = "select o.order_id, om.order_menu_map_id , msm.main_sub_menu_map_id, sum(om.quantity) quantity, sum(om.unit_price) unit_price, "+
+		query = "select o.order_id,o.order_sequence, om.order_menu_map_id , msm.main_sub_menu_map_id, sum(om.quantity) quantity, sum(om.unit_price) unit_price, "+
 						"sum(om.order_price) order_price, sm.menu_name, om.notes, s.status_code, o.waiter_id, "+ 
 						"o.customer_name, o.mobile_number, o.customer_address, o.tax, o.advance_amt, o.discount_amt, DATE_FORMAT(o.created_on,'%d %b %Y %T') created_on "+
 						"from order_master o inner join status_master s on o.status_id = s.status_id ";
@@ -364,6 +365,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		while(dataRS.next()){
 			if(count == 0){
 				orderData.setOrderId(dataRS.getInt("order_id"));
+				orderData.setOrder_sequence(dataRS.getString("order_sequence"));
 				orderData.setStatusCode(dataRS.getString("status_code"));
 				orderData.setWaiterName(dataRS.getString("waiter_id"));
 				orderData.setCustName(dataRS.getString("customer_name"));
@@ -411,7 +413,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		String timestamp = jsonObject.get("timestamp").getAsString();
 		String statusCode = jsonObject.get("statusCode").getAsString();
 		
-		String query = "select o.order_id, sm.menu_name, om.quantity, om.order_menu_map_id, om.created_on, "+
+		String query = "select o.order_id,o.order_sequence, sm.menu_name, om.quantity, om.order_menu_map_id, om.created_on, "+
 				 		"tm.table_name, om.notes, sm.is_veg  from order_master o "+ 
 						"inner join order_menu_map om on o.order_id = om.order_id and om.is_active = 1 " ;
 		
@@ -645,7 +647,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "select o.order_id, o.created_on, t.table_name, status_code, status_name, "+
+		String query = "select o.order_id,o.order_sequence, o.created_on, t.table_name, status_code, status_name, "+
 						"customer_name, o.mobile_number,customer_address, concat(wfirst_name, ' ',wmiddle_name, ' ', wlast_name) as waiter_name "+
 						"from order_master o "+
 						"inner join status_master s on o.status_id = s.status_id "+
@@ -661,6 +663,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		while(dataRS.next()){
 			orderData = new OrderData();
 			orderData.setOrderId(dataRS.getInt("order_id"));
+			orderData.setOrder_sequence(dataRS.getString("order_sequence"));
 			orderData.setStatusCode(dataRS.getString("status_code"));
 			orderData.setStatusName(dataRS.getString("status_name"));
 			orderData.setCustName(dataRS.getString("customer_name"));

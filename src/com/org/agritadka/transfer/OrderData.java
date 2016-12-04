@@ -6,6 +6,8 @@ public class OrderData {
 
 	private Integer orderId;
 	
+	private String order_sequence;
+	
 	private Integer tableTypeNameId;
 	
 	private String tableName;
@@ -34,6 +36,14 @@ public class OrderData {
 	
 	public Integer getOrderId() {
 		return orderId;
+	}
+
+	public String getOrder_sequence() {
+		return order_sequence;
+	}
+
+	public void setOrder_sequence(String order_sequence) {
+		this.order_sequence = order_sequence;
 	}
 
 	public void setOrderId(Integer orderId) {
