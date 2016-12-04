@@ -686,7 +686,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		Connection conn = connectionsUtil.getConnection();
 		
 		String query = "select * from order_master where customer_name is not null and mobile_number is not null "+
-						"group by lower(customer_name), mobile_number order by customer_name;";
+						"group by lower(customer_address), mobile_number order by customer_name;";
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		

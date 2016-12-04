@@ -733,8 +733,7 @@ jQuery(function ($) {
 	  });
 	  
 	  $('.editExistingCustomer').click(function () {
-		  
-		  alert('Pankaj');
+		  		 
 			var rowObj = this.closest('tr');
 			var orderId = $('#orderId').val();
 			
@@ -745,7 +744,8 @@ jQuery(function ($) {
 			$('#custName').val(custName);
 			$('#mobile').val(mobile);
 			$('#custAddress').val(custAddress);
-	  });
+			
+		});
 	  
 	});
 
