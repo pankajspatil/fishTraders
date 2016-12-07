@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonObject;
 import com.org.agritadka.generic.ConnectionsUtil;
 import com.org.agritadka.generic.Utils;
 import com.org.agritadka.transfer.MainMenu;
@@ -333,6 +334,32 @@ public List<MenuMapper> getAllSubMenus1(boolean onlyActive) throws SQLException{
 	
 	connectionsUtil.closeConnection(dataRS);		
 	return menuMapperList;
+}
+
+
+public Integer inactiveMenuMapping(String data, String userId) throws SQLException {
+
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+
+	Integer returnVal = 0;
+	JsonObject jsonObject = Utils.getJSONObjectFromString(data);
+
+	Integer mainSubMenuId = jsonObject.get("mainSubMenuId").getAsInt();
+	
+	String query = "update main_sub_menu_map o set is_active = ?, created_by = ?"+
+					"where o.main_sub_menu_map_id = ?";
+
+	PreparedStatement psmt = conn.prepareStatement(query);
+	psmt.setInt(1, 0);
+	psmt.setString(2, userId);
+	psmt.setInt(3, mainSubMenuId);
+	
+	psmt.executeUpdate();
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return returnVal;
 }
 
 

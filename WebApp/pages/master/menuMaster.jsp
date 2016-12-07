@@ -78,7 +78,7 @@
 									<img style="margin-left: 40%" height="22%" src="/AgriTadka/resources/images/edit.png" 
 									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="editMenu">
 									<img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" 
-									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="deleteMenu">
+									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="deleteMenu" onclick="">
 								</td>		
 							</tr><%
 						}
@@ -138,7 +138,7 @@
 					<%
 						//out.println(menuMap.size());
 						if(menuMap.size() > 0){
-							List<MenuMapper> mappers = new ArrayList();
+							List<MenuMapper> mappers = new ArrayList<MenuMapper>();
 							for(MainMenu mainMenu : menuMap.keySet()){
 								mappers = menuMap.get(mainMenu);
 								%><section>
@@ -157,7 +157,8 @@
 													%><img width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
 												}
 												%><%=mapper.getSubMenu().getSubMenuName() %>
-												<img style="float: right;" alt="" src="/AgriTadka/resources/images/Delete.png" height="85%" width="2%">
+												<img style="float: right;" alt="" src="/AgriTadka/resources/images/Delete.png" 
+												height="85%" width="2%" id=<%=mapper.getMainSubMenuId() %> onclick="inactiveMenuMapping(this)">
 												</li>
 											<%} %>
 										</ul><%

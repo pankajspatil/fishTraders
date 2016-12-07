@@ -89,6 +89,9 @@ var options = {
 var userList = new List('allSubMenu', options);
 userList.clear();
 
+//Main menu id
+var mainMenuId;
+
 function updateSubMenus(divObj){
 	//console.log(divObj);
 	$('#allSubMenu').LoadingOverlay("show");
@@ -110,7 +113,7 @@ function updateSubMenus(divObj){
 			return false;
 		}
 		$.each(value, function(key, value) {
-			var mainMenuId = value.mainMenu.mainMenuId;
+			mainMenuId = value.mainMenu.mainMenuId;
 			if(divId == mainMenuId){
 				//console.log('ID found == >' + mainMenuId);
 				addedMenus.push(value.subMenu.subMenuId);
@@ -135,4 +138,52 @@ function updateSubMenus(divObj){
 	//allSubMenu.append(ulObj);
 	}
 	$('#allSubMenu').LoadingOverlay("hide");
-}		
+}
+
+function inactiveMenuMapping(imgObj){
+	
+	console.log(imgObj);
+	
+	var mainSubMenuId = imgObj.id;
+	var liObj = $(imgObj).closest('li');
+	
+	
+	var postData = {
+			"action" : "inactiveMenuMapping",
+			"data" : JSON.stringify({"mainSubMenuId" : mainSubMenuId})
+	};
+	
+	$.ajax({
+	      type: 'POST',
+	      url: "/AgriTadka/pages/ajax/postAjaxData.jsp",
+	      data: postData, 
+	      dataType: 'json',
+	      success: function(resultData) {
+	    	  alert("Save Complete" + resultData)
+	    	  
+	    	  $(liObj).fadeOut(500, function() {
+	    		  $(liObj).remove();
+	    		});
+	    	  
+	    	 },
+	    	 error: function (xhr, status) { 
+	    		 console.log('ajax error = ' + xhr.statusText);
+	            } 
+	});
+	
+	/*$.each(menuMap, function(key, value) {
+		$.each(value, function(key, value1) {
+			mainSubMenuId = value1.mainSubMenuId;
+			if(mainSubMenuId == imgObj.id){
+				console.log('ID found == >' + mainSubMenuId);
+				
+				var i1 = value.indexOf(value1);console.log(i1);
+			    value.splice(i1,1);
+				
+				//addedMenus.push(value.subMenu.subMenuId);
+				//listFound = true; retur  false;
+			}
+		}); 
+	});*/
+	
+}

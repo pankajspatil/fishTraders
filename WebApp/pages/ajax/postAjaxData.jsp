@@ -58,7 +58,11 @@ try{
 	}else if(action.equals("deleteMenu")){
 		returnValue = order.updateCustomerInOrder(data);
 		out.println(returnValue);
+	}else if(action.equals("inactiveMenuMapping")){
+		returnValue = master.inactiveMenuMapping(data, userId);
+		out.println(returnValue);
 	}
+	
 	
 }catch (Exception ex){
 	System.out.println("Error while processing data for "+action);
