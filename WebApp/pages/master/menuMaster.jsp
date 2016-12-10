@@ -150,15 +150,15 @@
 									<%if(mappers.size() > 0){
 										%><ul class="selectable" id="content_<%=mainMenu.getMainMenuId()%>">
 										<%for(MenuMapper mapper : mappers){ %>
-											<li class="ui-widget-content">
+											<li class="ui-widget-content" id='<%=mapper.getMainSubMenuId() %>_<%=mapper.getSubMenu().getSubMenuId() %>' is_veg='<%=mapper.getSubMenu().isVeg()%>'>
 												<%if(mapper.getSubMenu().isVeg()){
-													%><img width="2%" height="85%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
+													%><img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
 												}else{
-													%><img width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
+													%><img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png"><%
 												}
 												%><%=mapper.getSubMenu().getSubMenuName() %>
-												<img style="float: right;" alt="" src="/AgriTadka/resources/images/Delete.png" 
-												height="85%" width="2%" id=<%=mapper.getMainSubMenuId() %> onclick="inactiveMenuMapping(this)">
+												<img class="menuRightIcon" alt="Remove Sub Menu" src="/AgriTadka/resources/images/right.jpg" 
+												height="85%" width="2%" onclick="inactiveMenuMapping(this)">
 												</li>
 											<%} %>
 										</ul><%

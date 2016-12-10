@@ -236,3 +236,10 @@ function getCursorPosition(element) {
     }
     return 0;
 }
+
+var parseBool = function(str) {
+    if (typeof str === 'string' && str.toLowerCase() == 'true')
+            return true;
+
+    return (parseInt(str) > 0);
+}

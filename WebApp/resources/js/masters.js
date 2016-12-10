@@ -81,7 +81,7 @@ function displaySuccess(){
 }
 
 var options = {
-		  valueNames: [ 'name' ],
+		  valueNames: [ 'name', { data: ['id'] } ],
 		  // Since there are no elements in the list, this will be used as template.
 		  item: '<li><h3 class="name ui-widget-content" style="font-size:large"></h3></li>'
 		};
@@ -103,34 +103,32 @@ function updateSubMenus(divObj){
 	
 	if(!$(divObj).hasClass('theme-blue-title-active')){
 		
-	var divId = divObj.id.split('_')[1];
+	mainMenuId = divObj.id.split('_')[1];
 	var addedMenus = new Array();
 	
 	var listFound = false;
+	var liObjs = $('#content_' + mainMenuId).find('li'); 
 	
-	$.each(menuMap, function(key, value) {
-		if(listFound){
-			return false;
-		}
-		$.each(value, function(key, value) {
-			mainMenuId = value.mainMenu.mainMenuId;
-			if(divId == mainMenuId){
-				//console.log('ID found == >' + mainMenuId);
-				addedMenus.push(value.subMenu.subMenuId);
-				listFound = true;
-			}
-		}); 
+	$.each(liObjs, function(key, value) {
+		
+		var id = value.id.split('_')[1];		
+		addedMenus.push(id);		
 	});
 	
-	var ulObj = $("<ul class='selectable bwl_acc_container list' style='font-weight:normal;'></ul>");
-	
 	$.each(subMenuList, function(key, value) {
-		if(!addedMenus.includes(value.subMenuId)){
-			//console.log('Not Found' + value.subMenuName);
-			//ulObj.append('<li class="ui-widget-content">' + value.subMenuName + '</li>');
+		if(!addedMenus.includes(value.subMenuId+"")){
+			var isImgText = '';
+			
+			if(parseBool(value.isVeg)){
+				isImgText = '<img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/veg-icon.png">';  
+    		  }else{
+    			 isImgText = '<img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png">';
+    		  }
 			
 			userList.add({
-				  name: value.subMenuName
+				  name: '<img alt="Add Sub Menu" src="/AgriTadka/resources/images/left.jpg" class="menuLeftIcon" onClick="addSubMenu(this)">' +isImgText + value.subMenuName,
+				  id: value.subMenuId,
+				  is_veg: value.isVeg
 				});
 		}
 	});
@@ -144,8 +142,13 @@ function inactiveMenuMapping(imgObj){
 	
 	console.log(imgObj);
 	
-	var mainSubMenuId = imgObj.id;
+	var imgId = imgObj.closest('li').id;
+	var isVeg = $(imgObj.closest('li')).attr('is_veg');
+	
+	var mainSubMenuId = imgId.split('_')[0];
+	var subMenuId = imgId.split('_')[1];
 	var liObj = $(imgObj).closest('li');
+	var subMenuName = liObj.text().trim();
 	
 	
 	var postData = {
@@ -159,10 +162,24 @@ function inactiveMenuMapping(imgObj){
 	      data: postData, 
 	      dataType: 'json',
 	      success: function(resultData) {
-	    	  alert("Save Complete" + resultData)
+	    	  //alert("Save Complete" + resultData)
 	    	  
 	    	  $(liObj).fadeOut(500, function() {
 	    		  $(liObj).remove();
+	    		  
+	    		  var isImgText = '';
+	  			
+	  			if(parseBool(isVeg)){
+	  				isImgText = '<img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/veg-icon.png">';  
+	      		  }else{
+	      			 isImgText = '<img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png">';
+	      		  }
+	    		  
+	    		  userList.add({
+					  name: '<img alt="Add Sub Menu" src="/AgriTadka/resources/images/left.jpg" class="menuLeftIcon" onClick="addSubMenu(this)">' + isImgText +  subMenuName,
+					  id: subMenuId
+					});
+	    		  userList.update();
 	    		});
 	    	  
 	    	 },
@@ -186,4 +203,49 @@ function inactiveMenuMapping(imgObj){
 		}); 
 	});*/
 	
+}
+
+function addSubMenu(imgObj){
+	
+	var liObj = $(imgObj).closest('li');
+	var subMenuId = liObj.attr('data-id');
+	var itemObj = userList.get('id', subMenuId)[0];
+	var subMenuName = itemObj.values().name !== '' ? itemObj.values().name.replace(/<[^>]+>/g,'').trim() : itemObj.values().name;
+	
+	var postData = {
+			"action" : "addSubMenu",
+			"data" : JSON.stringify({"mainMenuId" : mainMenuId, "subMenuId" : subMenuId})
+	};
+	
+	$.ajax({
+	      type: 'POST',
+	      url: "/AgriTadka/pages/ajax/postAjaxData.jsp",
+	      data: postData, 
+	      dataType: 'json',
+	      success: function(resultData) {
+	    	  //alert("Save Complete" + resultData)
+	    	  
+	    	  $(liObj).fadeOut(500, function() {
+	    		  
+	    		  var newLiObj = $('<li class="ui-widget-content" id="'+resultData+'_'+subMenuId+'"></li>');
+	    		  
+	    		  if(parseBool(itemObj.values().is_veg)){
+	    			$(newLiObj).append('<img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png">' + subMenuName);  
+	    		  }else{
+	    			  $(newLiObj).append('<img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Non Veg" src="/AgriTadka/resources/images/nonveg-icon.png">' + subMenuName);
+	    		  }
+	    		  
+	    		  $(newLiObj).append('<img class="menuRightIcon" alt="Remove Sub Menu" src="/AgriTadka/resources/images/right.jpg" height="85%" width="2%" onclick="inactiveMenuMapping(this)">');
+	    		  
+	    		  $('#content_' + mainMenuId).append(newLiObj);
+	    		  
+	    		  userList.remove('id', subMenuId);
+	    		  userList.update();
+	    		});
+	    	  
+	    	 },
+	    	 error: function (xhr, status) { 
+	    		 console.log('ajax error = ' + xhr.statusText);
+	            } 
+	});
 }

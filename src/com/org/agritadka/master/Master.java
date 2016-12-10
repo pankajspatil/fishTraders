@@ -362,5 +362,61 @@ public Integer inactiveMenuMapping(String data, String userId) throws SQLExcepti
 	return returnVal;
 }
 
+public Integer addSubMenu(String data, String userId) throws SQLException {
+
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+
+	Integer mainSubMenuId = 0;
+	JsonObject jsonObject = Utils.getJSONObjectFromString(data);
+
+	Integer mainMenuId = jsonObject.get("mainMenuId").getAsInt();
+	Integer subMenuId = jsonObject.get("subMenuId").getAsInt();
+	
+	String query = "select * from main_sub_menu_map where main_menu_id = ? and sub_menu_id = ?";
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);	
+	psmt.setInt(1, mainMenuId);
+	psmt.setInt(2, subMenuId);
+	
+	ResultSet dataRS = psmt.executeQuery();
+	
+	if(dataRS.next()){
+		mainSubMenuId = dataRS.getInt("main_sub_menu_map_id");
+		
+		query = "update main_sub_menu_map o set is_active = ?, created_by = ?"+
+				"where main_sub_menu_map_id = ?";
+
+		psmt = conn.prepareStatement(query);
+		
+		psmt.setInt(1, 1);
+		psmt.setString(2, userId);
+		psmt.setInt(3, mainSubMenuId);
+		
+		psmt.executeUpdate();
+		
+	}else{
+		
+		query = "insert into main_sub_menu_map(main_menu_id, sub_menu_id, created_by) values(?,?,?)";
+		
+		psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		
+		psmt.setInt(1, mainMenuId);
+		psmt.setInt(2, subMenuId);
+		psmt.setString(3, userId);
+		
+		psmt.executeUpdate();
+		
+		dataRS = psmt.getGeneratedKeys();
+
+		if (dataRS.next()) {
+			mainSubMenuId = dataRS.getInt(1);
+		}
+	}
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return mainSubMenuId;
+}
+
 
 }

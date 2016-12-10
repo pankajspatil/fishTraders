@@ -61,7 +61,11 @@ try{
 	}else if(action.equals("inactiveMenuMapping")){
 		returnValue = master.inactiveMenuMapping(data, userId);
 		out.println(returnValue);
+	}else if(action.equals("addSubMenu")){
+		returnValue = master.addSubMenu(data, userId);
+		out.println(returnValue);
 	}
+	
 	
 	
 }catch (Exception ex){

@@ -106,3 +106,26 @@
   content: "\e000";
   font-family: "demo";
  }*/
+ 
+ .menuLeftIcon{
+ width: 2%;
+ float: left;
+ padding-left: 1%;
+ padding-right: 1%;
+ }
+ 
+ .menuRightIcon{
+ width: 4%;
+ float: right;
+ padding-left: 1%;
+ padding-right: 1%;
+ height:100%;
+ }
+ 
+ .onePaddingLeft {
+	padding-left: 1%;
+}
+
+.onePaddingRight {
+	padding-right: 1%;
+}
