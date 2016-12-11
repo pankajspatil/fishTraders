@@ -40,7 +40,8 @@ $(".headerTable").hide();
 			<td>Cust. Name</td>
 			<td>Mobile</td>
 			<td>Address</td>
-			<td colspan=2>Action</td>
+			<td colspan=1>Attach</td>
+			<td colspan=1>Update</td>
 		</tr>
 	</thead>
 	<tbody>
