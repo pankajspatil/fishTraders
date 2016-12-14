@@ -297,12 +297,12 @@ function validateSubMenuForm(){
 		
 		return false;
 	}
-	if(acunitPrice.trim().isNAN()){
+	if(isNaN(acunitPrice.trim())){
 		paramMap.put(MSG, 'Please Enter valid numbers in Non Ac Unit Price.');
 		displayNotification(paramMap);
 		
 		return false;
-	}if(nonAcUnitPrice.trim().isNAN()){
+	}if(isNaN(nonAcUnitPrice.trim())){
 		paramMap.put(MSG, 'Please Enter valid numbers in Non Ac Unit Price.');
 		displayNotification(paramMap);
 		

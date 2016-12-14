@@ -267,4 +267,9 @@ function decodeHTML(escapedHtml) {
 	    result = result + elem.childNodes[i].nodeValue;
 	  }
 	  return result;
-	}
+}
+
+function validateFloatKeyPress(el) {
+    var v = parseFloat(el.value);
+    el.value = (isNaN(v)) ? '' : v.toFixed(2);
+}

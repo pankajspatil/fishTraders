@@ -91,11 +91,11 @@
 		</tr>
 		<tr>
 			<td class="headerTR">Ac Unit Price</td>
-			<td><input type="text" name="acUnitPrice" id="acUnitPrice" value="<%=acUnitPrice %>"/> </td>
+			<td><input type="text" name="acUnitPrice" id="acUnitPrice" value="<%=acUnitPrice %>" onchange="validateFloatKeyPress(this)"/> </td>
 		</tr>
 		<tr>
 			<td class="headerTR">Non Ac UnitPrice</td>
-			<td><input type="text" name="nonAcUnitPrice" id="nonAcUnitPrice" value="<%=nonAcUnitPrice %>"/> </td>
+			<td><input type="text" name="nonAcUnitPrice" id="nonAcUnitPrice" value="<%=nonAcUnitPrice %>" onchange="validateFloatKeyPress(this)"/> </td>
 		</tr>
 		<tr>
 			<td class="headerTR">Food Type</td>
