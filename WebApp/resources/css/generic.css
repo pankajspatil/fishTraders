@@ -329,3 +329,23 @@ table.dataTable tbody tr:nth-child(2n) { background-color:#c0c0c0 } */
 .ui-tabs-selected{
 	background: #2d9fd0;
 }
+.pagination li {
+  display:inline-block;
+  padding:5px;
+}
+
+.pagination a{
+  padding: 1px 5px;
+  border: 1px solid #cccccc;
+  margin: 2px;
+  color: black;
+  text-decoration: none;
+  text-align: center;
+  outline: none;
+  font-weight: bold;
+}
+
+.pagination li.active a{
+  color: white;
+  background: #2d9fd0;
+}

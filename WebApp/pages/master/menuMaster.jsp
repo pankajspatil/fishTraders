@@ -37,7 +37,7 @@
 			: Utils.getString(request.getParameter("priceType"));
 	
 	Order order = new Order();
-	LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = order.getMenus(priceType);
+	LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = master.getMenus(priceType);
 	
 	//List<MenuMapper> menuMapperList = master.getAllSubMenus(false);
 %>
@@ -76,9 +76,9 @@
 								<td align="center"><%=mainMenu.isActive() ? "True" : "False" %></td>
 								<td>
 									<img style="margin-left: 40%" height="22%" src="/AgriTadka/resources/images/edit.png" 
-									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="editMenu">
-									<img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" 
-									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="deleteMenu" onclick="">
+									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="editMenu" onclick="updateMenuRecord(this)">
+									<%-- <img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" 
+									id="mainMenu_<%=mainMenu.getMainMenuId()%>" name="deleteMenu" onclick="deleteMenuRecord(this)"> --%>
 								</td>		
 							</tr><%
 						}
@@ -114,9 +114,9 @@
 								<td align="center"><%=subMenu.isActive() ? "True" : "False" %></td>
 								<td>
 									<img style="margin-left: 40%" height="22%" src="/AgriTadka/resources/images/edit.png" 
-									id="subMenu_<%=subMenu.getSubMenuId()%>" name="editMenu">
-									<img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" 
-									id="subMenu_<%=subMenu.getSubMenuId()%>" name="deleteMenu">
+									id="subMenu_<%=subMenu.getSubMenuId()%>" name="editMenu" onclick="updateMenuRecord(this)">
+									<%-- <img class="deleteIcon" src="/AgriTadka/resources/images/Delete.png" 
+									id="subMenu_<%=subMenu.getSubMenuId()%>" name="deleteMenu" onclick="deleteMenuRecord(this)"> --%>
 								</td>		
 							</tr><%
 						}
@@ -149,7 +149,13 @@
 									<div class="block" style="overflow: auto;">
 									<%if(mappers.size() > 0){
 										%><ul class="selectable" id="content_<%=mainMenu.getMainMenuId()%>">
-										<%for(MenuMapper mapper : mappers){ %>
+										<%for(MenuMapper mapper : mappers){ 
+											
+											System.out.println("SubMenuId==>" + mapper.getSubMenu().getSubMenuId() + "==>" + mainMenu.getMainMenuId());
+											
+											if(mapper.getSubMenu().getSubMenuId() != 0){
+											
+											%>
 											<li class="ui-widget-content" id='<%=mapper.getMainSubMenuId() %>_<%=mapper.getSubMenu().getSubMenuId() %>' is_veg='<%=mapper.getSubMenu().isVeg()%>'>
 												<%if(mapper.getSubMenu().isVeg()){
 													%><img class="onePaddingRight onePaddingLeft" width="2%" height="85%" alt="Veg" src="/AgriTadka/resources/images/veg-icon.png"> <%
@@ -160,7 +166,7 @@
 												<img class="menuRightIcon" alt="Remove Sub Menu" src="/AgriTadka/resources/images/right.jpg" 
 												height="85%" width="2%" onclick="inactiveMenuMapping(this)">
 												</li>
-											<%} %>
+											<%}} %>
 										</ul><%
 									}%>
 										
@@ -210,6 +216,7 @@
 				 <ul class="list subMenuList" style="border : 1px solid #aed0ea; color: #2779aa">
 				    		    
 				  </ul>
+				  <ul class="pagination"></ul>
 				  
 				</div>
 				 	
@@ -219,7 +226,7 @@
 		</div>
 	</div>
 	
-<script type="text/javascript" src="<%=contextPath%>/resources/js/list.js"></script>	
+	
 <script src="<%=contextPath%>/resources/js/masters.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/order.js"></script>
 

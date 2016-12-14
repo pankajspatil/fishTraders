@@ -69,6 +69,11 @@
 <script src="/AgriTadka/resources/js/fusioncharts.charts.js" type="text/javascript"></script>
 <script src="/AgriTadka/resources/js/fusioncharts.theme.fint.js" type="text/javascript"></script>
 
+<!-- List Js -->
+<script type="text/javascript" src="<%=contextPath%>/resources/js/list.js"></script>
+<script type="text/javascript" src="<%=contextPath%>/resources/js/list.pagination.min.js"></script>
+
+
 </head>
 
 <body>

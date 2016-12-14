@@ -37,3 +37,5 @@ var ENTER_FIRST_NAME = "Please enter first name.";
 var ENTER_LAST_NAME = "Please enter last name.";
 var ENTER_EMAIL = "Please enter email.";
 var ENTER_VALID_EMAIL = "Please enter valid email.";
+var LOWER_CASE = "lower";
+var UPPER_CASE = "upper";

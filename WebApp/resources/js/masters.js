@@ -4,25 +4,6 @@
  */
 
 $(document).ready(function() {
-	$('#foodMenu-container').easytabs({
-		uiTabs: true, 
-		 collapsible: true ,
-		 defaultTab: 'li#mainMenuTab'
-		 });
-	
-	   var mainMenuTable = $('#mainMenuTable').DataTable({
-	    	"bSort" : true,
-	    	"paging" : true/*,
-	    	"pageLength": 15,
-	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
-	    });
-	   
-	   var subMenuTable = $('#subMenuTable').DataTable({
-	    	"bSort" : true,
-	    	"paging" : true/*,
-	    	"pageLength": 15,
-	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
-	    });
 	   
 	   $('#mainMenuBtn').click(function(){
 		   openMenuFancyBox(0, 'mainMenu', this);
@@ -40,6 +21,25 @@ $(document).ready(function() {
 		   deleteMenuRecord(this);
 		});
 	   
+	   var mainMenuTable = $('#mainMenuTable').DataTable({
+	    	"bSort" : true,
+	    	"paging" : true/*,
+	    	"pageLength": 15,
+	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
+	    });
+	   
+	   var subMenuTable = $('#subMenuTable').DataTable({
+	    	"bSort" : true,
+	    	"paging" : true/*,
+	    	"pageLength": 15,
+	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
+	    });
+	   
+	   $('#foodMenu-container').easytabs({
+			uiTabs: true, 
+			 collapsible: true ,
+			 defaultTab: 'li#mainMenuTab'
+			 });
 });
 
 function openMenuFancyBox(menuId, menuType, obj){
@@ -76,12 +76,10 @@ function deleteMenuRecord(imgObj){
 	
 }
 
-function displaySuccess(){
-	
-}
-
 var options = {
 		  valueNames: [ 'name', { data: ['id'] } ],
+		  page: 3,
+		  plugins: [ ListPagination({}) ],
 		  // Since there are no elements in the list, this will be used as template.
 		  item: '<li><h3 class="name ui-widget-content" style="font-size:large"></h3></li>'
 		};
@@ -249,3 +247,79 @@ function addSubMenu(imgObj){
 	            } 
 	});
 }
+
+function validateMainMenuForm(){
+	
+	var menuName = $('#menuName').val();
+	
+	var paramMap = new Map();
+	if(menuName.trim() == ''){
+		paramMap.put(MSG, 'Please Enter Menu Name.');
+		displayNotification(paramMap);
+		
+		return false;
+	}
+	
+	if(menuName.toLowerCase() !== oldMenuName.toLowerCase()){
+		var mainMenuNameArray = parent.$('#mainMenuTable').DataTable().column(0).data();	
+		mainMenuNameArray = convertCaseArray(mainMenuNameArray, LOWER_CASE);
+		
+		if(mainMenuNameArray.includes(menuName.toLowerCase())){
+			paramMap.put(MSG, 'Duplicate Menu Name.');
+			displayNotification(paramMap);
+			
+			return false;
+		}
+	}
+	
+}
+
+function validateSubMenuForm(){
+	
+	var menuName = $('#subName').val();
+	var acunitPrice = $('#acUnitPrice').val();
+	var nonAcUnitPrice = $('#nonAcUnitPrice').val();
+	
+	var paramMap = new Map();
+	if(menuName.trim() == ''){
+		paramMap.put(MSG, 'Please Enter Menu Name.');
+		displayNotification(paramMap);
+		
+		return false;
+	}if(acunitPrice.trim() == ''){
+		paramMap.put(MSG, 'Please Enter AC Unit Price.');
+		displayNotification(paramMap);
+		
+		return false;
+	}if(nonAcUnitPrice.trim() == ''){
+		paramMap.put(MSG, 'Please Enter Non AC Unit Price.');
+		displayNotification(paramMap);
+		
+		return false;
+	}
+	if(acunitPrice.trim().isNAN()){
+		paramMap.put(MSG, 'Please Enter valid numbers in Non Ac Unit Price.');
+		displayNotification(paramMap);
+		
+		return false;
+	}if(nonAcUnitPrice.trim().isNAN()){
+		paramMap.put(MSG, 'Please Enter valid numbers in Non Ac Unit Price.');
+		displayNotification(paramMap);
+		
+		return false;
+	}
+	
+	if(menuName.toLowerCase() !== oldSubMenuName.toLowerCase()){
+		var mainMenuNameArray = parent.$('#subMenuTable').DataTable().column(0).data();	
+		mainMenuNameArray = convertCaseArray(mainMenuNameArray, LOWER_CASE);
+		
+		if(mainMenuNameArray.includes(menuName.toLowerCase())){
+			paramMap.put(MSG, 'Duplicate Menu Name.');
+			displayNotification(paramMap);
+			
+			return false;
+		}
+	}
+	
+}
+

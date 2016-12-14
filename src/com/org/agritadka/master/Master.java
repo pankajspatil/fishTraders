@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gson.JsonObject;
@@ -176,6 +177,7 @@ public class Master {
 		psmt.setInt(6, mainMenu.getMainMenuId());
 		
 		psmt.executeUpdate();
+		
 		connectionsUtil.closeConnection(conn);
 		
 		return mainMenu;
@@ -416,6 +418,76 @@ public Integer addSubMenu(String data, String userId) throws SQLException {
 	connectionsUtil.closeConnection(conn);
 	
 	return mainSubMenuId;
+}
+
+public LinkedHashMap<MainMenu, List<MenuMapper>> getMenus(String priceType) throws SQLException{
+	
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "SELECT ms.main_sub_menu_map_id, m.main_menu_id, s.sub_menu_id, " +
+					"m.menu_name as main_menu, s.menu_name as sub_menu, s."+ priceType +"_unit_price as unit_price, s.is_veg "+
+					"FROM main_menu_master m "+
+					"inner join (select * from main_menu_master mm where is_active = 1) mm on m.main_menu_id = mm.main_menu_id "+
+					"left join agri_tadka.main_sub_menu_map ms on m.main_menu_id = ms.main_menu_id and ms.is_active = 1 "+
+					"left join (select * from sub_menu_master where is_active = 1) s on s.sub_menu_id = ms.sub_menu_id order by m.menu_name, s.menu_name";
+	//System.out.println("query==>" + query);
+	
+	ResultSet dataRS = conn.createStatement().executeQuery(query);
+	
+	Integer mainMenuId, prevId = 0, mainSubMenuId, subMenuId;
+	LinkedHashMap<MainMenu, List<MenuMapper>> mainSubMenuMap = new LinkedHashMap<MainMenu, List<MenuMapper>>();
+	
+	String mainMenuName, subMenuName;
+	Float unitPrice = new Float(0);
+	MainMenu mainMenuObj, oldObj = null;
+	SubMenu subMenuObj;
+	MenuMapper menuMapper;
+	List<MenuMapper> menus = new ArrayList<MenuMapper>();
+	
+	while(dataRS.next()){
+		
+		mainMenuId = dataRS.getInt("main_menu_id");
+		mainMenuName = dataRS.getString("main_menu");
+		subMenuName = dataRS.getString("sub_menu");
+		subMenuId = dataRS.getInt("sub_menu_id");
+		mainSubMenuId = dataRS.getInt("main_sub_menu_map_id");
+		unitPrice = dataRS.getFloat("unit_price");
+		
+		if(mainMenuId != prevId && prevId != 0){
+			
+			mainSubMenuMap.put(oldObj, menus);
+			menus = new ArrayList<MenuMapper>();
+		}
+		
+		mainMenuObj = new MainMenu();
+		mainMenuObj.setMainMenuId(mainMenuId);
+		mainMenuObj.setMainMenuName(mainMenuName);
+		
+		subMenuObj = new SubMenu();
+		subMenuObj.setSubMenuId(subMenuId);
+		subMenuObj.setSubMenuName(subMenuName);
+		subMenuObj.setUnitPrice(unitPrice);
+		subMenuObj.setVeg(dataRS.getBoolean("is_veg"));
+		
+		menuMapper = new MenuMapper();
+		menuMapper.setMainMenu(mainMenuObj);
+		menuMapper.setSubMenu(subMenuObj);
+		menuMapper.setMainSubMenuId(mainSubMenuId);
+				
+		menus.add(menuMapper);
+		
+		oldObj = mainMenuObj;
+		prevId = mainMenuId;
+		
+	}
+	mainSubMenuMap.put(oldObj, menus);
+	
+	//System.out.println("mainSubMenuMap==>" + mainSubMenuMap.toString());
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return mainSubMenuMap;
 }
 
 

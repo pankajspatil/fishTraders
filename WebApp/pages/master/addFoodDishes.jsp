@@ -13,7 +13,6 @@
 </head>
 <body>
 	<%
-		System.out.println("Food Dish Page");
 
 	Master master = new Master();
 	Integer subMenuId = Utils.getInt(request.getParameter("menuMapperId"));
@@ -41,10 +40,10 @@
 		subName = Utils.getString(request.getParameter("subName"));
 		descritpion = Utils.getString(request.getParameter("description"));
 		foodType = Boolean.parseBoolean(Utils.getString(request.getParameter("foodType")));
-		active = Boolean.parseBoolean(Utils.getInt(request.getParameter("active")).toString());
+		active = Boolean.parseBoolean(Utils.getString(request.getParameter("active")).toString());
 		
-		System.out.print("foodType " +Utils.getString(request.getParameter("foodType")));
-		System.out.print("active " +request.getParameter("active"));
+		//System.out.print("foodType " +Utils.getString(request.getParameter("foodType")));
+		//System.out.print("active " +request.getParameter("active"));
 		
 		acUnitPrice = Float.parseFloat(Utils.getFloat(request.getParameter("acUnitPrice")).toString());
 		nonAcUnitPrice = Float.parseFloat(Utils.getFloat(request.getParameter("nonAcUnitPrice")).toString());
@@ -103,13 +102,13 @@
 			<td>
 			<%if(foodType){
 				%>
-				<input type="radio" name="foodType" id="foodTypeVeg" value="1" checked="checked"> Veg
-				<input type="radio" name="foodType" id="foodTypeNonVeg" value="0"> Non Veg
+				<input type="radio" name="foodType" id="foodTypeVeg" value="true" checked="checked"> Veg
+				<input type="radio" name="foodType" id="foodTypeNonVeg" value="false"> Non Veg
 				<%
 			}else{
 				%>
-				<input type="radio" name="foodType" id="foodTypeVeg" value="1"> Veg
-				<input type="radio" name="foodType" id="foodTypeNonVeg" value="0" checked="checked"> Non Veg
+				<input type="radio" name="foodType" id="foodTypeVeg" value="true"> Veg
+				<input type="radio" name="foodType" id="foodTypeNonVeg" value="false" checked="checked"> Non Veg
 				<%
 			}
 			
@@ -122,22 +121,24 @@
 			<td class="headerTR">Active</td>
 			<td>
 			<%String activeSelected = "";
-			String activeValue="0";
 				
 			if(active){
 				activeSelected = "checked=checked";
-				activeValue ="1";
 			}
 				
 			%>
-			<input type="checkbox" value="<%=activeValue %>" name="active" id="active" <%=activeSelected %>></td>
+			<input type="checkbox" value="true" name="active" id="active" <%=activeSelected %>></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center"><input type="submit" name="page1" value="<%=submitText %>" class="btn btn-main btn-2g"></td>
+			<td colspan="2" align="center"><input type="submit" name="page1" value="<%=submitText %>" class="btn btn-main btn-2g" onclick="return validateSubMenuForm()"></td>
 		</tr>
 	</table>
 	<input type="hidden" name="mainMenuId" id="menuMapperId" value="<%=subMenuId%>">
 </form>
 </center>
+<script type="text/javascript">
+var oldSubMenuName = '<%=subName%>';
+</script>
+<script src="<%=contextPath%>/resources/js/masters.js" type="text/javascript"></script>
 </body>
 </html>

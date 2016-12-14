@@ -243,3 +243,28 @@ var parseBool = function(str) {
 
     return (parseInt(str) > 0);
 }
+
+function convertCaseArray(CapsArray, requiredCase){
+    caseArray = [];
+    for (var i = 0; i <CapsArray.length; i++) {
+    		if(requiredCase === UPPER_CASE){
+    			caseArray.push(decodeHTML(CapsArray[i].trim().toUpperCase()));
+    		}else{
+    			caseArray.push(decodeHTML(CapsArray[i].trim().toLowerCase()));
+    		}
+            
+        }
+ return caseArray;
+}
+
+function decodeHTML(escapedHtml) {
+	  var elem = document.createElement('div');
+	  elem.innerHTML = escapedHtml;
+	  var result = '';
+	  // Chrome splits innerHTML into many child nodes, each one at most 65536.
+	  // Whereas FF creates just one single huge child node.
+	  for (var i = 0; i < elem.childNodes.length; ++i) {
+	    result = result + elem.childNodes[i].nodeValue;
+	  }
+	  return result;
+	}

@@ -13,8 +13,6 @@
 <body>
 <%
 
-System.out.println("FoodCategories Page");
-
 Master master = new Master();
 Integer mainMenuId = Utils.getInt(request.getParameter("mainMenuId"));
 String page1 = Utils.getString(request.getParameter("page1"));
@@ -33,6 +31,8 @@ if(page1.equals("") && mainMenuId != 0){
 	foodType = mainMenu.isVeg();
 	active = mainMenu.isActive();
 	
+	System.out.println("Active iN Update===>" + mainMenu.isActive());
+	
 }else{
 	
 	String message = "Record Added Successfully.";
@@ -41,6 +41,8 @@ if(page1.equals("") && mainMenuId != 0){
 	descritpion = Utils.getString(request.getParameter("description"));
 	foodType = Boolean.parseBoolean(Utils.getString(request.getParameter("foodType")));
 	active = Boolean.parseBoolean(Utils.getString(request.getParameter("active")));
+	
+	System.out.println("Active==>" + Utils.getString(request.getParameter("active")));
 	
 	mainMenu = new MainMenu();
 	mainMenu.setMainMenuName(menuName);
@@ -88,13 +90,13 @@ if(page1.equals("") && mainMenuId != 0){
 			<td>
 			<%if(foodType){
 				%>
-				<input type="radio" name="foodType" id="foodTypeVeg" value="1" checked="checked"> Veg
-				<input type="radio" name="foodType" id="foodTypeNonVeg" value="0"> Non Veg
+				<input type="radio" name="foodType" id="foodTypeVeg" value="true" checked="checked"> Veg
+				<input type="radio" name="foodType" id="foodTypeNonVeg" value="false"> Non Veg
 				<%
 			}else{
 				%>
-				<input type="radio" name="foodType" id="foodTypeVeg" value="1"> Veg
-				<input type="radio" name="foodType" id="foodTypeNonVeg" value="0" checked="checked"> Non Veg
+				<input type="radio" name="foodType" id="foodTypeVeg" value="true"> Veg
+				<input type="radio" name="foodType" id="foodTypeNonVeg" value="false" checked="checked"> Non Veg
 				<%
 			}
 			
@@ -113,15 +115,18 @@ if(page1.equals("") && mainMenuId != 0){
 			}
 				
 			%>
-			<input type="checkbox" value="1" name="active" id="active" <%=activeSelected %>></td>
+			<input type="checkbox" value="true" name="active" id="active" <%=activeSelected %>></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center"><input type="submit" name="page1" value="<%=submitText %>" class="btn btn-main btn-2g"></td>
+			<td colspan="2" align="center"><input type="submit" name="page1" value="<%=submitText %>" class="btn btn-main btn-2g" onclick="return validateMainMenuForm()"></td>
 		</tr>
 	</table>
 	<input type="hidden" name="mainMenuId" id="mainMenuId" value="<%=mainMenuId%>">
 </form>
 </center>
+<script type="text/javascript">
+var oldMenuName = '<%=menuName.equals("") ? "" :  menuName%>';
+</script>
 <script src="<%=contextPath%>/resources/js/masters.js" type="text/javascript"></script>
 </body>
 </html>
