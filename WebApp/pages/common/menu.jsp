@@ -41,7 +41,9 @@
 					<li class='first-child'><a
 						href='<%=request.getContextPath()%>/pages/master/tableMaster.jsp'><span>Table
 								Master</span></a></li>
-					<li class='has-sub'><a href='#'><span>Food Menu</span></a>
+					<li class='first-child'><a
+								href='<%=request.getContextPath()%>/pages/master/menuMaster.jsp'><span>Food Menu Master</span></a></li>
+					<%-- <li class='has-sub'><a href='#'><span>Food Menu</span></a>
 						<ul>
 							<li class='first-child'><a
 								href='<%=request.getContextPath()%>/pages/master/menuMaster.jsp'><span>Food Menu</span></a></li>
@@ -51,7 +53,7 @@
 								</a>
 							</li>
 						</ul>
-					</li>
+					</li> --%>
 				</ul>
 			</li>
 			<% } %>

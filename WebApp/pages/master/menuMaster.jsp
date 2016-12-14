@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="com.google.gson.Gson"%>
 <%@page import="com.google.gson.JsonParser"%>
 <%@page import="com.org.agritadka.order.Order"%>
@@ -38,7 +39,6 @@
 	
 	Order order = new Order();
 	LinkedHashMap<MainMenu, List<MenuMapper>> menuMap = master.getMenus(priceType);
-	
 	//List<MenuMapper> menuMapperList = master.getAllSubMenus(false);
 %>
 
@@ -54,7 +54,6 @@
 			<li class='tab' id="menuMappingTab"><a href="#menuMapping">Menu Mapping</a></li>
 			
 		</ul>
-
 		<div id="mainMenuMaster">
 			<table id="mainMenuTable" border="0" width="100%">
 				<thead>
@@ -150,11 +149,7 @@
 									<%if(mappers.size() > 0){
 										%><ul class="selectable" id="content_<%=mainMenu.getMainMenuId()%>">
 										<%for(MenuMapper mapper : mappers){ 
-											
-											System.out.println("SubMenuId==>" + mapper.getSubMenu().getSubMenuId() + "==>" + mainMenu.getMainMenuId());
-											
 											if(mapper.getSubMenu().getSubMenuId() != 0){
-											
 											%>
 											<li class="ui-widget-content" id='<%=mapper.getMainSubMenuId() %>_<%=mapper.getSubMenu().getSubMenuId() %>' is_veg='<%=mapper.getSubMenu().isVeg()%>'>
 												<%if(mapper.getSubMenu().isVeg()){
@@ -182,8 +177,6 @@
 							<%
 									}
 								%>
-			
-						
 					</div>
 				</td>
 				<td width="50%" valign="top">
