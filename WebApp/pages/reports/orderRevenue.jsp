@@ -3,11 +3,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="/pages/common/header.jsp"%>
+<%@ include file="/pages/common/validateSession.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html5/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<script src="<%=contextPath%>/resources/js/reports.js" type="text/javascript"></script>
+
 </head>
 <body>
 <%
@@ -157,27 +158,5 @@ if(!page1.equals("")){
 	}	
 }
 %>
-
-
-	
-	<script>
-	$( "#fromDate" ).datepicker({
-		changeMonth: true,
-	    changeYear: true,
-	    dateFormat:'yy-mm-dd',
-	    onSelect: function (date) {
-	    	$( "#toDate" ).datepicker( "option", "minDate", date );
-        }
-	});
-
-	$( "#toDate" ).datepicker({
-		changeMonth: true,
-	    changeYear: true,
-	    dateFormat:'yy-mm-dd',
-	    onSelect: function (date) {
-	    	$( "#fromDate" ).datepicker( "option", "maxDate", date );
-        }
-	});
-	</script>
-</body>
+<script src="<%=contextPath%>/resources/js/reports.js" type="text/javascript"></script></body>
 </html>

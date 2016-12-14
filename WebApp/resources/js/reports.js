@@ -25,3 +25,22 @@ function validateStatusForm(){
 	}
 	
 }
+
+
+$( "#fromDate" ).datepicker({
+	changeMonth: true,
+    changeYear: true,
+    dateFormat:'yy-mm-dd',
+    onSelect: function (date) {
+    	$( "#toDate" ).datepicker( "option", "minDate", date );
+    }
+});
+
+$( "#toDate" ).datepicker({
+	changeMonth: true,
+    changeYear: true,
+    dateFormat:'yy-mm-dd',
+    onSelect: function (date) {
+    	$( "#fromDate" ).datepicker( "option", "maxDate", date );
+    }
+});

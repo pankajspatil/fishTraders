@@ -642,7 +642,7 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		return returnVal;
 	}
 	
-	public List<OrderData> getAllOrders() throws SQLException{
+	public List<OrderData> getAllOrders(String fromDate, String toDate) throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
@@ -650,12 +650,17 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		String query = "select o.order_id,o.order_sequence, o.created_on, t.table_name, status_code, status_name, "+
 						"customer_name, o.mobile_number,customer_address, concat(wfirst_name, ' ',wmiddle_name, ' ', wlast_name) as waiter_name "+
 						"from order_master o "+
-						"inner join status_master s on o.status_id = s.status_id "+
+						"inner join status_master s on o.status_id = s.status_id and o.created_on between ? AND ? "+
 						"left join table_type_name_map ttn on o.table_id = ttn.table_type_name_map_id "+
 						"left join table_master t on ttn.table_id = t.table_id "+
 						"left join waiter_master w on o.waiter_id = w.waiter_id "+
 						"order by o.order_id desc; ";
-		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setString(1, fromDate + " 00:00:00");
+		psmt.setString(2, toDate + " 23:59:59");
+		
+		ResultSet dataRS = psmt.executeQuery();
 		
 		OrderData orderData = new OrderData();
 		List<OrderData> orderList = new ArrayList<OrderData>();

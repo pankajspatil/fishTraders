@@ -1,3 +1,5 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.org.agritadka.transfer.OrderData"%>
 <%@page import="java.util.List"%>
 <%@page import="com.org.agritadka.order.Order"%>
@@ -5,7 +7,7 @@
     pageEncoding="ISO-8859-1"%>
     
 <%@ include file="/pages/common/header.jsp"%>  
-    <%@ include file="/pages/common/validateSession.jsp"%>  
+<%@ include file="/pages/common/validateSession.jsp"%>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,10 +17,47 @@
 <body>
 <%
 Order order = new Order();
-List<OrderData> orderList = order.getAllOrders();
+
+String fromDate = Utils.getString(request.getParameter("fromDate"));
+String toDate = Utils.getString(request.getParameter("toDate"));
+String reportType = Utils.getString(request.getParameter("reportType"));
+
+String page1 = Utils.getString(request.getParameter("page1"));
+if (fromDate.equals("") && page1.equals("")){
+	 String pattern = "yyyy-MM-dd"; 
+	 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern); 
+	 String date = simpleDateFormat.format(new Date());
+	 fromDate = date;
+	 toDate = date;
+	}
+List<OrderData> orderList = order.getAllOrders(fromDate, toDate);
+
 %>
 <center>
 	<h1>Order Dashboard</h1>
+	
+	<form action="" method="post">
+	<table align="center" border="0" width="30%">
+		<tr align="center">
+			<td>
+				<b>From Date</b> &nbsp; <input size="12" type="text" name="fromDate" id="fromDate" value="<%=fromDate %>" 
+				placeholder="From date" style="padding: 4px;" readonly="readonly">
+			</td>
+			
+			<td>
+				<b>To Date</b> &nbsp;<input size="12" type="text" name="toDate" id="toDate" value="<%=toDate %>" 
+				placeholder="To Date" style="padding: 4px;" readonly="readonly">
+			</td>
+		</tr>
+		
+		<tr align="center">
+			<td colspan="2">
+				<input class="btn btn-main btn-2g" type="submit" name="page1" id="page1" value="Submit">
+			</td>
+		</tr>
+	</table>
+</form>
+	
 	<table width="100%" border="1" id="orderDashboard">
 	<thead>
 		<tr class="headerTR">
@@ -73,5 +112,6 @@ List<OrderData> orderList = order.getAllOrders();
 
 </center>
 <script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
+<script src="<%=contextPath%>/resources/js/reports.js" type="text/javascript"></script>
 </body>
 </html>
