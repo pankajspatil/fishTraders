@@ -58,7 +58,7 @@ public LinkedHashMap<String, String> getRevenueData(String fromDate, String toDa
 		String format = reportType.equalsIgnoreCase("month") ? "%b-%y" : "%d-%b-%y";
 		String orderByFormat = reportType.equalsIgnoreCase("month") ? "%Y-%m" : "%Y-%m-%d";
 		
-		String query = "select s.status_id, sum(ifnull(unit_price,0)) - sum(ifnull(discount_amt,0)) as amount, "
+		String query = "select s.status_id, sum(ifnull(order_price,0)) - sum(ifnull(discount_amt,0)) as amount, "
 					+ "date_format(o.created_on, '"+ format +"') as reportKey "
 					+ "from order_master o inner join status_master s on o.status_id = s.status_id "
 					+ "inner join order_menu_map om on om.order_id = o.order_id and om.is_active = 1 "
