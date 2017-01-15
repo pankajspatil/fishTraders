@@ -1,4 +1,4 @@
-<%@page import="com.org.fishtrader.transfer.Table"%>
+<%@page import="com.org.fishtrader.transfer.Boat"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="com.org.fishtrader.home.Home"%>
@@ -17,7 +17,7 @@
 	<table width="100%" align="center">
 		<tr>
 			<td width="33.33%">&nbsp;</td>
-			<td width="33.33%" align="center"><h1>Table Status</h1></td>
+			<td width="33.33%" align="center"><h1>Boat Status</h1></td>
 			<td width="33.33%" align="right"><div
 					style="border: 2px solid black; width: 30%; text-align: center;">
 					<div class="reactanleDiv avlblFill">Vacant</div>
@@ -29,7 +29,7 @@
 	<%
 int tablesPerRow = 5;
 Home home = new Home();
-LinkedHashMap<String, List<Table>> tableMap = home.getTables();
+LinkedHashMap<String, List<Boat>> tableMap = home.getAllBoats();
 //out.println(tableMap.toString());
 
 if(tableMap.size() > 0){
@@ -43,18 +43,16 @@ if(tableMap.size() > 0){
 			</tr>
 		</table>
 		<%
-		List<Table> tableList = tableMap.get(tableType);
-		if(tableList.size() > 0){
+		List<Boat> boatList = tableMap.get(tableType);
+		if(boatList.size() > 0){
 			%><table align="center" width="<%=tablesPerRow * 10 %>%" border="1" cellpadding="20"
 			cellspacing="20">
 			<tr>
 			<%
 			int count = tablesPerRow;
-			for(Table table : tableList){
-				%><td align="center" class='waves-effect <%=Utils.getString(table.getStatusCode()).equals("INQUEUE")
-						? "homeTableOccpd" : "homeTableAvlble"%>' 
-						onclick="openOrderPage(<%=table.getTableId()%>,'<%=table.getTableName()%>','<%=table.getPriceType()%>')">
-						<b><%=table.getTableName()%></b>
+			for(Boat boat : boatList){
+				%><td align="center" >
+						<b><%=boat.getBoatName()%></b>
 					</td><%
 				count --;
 				if(count == 0){
