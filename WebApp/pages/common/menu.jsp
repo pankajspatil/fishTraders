@@ -1,4 +1,4 @@
-<%@page import="com.org.agritadka.generic.Constants"%>
+<%@page import="com.org.fishtrader.generic.Constants"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="java.sql.Connection,java.util.ArrayList"%>

@@ -1,2 +1,2 @@
-# AgriTadka
-This is for Agri Tadka Restaurant
+# FishTader
+This is for Fish Trader Restaurant

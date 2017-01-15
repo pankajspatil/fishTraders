@@ -1,5 +1,5 @@
-<%@page import="com.org.agritadka.master.Master"%>
-<%@page import="com.org.agritadka.transfer.MainMenu"%>
+<%@page import="com.org.fishtrader.master.Master"%>
+<%@page import="com.org.fishtrader.transfer.MainMenu"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>

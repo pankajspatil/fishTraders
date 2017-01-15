@@ -1,12 +1,12 @@
-<%@page import="com.org.agritadka.transfer.Waiter"%>
-<%@page import="com.org.agritadka.transfer.OrderMenu"%>
-<%@page import="com.org.agritadka.transfer.OrderData"%>
+<%@page import="com.org.fishtrader.transfer.Waiter"%>
+<%@page import="com.org.fishtrader.transfer.OrderMenu"%>
+<%@page import="com.org.fishtrader.transfer.OrderData"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.org.agritadka.transfer.MenuMapper"%>
+<%@page import="com.org.fishtrader.transfer.MenuMapper"%>
 <%@page import="java.util.List"%>
-<%@page import="com.org.agritadka.transfer.MainMenu"%>
+<%@page import="com.org.fishtrader.transfer.MainMenu"%>
 <%@page import="java.util.LinkedHashMap"%>
-<%@page import="com.org.agritadka.order.Order"%>
+<%@page import="com.org.fishtrader.order.Order"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/pages/common/header.jsp"%>
