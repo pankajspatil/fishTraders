@@ -51,7 +51,7 @@ if(tableMap.size() > 0){
 			<%
 			int count = tablesPerRow;
 			for(Boat boat : boatList){
-				%><td align="center" >
+				%><td align="center" class='waves-effect homeTableAvlble' onclick="openBoatPage(<%=boat.getBoatId()%>,'<%=boat.getBoatName()%>')">
 						<b><%=boat.getBoatName()%></b>
 					</td><%
 				count --;
@@ -75,7 +75,7 @@ if(tableMap.size() > 0){
 
 <!-- <h1 align="center">Table Status<div style="float: right;border: 1px;">Text</div></h1> -->
 <script src="<%=contextPath%>/resources/js/materialize.js" type="text/javascript"></script>
-<script src="/AgriTadka/resources/js/order.js" type="text/javascript"></script>
+<script src="<%=contextPath%>/resources/js/boat.js" type="text/javascript"></script>
 </body>
 <%@ include file="/pages/common/footer.jsp" %>
 </html>

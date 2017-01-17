@@ -18,7 +18,7 @@ public class Home {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "";
+		String query = "Select * from boat_master";
 		
 		System.out.println("query ==> " + query);
 		
@@ -28,13 +28,8 @@ public class Home {
 		Boat boat;
 		List<Boat> boatList = new ArrayList<Boat>();
 		
-		while(dataRS.next()){
+		while(dataRS.next()){			
 			
-			currentTblType = dataRS.getString("Boat_type");
-			if(!previousTblType.equals(currentTblType) && !previousTblType.equals("")){
-				boatMap.put(previousTblType, boatList);
-				boatList = new ArrayList<Boat>();
-			}
 			boat = new Boat();
 			boat.setBoatId(dataRS.getInt("boat_id"));			
 			boat.setBoatName(dataRS.getString("boat_name"));
