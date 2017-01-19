@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.org.fishtrader.generic.ConnectionsUtil;
 import com.org.fishtrader.transfer.Boat;
+import com.org.fishtrader.transfer.Vendor;
 
 public class Home {
 	
@@ -18,36 +19,61 @@ public class Home {
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 		
-		String query = "Select * from boat_master";
+		String query = "Select * from vendor_master vn, boat_master bm where vn.vendor_id = bm.vendorid";
 		
 		System.out.println("query ==> " + query);
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		LinkedHashMap<String, List<Boat>> boatMap = new LinkedHashMap<String, List<Boat>>();
-		String previousTblType = "", currentTblType = "";
+		String previousvendorid = "", currentvendorid = "";
 		Boat boat;
 		List<Boat> boatList = new ArrayList<Boat>();
 		
 		while(dataRS.next()){			
-			
+			currentvendorid = dataRS.getString("vendor_id");
 			boat = new Boat();
 			boat.setBoatId(dataRS.getInt("boat_id"));			
 			boat.setBoatName(dataRS.getString("boat_name"));
 			boat.setIsActive(dataRS.getInt("is_active"));
 			
 			boatList.add(boat);
-			previousTblType = currentTblType;
+			previousvendorid = currentvendorid;
 		}
 		
 		if(boatList.size() > 0){
-			boatMap.put(previousTblType, boatList);
+			boatMap.put(previousvendorid, boatList);
 		}
 		
 		connectionsUtil.closeConnection(conn);
 		return boatMap;
 	}
 	
-	
+public List<Vendor> getAllVendors() throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "Select * from vendor_master";
+		
+		System.out.println("query ==> " + query);
+		
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		List<Vendor> vendorlist = new ArrayList<Vendor>();
+		Vendor vendor;
+		
+		while(dataRS.next()){			
+			
+			vendor = new Vendor();
+			vendor.setVendorId(dataRS.getInt("vendor_id"));			
+			vendor.setVendorName(dataRS.getString("vendor name"));
+			vendor.setVendorAddress(dataRS.getString("address"));
+			vendorlist.add(vendor);
+		}
+		
+		
+		connectionsUtil.closeConnection(conn);
+		return vendorlist;
+	}
 
 	
 	public void updateTable(int tableId,String tablename,int active){
