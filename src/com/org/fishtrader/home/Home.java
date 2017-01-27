@@ -25,12 +25,19 @@ public class Home {
 		
 		ResultSet dataRS = conn.createStatement().executeQuery(query);
 		LinkedHashMap<String, List<Boat>> boatMap = new LinkedHashMap<String, List<Boat>>();
-		String previousvendorid = "", currentvendorid = "";
+		String previousvendorid = "", currentvendorid = ""; 
 		Boat boat;
 		List<Boat> boatList = new ArrayList<Boat>();
 		
 		while(dataRS.next()){			
-			currentvendorid = dataRS.getString("vendor_id");
+			currentvendorid = dataRS.getString("vendorid");
+			
+			if(!previousvendorid.equals(currentvendorid) && !previousvendorid.equals("")){
+				boatMap.put(previousvendorid, boatList);
+				boatList = new ArrayList<Boat>();
+			}
+			
+			
 			boat = new Boat();
 			boat.setBoatId(dataRS.getInt("boat_id"));			
 			boat.setBoatName(dataRS.getString("boat_name"));
@@ -46,6 +53,8 @@ public class Home {
 		
 		connectionsUtil.closeConnection(conn);
 		return boatMap;
+		
+		
 	}
 	
 public List<Vendor> getAllVendors() throws SQLException{

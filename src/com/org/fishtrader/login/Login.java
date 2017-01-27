@@ -355,7 +355,7 @@ public List<String> getUserMenu(String username) {
 
 		String query = "select mm.menu_description from role_master rm,"
 				+ "role_menu_map rmm,user_menu_master mm,user_master um 	where 	 "
-				+ "rm.role_id = rmm.role_id and 	 um.Role_Id = rm.role_id and 	 "
+				+ "rm.role_id = rmm.role_id and "
 				+ "mm.menu_id = rmm.menu_id and "
 				+ " ucase(um.user_name)=ucase(?)";
 		
