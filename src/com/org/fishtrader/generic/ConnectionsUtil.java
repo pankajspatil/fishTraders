@@ -6,10 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
 //import com.mysql.jdbc.Driver;
 
 public class ConnectionsUtil {
@@ -21,7 +17,7 @@ public class ConnectionsUtil {
 			/*Class.forName("com.mysql.jdbc.Driver").newInstance();
 			// conn =
 			// DriverManager.getConnection("jdbc:mysql://localhost:3306/testdatabase?user=testuser&password=testpassword");
-			String connectionUrl = "jdbc:mysql://localhost:3306/agri_tadka";
+			String connectionUrl = "jdbc:mysql://localhost:3306/doctorsonline";
 			String connectionUser = "root";
 			String connectionPassword = "admin";
 			conn = DriverManager.getConnection(connectionUrl, connectionUser,
@@ -51,6 +47,63 @@ public class ConnectionsUtil {
 		return conn;
 	}
 	
+	public void closeResultSet(ResultSet rs){
+		Statement st;
+		try {
+			if (rs!=null){
+				st = rs.getStatement();
+				this.closeConnection(st);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void closeRes(ResultSet rs){
+		Statement st;
+		try {
+			if (rs!=null){
+				st = rs.getStatement();
+				closeCon(st);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void closeCon(Statement st){
+		Connection con = null;
+		if (st!=null){
+			try {
+				 con = st.getConnection();
+				ResultSet rs = st.getResultSet();
+				if(rs!=null){
+					rs.close();
+					st.close();
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally{
+				if (con != null){
+					try {
+						con.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
+						
+		}
+	}
 	
 	public void closeConnection(Statement st){
 		Connection con = null;

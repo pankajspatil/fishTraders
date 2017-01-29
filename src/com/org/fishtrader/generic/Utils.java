@@ -1,9 +1,13 @@
 package com.org.fishtrader.generic;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.json.simple.JSONObject;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -20,13 +24,26 @@ public class Utils {
 	}
 	
 	
-	public static Double getFloat(Object param){
+	public static Double getDouble(Object param){
 		return (param == null || param =="") ? new Double(0) : Double.parseDouble(param.toString());
 	}
 	
 	public static String[] getStringArray(Object param){
 		return param == null ? new String[0] : (String[])param;
 		
+	}
+	
+	public static Integer[] getIntegerArray(Object param){
+		Integer[] intArray = new Integer[0];
+		String[] strArray = (String[])param;
+		
+		if(param != null){
+			intArray = new Integer[((String[])param).length];
+			for(int i=0; i < strArray.length; i++){
+				intArray[i] = Integer.parseInt(strArray[i]); 
+			}
+		}
+		return intArray;
 	}
 	
 	public static String getValidCharge(Object param){
@@ -85,6 +102,32 @@ public class Utils {
 	public static JsonObject getJSONObjectFromString(String data){
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject)jsonParser.parse(data);
+		
+		return jsonObject;
+	}
+	
+public JSONObject getConfig(){
+		
+	JSONObject jsonObject = new JSONObject();
+		try{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		
+		Connection conn =  connectionsUtil.getConnection();
+		
+		String query = "select * from config where is_active = 1";
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		while(dataRS.next()){
+			jsonObject.put(dataRS.getString("config_key"), dataRS.getString("config_value"));
+		}
+		System.out.println("jsonObject of config==>" + jsonObject);
+		
+		connectionsUtil.closeResultSet(dataRS);
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		
 		
 		return jsonObject;
 	}

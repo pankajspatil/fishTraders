@@ -1,3 +1,4 @@
+<%@page import="com.org.fishtrader.master.Master"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="/pages/common/header.jsp"%>
@@ -49,6 +50,7 @@
 
 		int tablesPerRow = 5;
 		Home home = new Home();
+		Master master = new Master();
 
 		if (reload != null && reload.equalsIgnoreCase("1")) {
 			boatMap = (LinkedHashMap<String, List<Boat>>) session
@@ -61,7 +63,7 @@
 		} else {
 
 			boatMap = home.getAllBoats();
-			vendorList = home.getAllVendors();
+			vendorList = master.getAllVendors(true);
 			session.setAttribute("boatMap", boatMap);
 			session.setAttribute("VendorList", vendorList);
 		}

@@ -12,9 +12,11 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.org.fishtrader.generic.ConnectionsUtil;
 import com.org.fishtrader.generic.Utils;
+import com.org.fishtrader.transfer.Fish;
 import com.org.fishtrader.transfer.MainMenu;
 import com.org.fishtrader.transfer.MenuMapper;
 import com.org.fishtrader.transfer.SubMenu;
+import com.org.fishtrader.transfer.Vendor;
 
 public class Master {
 	
@@ -488,6 +490,63 @@ public LinkedHashMap<MainMenu, List<MenuMapper>> getMenus(String priceType) thro
 	connectionsUtil.closeConnection(conn);
 	
 	return mainSubMenuMap;
+}
+public List<Vendor> getAllVendors(Boolean isActive) throws SQLException{
+	
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "select * from vendor_master";
+	if(isActive){
+		query += " where is_active = 1";
+	}
+	
+	ResultSet dataRS = conn.createStatement().executeQuery(query);
+	List<Vendor> vendorList = new ArrayList<Vendor>();
+	Vendor vendor;
+	
+	while(dataRS.next()){
+		vendor = new Vendor();
+		
+		vendor.setVendorId(dataRS.getInt("vendor_id"));
+		vendor.setVendorName(dataRS.getString("vendor_name"));
+		vendor.setIsActive(dataRS.getBoolean("is_active"));
+		
+		vendorList.add(vendor);
+	}
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return vendorList;
+}
+
+public List<Fish> getAllFishes(Boolean isActive) throws SQLException{
+	
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "select * from fish_master";
+	if(isActive){
+		query += " where is_active = 1";
+	}
+	
+	ResultSet dataRS = conn.createStatement().executeQuery(query);
+	List<Fish> fishList = new ArrayList<Fish>();
+	Fish fish;
+	
+	while(dataRS.next()){
+		fish = new Fish();
+		
+		fish.setFishId(dataRS.getInt("fish_id"));
+		fish.setFishName(dataRS.getString("fish_name"));
+		fish.setIsActive(dataRS.getBoolean("is_active"));
+		
+		fishList.add(fish);
+	}
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return fishList;
 }
 
 

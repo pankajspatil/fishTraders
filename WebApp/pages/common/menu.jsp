@@ -56,20 +56,18 @@
 					</li> --%>
 				</ul>
 			</li>
-			<% } %>
-			<%
-				if (menulist.contains("Cooking")) {
-			%>
-			<li><a
-				href='<%=request.getContextPath()%>/pages/order/cookingDashboard.jsp'><span>Cooking</span></a></li>
-			<% } %>
-			<%
-				if (menulist.contains("Parcel")) {
-			%>
-			<li onclick="openOrderPage()"><a
-				href='<%=request.getContextPath()%>/pages/order/orderPlacement.jsp'><span>Parcel</span></a></li>
-			<% } %>
-			<%
+			<% } 
+			if (menulist.contains("Transaction")) {%>
+		<li class='has-sub'><a href='#'><span>Transaction</span></a>
+			<ul>
+				<li class='first-child'><a
+					href='<%=request.getContextPath()%>/pages/transaction/addExpense.jsp'><span>Expense</span></a>
+				</li>
+				<li><a
+					href='<%=request.getContextPath()%>/pages/reports/orderStatus.jsp'><span>Order
+							Status</span></a></li>
+			</ul></li>
+			<% } 
 				if (menulist.contains("Reports")) {
 			%>
 			<li class='has-sub'><a href='#'><span>Reports</span></a>

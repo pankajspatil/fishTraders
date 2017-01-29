@@ -10,7 +10,6 @@ import java.util.List;
 
 import com.org.fishtrader.generic.ConnectionsUtil;
 import com.org.fishtrader.transfer.Boat;
-import com.org.fishtrader.transfer.Vendor;
 
 public class Home {
 	
@@ -41,7 +40,7 @@ public class Home {
 			boat = new Boat();
 			boat.setBoatId(dataRS.getInt("boat_id"));			
 			boat.setBoatName(dataRS.getString("boat_name"));
-			boat.setIsActive(dataRS.getInt("is_active"));
+			boat.setIsActive(dataRS.getBoolean("is_active"));
 			
 			boatList.add(boat);
 			previousvendorid = currentvendorid;
@@ -56,34 +55,6 @@ public class Home {
 		
 		
 	}
-	
-public List<Vendor> getAllVendors() throws SQLException{
-		
-		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
-		Connection conn = connectionsUtil.getConnection();
-		
-		String query = "Select * from vendor_master";
-		
-		System.out.println("query ==> " + query);
-		
-		ResultSet dataRS = conn.createStatement().executeQuery(query);
-		List<Vendor> vendorlist = new ArrayList<Vendor>();
-		Vendor vendor;
-		
-		while(dataRS.next()){			
-			
-			vendor = new Vendor();
-			vendor.setVendorId(dataRS.getInt("vendor_id"));			
-			vendor.setVendorName(dataRS.getString("vendor name"));
-			vendor.setVendorAddress(dataRS.getString("address"));
-			vendorlist.add(vendor);
-		}
-		
-		
-		connectionsUtil.closeConnection(conn);
-		return vendorlist;
-	}
-
 	
 	public void updateTable(int tableId,String tablename,int active){
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();

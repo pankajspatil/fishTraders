@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Agri Tadka</title>
+<title>Fish Trader</title>
 
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/generic.css">
@@ -58,21 +58,20 @@
 
 <!-- OverLay JS-->
 
-<script src="/AgriTadka/resources/js/loadingoverlay.js" type="text/javascript"></script>
+<script src="<%=contextPath%>/resources/js/loadingoverlay.js" type="text/javascript"></script>
 
 <!-- Easy Tabs -->
-<script src="/AgriTadka/resources/js/jquery.easytabs.min.js" type="text/javascript"></script>
-<!-- <script src="/AgriTadka/resources/js/jquery.hashchange.min.js" type="text/javascript"></script> -->
+<script src="<%=contextPath%>/resources/js/jquery.easytabs.min.js" type="text/javascript"></script>
+<!-- <script src="/<%=contextPath%>/resources/js/jquery.hashchange.min.js" type="text/javascript"></script> -->
 
 <!-- Charts -->
-<script src="/AgriTadka/resources/js/fusioncharts.js" type="text/javascript"></script>
-<script src="/AgriTadka/resources/js/fusioncharts.charts.js" type="text/javascript"></script>
-<script src="/AgriTadka/resources/js/fusioncharts.theme.fint.js" type="text/javascript"></script>
+<script src="<%=contextPath%>/resources/js/fusioncharts.js" type="text/javascript"></script>
+<script src="<%=contextPath%>/resources/js/fusioncharts.charts.js" type="text/javascript"></script>
+<script src="<%=contextPath%>/resources/js/fusioncharts.theme.fint.js" type="text/javascript"></script>
 
 <!-- List Js -->
 <script type="text/javascript" src="<%=contextPath%>/resources/js/list.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/list.pagination.min.js"></script>
-
 
 </head>
 

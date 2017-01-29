@@ -1,5 +1,4 @@
-<%@page import="com.org.fishtrader.transfer.Table"%>
-<%@page import="java.util.List"%>
+<%-- <%@page import="java.util.List"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="com.org.fishtrader.home.Home"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -106,4 +105,4 @@ function popitup() {
 
 	</form>
 </body>
-</html>
+</html> --%>
