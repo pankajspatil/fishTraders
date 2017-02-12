@@ -5,7 +5,7 @@ function openBoatPage(boatId, boatName){
 	
 	var form = $("<form></form>").attr('id', 'boatTransferForm')
 				.attr("name", "boatTransferForm")
-				.attr("action", "/FishTrader/pages/boat/boatPlacement.jsp")
+				.attr("action", contextPath + "/pages/boat/boatPlacement.jsp")
 				.attr("method","post");
 	
 	if(boatId !== undefined && boatId != null){

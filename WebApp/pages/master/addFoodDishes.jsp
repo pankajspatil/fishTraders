@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@page import="com.org.fishtrader.master.Master"%>
-<%@page import="com.org.fishtrader.transfer.SubMenu"%>
+<%@page import="com.org.fishtraders.master.Master"%>
+<%@page import="com.org.fishtraders.transfer.SubMenu"%>
 <%@page import="java.util.List"%>
 <%@ include file="/pages/common/header.jsp"%>
 <%@ include file="/pages/common/validateSession.jsp"%>

@@ -1,6 +1,6 @@
-<%@page import="com.org.fishtrader.generic.Utils"%>
-<%@page import="com.org.fishtrader.generic.Constants"%>
-<%@page import="com.org.fishtrader.generic.ConnectionsUtil"%>
+<%@page import="com.org.fishtraders.generic.Utils"%>
+<%@page import="com.org.fishtraders.generic.Constants"%>
+<%@page import="com.org.fishtraders.generic.ConnectionsUtil"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ include file="/pages/general/variables.jsp"%>
@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Fish Trader</title>
+<title>FishTraders</title>
 
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/resources/css/generic.css">
@@ -81,7 +81,7 @@
 			<td class="headercol">
 				<div id="header">
 					<!-- <h1>Project Resource Management</h1> -->
-					<img src="<%=contextPath %>/resources/images/header/banner.png" />
+					<img src="<%=contextPath %>/resources/images/header/banner.jpg" width="50%" height="140px" />
 				</div>
 			</td>
 		</tr>

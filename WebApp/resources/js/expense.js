@@ -33,6 +33,10 @@ $(document).ready(function() {
 		   return validateFloatKeyPress(event)
 	   });
 	   
+	   $('#vendorId').change(function (event){
+		   updateBoats(event);
+	   });
+	   
 	} );
 
 function openExpenseFancyBox(expenseId, menuType, obj){
@@ -79,4 +83,41 @@ function validateCreateExpense(){
 		  return false;
 	  }
 	
+}
+
+function updateBoats(el){
+	
+	var vendorObj = $(event.currentTarget);
+    var vendorId = $(vendorObj).val();
+    var boatObj = $('#boatId');
+    
+    boatObj.find('option').not(':first').remove();
+	
+    var data = {
+			"vendorId" : vendorId,
+			"boatId" : 0
+	};
+	
+	var postData = {
+			"action" : "getBoatsByVendor",
+			"data" : JSON.stringify(data)
+	};
+	
+	$.ajax({
+	      type: 'POST',
+	      url: contextPath + "/pages/ajax/postAjaxData.jsp",
+	      data: postData, 
+	      dataType: 'json',
+	      async : false,
+	      success: function(resultData) {
+	    	  //alert("Save Complete" + resultData)
+	    	  	$.each(resultData, function(key, value) {
+	    	  		 boatObj.append("<option value='"+value.boatId+"'>"+value.boatName+"</option>");
+	    	  		 //console.log("key==>"+key + "value==>" + value);
+	    		  });
+	    	 },
+    	 error: function (xhr, status) { 
+    		 console.log('ajax error = ' + xhr.statusText);
+            } 
+	});
 }

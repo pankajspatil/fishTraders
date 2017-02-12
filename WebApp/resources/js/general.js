@@ -104,7 +104,7 @@ function displayNotification(paramMap){
         delayIndicator: false,
         position: 'center top',
         msg: msg,
-        //img:'/AgriTadka/resources/images/1.png',
+        //img:'/Krishnadeep/resources/images/1.png',
         //delay:500,
         iconSource:'fontAwesome'
     });
@@ -144,7 +144,7 @@ function validPassword(str)
 function callAjax(paramsMap){
 	
 	var methodType = paramsMap.hasKey(METHOD_TYPE) ? paramsMap.get(METHOD_TYPE) : 'POST';
-	var url = paramsMap.hasKey(URL) ? paramsMap.get(URL) : '/AgriTadka/pages/ajax/postAjaxData.jsp';
+	var url = paramsMap.hasKey(URL) ? paramsMap.get(URL) : contextPath + '/pages/ajax/postAjaxData.jsp';
 	var postData = paramsMap.hasKey(DATA) ? paramsMap.get(DATA) : {};
 	var dataType = paramsMap.hasKey(DATA_TYPE) ? paramsMap.get(DATA_TYPE) : 'json';
 	var successHandler = paramsMap.hasKey(SUCCESS_HANDLER) ? paramsMap.get(SUCCESS_HANDLER) : 'defaultSuccessHandler';
@@ -204,6 +204,7 @@ function openFancyBox(obj, paramMap){
 	var url = paramMap.get(URL);
 	var width = paramMap.get(WIDTH) ? paramMap.get(WIDTH) : '50%';
 	var height = paramMap.get(HEIGHT) ? paramMap.get(HEIGHT) : '50%';
+	var data = paramMap.get(DATA);
 	
 	$(obj).fancybox({
 		'href' : url,
@@ -269,7 +270,76 @@ function decodeHTML(escapedHtml) {
 	  return result;
 }
 
-function validateFloatKeyPress(el) {
+function validateFloatKeyPress_old(el) {
     var v = parseFloat(el.value);
     el.value = (isNaN(v)) ? '' : v.toFixed(2);
 }
+
+function validateNumbersKeyPress(el){
+	var v = parseFloat(el.value);
+	el.value = new RegExp(/^[0-9]*$/g).test(el.value) ? el.value : '';
+}
+
+
+function validateFloatKeyDown(event) {
+	   var inputCode = event.which;
+	   var obj = $(event.currentTarget);
+	   var currentValue = $(obj).val();
+	   if(inputCode === 8 || inputCode == 46){
+		   var amt = currentValue.substr(0, getCursorPosition($(obj)) - 1) + currentValue.substr(getCursorPosition($(obj)), currentValue.length);
+		   if(inputCode == 46){
+			   amt = currentValue.substr(0, getCursorPosition($(obj))) + currentValue.substr(getCursorPosition($(obj)) + 1, currentValue.length);
+		   }
+	   }
+}
+
+function validateFloatKeyPress(event) {
+		    var inputCode = event.which;
+		    var obj = $(event.currentTarget);
+		    var currentValue = $(obj).val();
+		    if (inputCode > 0 && (inputCode < 48 || inputCode > 57)) {
+		        if (inputCode == 46) {
+		        	
+		        	if (getCursorPosition($(obj)) == 0 && currentValue.charAt(0) == '-') return false;
+		            if (currentValue.match(/[.]/)) return false;
+		        } 
+		        else if (inputCode == 45) {
+		            if (currentValue.charAt(0) == '-') return false;
+		            if (getCursorPosition($(obj)) != 0) return false;
+		        } 
+		        else if (inputCode == 8){
+		        	return true;
+		        }
+		        else return false;
+		
+		    } 
+		    else if (inputCode > 0 && (inputCode >= 48 && inputCode <= 57)) {
+		        if (currentValue.charAt(0) == '-' && getCursorPosition($(obj)) == 0) return false;
+		    }
+}
+
+function printReceipt(paramsMap){
+	
+	var visitId = btnObj.id;
+	/*var paramsMap = new Map();
+	var dataMap = new Map();
+
+	dataMap.put("visitId", visitId);
+	paramsMap.put(WIN_URL, contextPath + '/pages/doctor/printVisitReceipt.jsp');
+	paramsMap.put(DATA, dataMap);
+	
+	openWindow(paramsMap);*/
+	
+	var paramMap = new Map();
+	
+	var url = contextPath + '/pages/doctor/printVisitReceipt.jsp?visitId=' + visitId;
+	
+	paramMap.put(URL, url);
+	paramMap.put(WIDTH, '70%');
+	paramMap.put(HEIGHT, '80%');
+	
+	openFancyBox(btnObj, paramMap);
+}
+
+
+

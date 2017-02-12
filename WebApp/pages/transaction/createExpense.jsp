@@ -1,14 +1,15 @@
-<%@page import="com.org.fishtrader.master.Master"%>
-<%@page import="com.org.fishtrader.transfer.Fish"%>
-<%@page import="com.org.fishtrader.transfer.Vendor"%>
+<%@page import="com.org.fishtraders.transfer.Boat"%>
+<%@page import="com.org.fishtraders.master.Master"%>
+<%@page import="com.org.fishtraders.transfer.Fish"%>
+<%@page import="com.org.fishtraders.transfer.Vendor"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="java.util.Arrays"%>
-<%@page import="com.org.fishtrader.modules.Expense"%>
-<%@page import="com.org.fishtrader.transfer.ExpenseModel"%>
+<%@page import="com.org.fishtraders.modules.Expense"%>
+<%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
 <%@page import="java.util.Iterator"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -32,9 +33,7 @@
 		Integer vendorId = Utils.getInt(request.getParameter("vendorId"));
 		Integer fishId = Utils.getInt(request.getParameter("fishId"));
 		Integer boatId = Utils.getInt(request.getParameter("boatId"));
-		//Integer expQuantity = Utils.getInt(request.getParameter("expenseQty"));
 		Double expAmount = Utils.getDouble(request.getParameter("expenseAmount"));
-		//Double expenseVat = Utils.getDouble(request.getParameter("expenseVat"));
 		String expenseDesc = Utils.getString(request.getParameter("expenseDesc"));
 		
 		if(!page1.equals("")){
@@ -42,22 +41,24 @@
 			
 			ExpenseModel expenseModel = new ExpenseModel();
 			
+			Boat boat = new Boat();
+			boat.setBoatId(boatId);
+			
 			Vendor vendor = new Vendor();
 			vendor.setVendorId(vendorId);
-			expenseModel.setVendor(vendor);
+			
 
 			Fish fish = new Fish();
 			fish.setFishId(fishId);
-			expenseModel.setFish(fish);
 			
-			//expenseModel.setExpenseQty(expQuantity);
+			expenseModel.setVendor(vendor);
+			expenseModel.setFish(fish);
+			expenseModel.setBoat(boat);
 			expenseModel.setExpenseAmt(expAmount);
-			//expenseModel.setExpenseVat(expenseVat);
 			expenseModel.setExpenseRemark(expenseDesc);
 			expenseModel.setCreatedBy(userId);
 			
 			Expense expense = new Expense();
-			
 			expense.addExpense(expenseModel);
 			
 			%>
@@ -70,7 +71,6 @@
 			});
 			</script>
 			<%
-			
 		}
 	%>
 
@@ -100,7 +100,7 @@
 	<tr>
 		<th class="headerTR">Fish</th>
 		<td>
-			<select id="expenseItem" name="expenseItem" class="fullRowElement">
+			<select id="fishId" name="fishId" class="fullRowElement">
 				<option value="-1">Please Select</option>
 				<%
 				for(Fish fish : fishList){

@@ -1,14 +1,14 @@
-<%@page import="com.org.fishtrader.master.Master"%>
+<%@page import="com.org.fishtraders.master.Master"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="/pages/common/header.jsp"%>
 <%@ include file="/pages/common/validateSession.jsp"%>
-<%@page import="com.org.fishtrader.transfer.Boat"%>
-<%@page import="com.org.fishtrader.transfer.Vendor"%>
+<%@page import="com.org.fishtraders.transfer.Boat"%>
+<%@page import="com.org.fishtraders.transfer.Vendor"%>
 
 <%@page import="java.util.List"%>
 <%@page import="java.util.LinkedHashMap"%>
-<%@page import="com.org.fishtrader.home.Home"%>
+<%@page import="com.org.fishtraders.home.Home"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

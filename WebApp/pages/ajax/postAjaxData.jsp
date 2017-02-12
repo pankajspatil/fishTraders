@@ -1,9 +1,10 @@
-<%@page import="com.org.fishtrader.master.Master"%>
-<%@page import="com.org.fishtrader.transfer.Cooking"%>
+<%@page import="com.org.fishtraders.transfer.Boat"%>
+<%@page import="com.org.fishtraders.master.Master"%>
+<%@page import="com.org.fishtraders.transfer.Cooking"%>
 <%@page import="java.util.List"%>
-<%@page import="com.org.fishtrader.generic.Constants"%>
-<%@page import="com.org.fishtrader.order.Order"%>
-<%@page import="com.org.fishtrader.generic.Utils"%>
+<%@page import="com.org.fishtraders.generic.Constants"%>
+<%@page import="com.org.fishtraders.order.Order"%>
+<%@page import="com.org.fishtraders.generic.Utils"%>
 <%@page import="com.google.gson.JsonParser"%>
 <%@page import="com.google.gson.JsonObject"%>
 <%@page import="com.google.gson.Gson"%>
@@ -58,12 +59,17 @@ try{
 	}else if(action.equals("deleteMenu")){
 		returnValue = order.updateCustomerInOrder(data);
 		out.println(returnValue);
-	}else if(action.equals("inactiveMenuMapping")){
-		returnValue = master.inactiveMenuMapping(data, userId);
-		out.println(returnValue);
-	}else if(action.equals("addSubMenu")){
-		returnValue = master.addSubMenu(data, userId);
-		out.println(returnValue);
+	}else if(action.equals("getBoatsByVendor")){
+		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
+		
+		Integer vendorId = jsonObject.get("vendorId").getAsInt();
+		Integer boatId = jsonObject.get("boatId").getAsInt();
+		
+		List<Boat> returnList = master.getAllBoats(true, boatId, vendorId);
+		Gson gson = new Gson();
+		
+		String returnStr = gson.toJson(returnList);
+		out.println(returnStr);
 	}
 	
 	

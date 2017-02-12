@@ -1,6 +1,6 @@
-<%@page import="com.org.fishtrader.transfer.Customer"%>
+<%@page import="com.org.fishtraders.transfer.Customer"%>
 <%@page import="java.util.List"%>
-<%@page import="com.org.fishtrader.order.Order"%>
+<%@page import="com.org.fishtraders.order.Order"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,7 +11,7 @@
 <script>
 $(".headerTable").hide();
 </script>
-<script type="text/javascript" src="/AgriTadka/resources/js/order.js"></script>
+<script type="text/javascript" src="<%=contextPath %>/resources/js/order.js"></script>
 </head>
 <body>
 <center>
@@ -50,8 +50,8 @@ $(".headerTable").hide();
 				<td width="30%"><%=customer.getCustName() %></td>
 				<td width="10%"><%=customer.getMobile() %></td>
 				<td><%=customer.getCustAddress() %></td>
-				<td width="10%"><img alt="Add Customer" class="updateExistingCustomer" src="/AgriTadka/resources/images/Add.png" width="25%"> </td>
-				<td width="10%"><img alt="Edit Customer" class="editExistingCustomer" src="/AgriTadka/resources/images/edit.png" width="25%"> </td>
+				<td width="10%"><img alt="Add Customer" class="updateExistingCustomer" src="<%=contextPath %>/resources/images/Add.png" width="25%"> </td>
+				<td width="10%"><img alt="Edit Customer" class="editExistingCustomer" src="<%=contextPath %>/resources/images/edit.png" width="25%"> </td>
 				
 			</tr>
 			<%
