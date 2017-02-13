@@ -1,17 +1,15 @@
-<%@page import="com.org.krishnadeep.modules.Invoice"%>
-<%@page import="com.org.krishnadeep.models.InvoiceModel"%>
-<%@page import="com.org.krishnadeep.models.ExpenseItem"%>
-<%@page import="com.org.krishnadeep.masters.Masters"%>
-<%@page import="com.org.krishnadeep.models.Vendor"%>
+<%@page import="com.org.fishtraders.transfer.Customer"%>
+<%@page import="com.org.fishtraders.transfer.InvoiceModel"%>
+<%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
+<%@page import="com.org.fishtraders.transfer.Vendor"%>
+<%@page import="com.org.fishtraders.modules.Invoice"%>
+<%@page import="com.org.fishtraders.master.Master"%>
 <%@page import="java.util.List"%>
-<%@page import="com.org.krishnadeep.models.ExpenseModel_old"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="java.util.Arrays"%>
-<%@page import="com.org.krishnadeep.modules.Expense"%>
-<%@page import="com.org.krishnadeep.models.ExpenseModel"%>
 <%@page import="java.util.Iterator"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -25,11 +23,10 @@
 </head>
 <body>
 	<%
-	Masters masters = new Masters();
+	Master masters = new Master();
 	Invoice invoice = new Invoice();
 	
-	List<Vendor> vendorList = masters.getAllVendors(true);
-	List<ExpenseItem> itemList = masters.getAllExpenseItems(true);
+	List<Vendor> vendorList = masters.getAllVendors(true, 0);
 	
 	List<ExpenseModel> expenseList = new ArrayList<ExpenseModel>();
 	
@@ -110,6 +107,7 @@
 				<option value="-1">Please Select</option>
 				<%String selected = "";
 				for(Vendor vendor : vendorList){
+					selected = "";
 					if(vendor.getVendorId() == vendorId){
 						selected = "selected";
 					}
@@ -117,16 +115,16 @@
 				}%>
 			</select>
 	</tr>
-	<tr>
-		<th class="headerTR">Amount</th>
-		<td><input type="text" id="invoiceAmount" name="invoiceAmount" class="fullRowElement" value="<%=invoiceAmount%>"></td>
-	</tr>
-	<tr>
+	<tr style="display: none;">
 		<th class="headerTR">Expense Exist</th>
 		<td align="left">
-			<input style="width: 10%" type="checkbox" id="expenseExist" name="expenseExist" class="fullRowElement" value="true"
-			<%=expenseExist ? "checked=checked" : "" %>>
+			<input style="width: 10%;" type="checkbox" id="expenseExist" name="expenseExist" class="fullRowElement" value="true"
+			<%=expenseExist ? "checked=checked" : "" %> checked="checked">
 		</td>
+	</tr>
+	<tr style="display: none;">
+		<th class="headerTR">Amount</th>
+		<td><input type="text" id="invoiceAmount" name="invoiceAmount" class="fullRowElement" value="<%=invoiceAmount%>"></td>
 	</tr>
 	<tr>
 		<th class="headerTR">Remarks</th>
@@ -148,10 +146,11 @@
 <thead>
 	<tr class="headerTR">
 		<th>Select</th>
-		<th width="10%">No.</th>
-		<th width="20%">Item</th>
+		<th width="10%">No</th>
 		<th width="20%">Vendor</th>
-		<th>Qty</th>
+		<th width="10%">Boat</th>
+		<th width="10%">Fish</th>
+		<th width="20%">Customer</th>
 		<th>Amount</th>
 		<th>Paid</th>
 		<th>Pay</th>
@@ -159,16 +158,23 @@
 </thead>
 <tbody>
 <%if(expenseList.size() > 0 ){
-	
-	System.out.println("expenseList==>" + expenseList);
+	String customerName = "";
+	Customer customer = null;
 	
 	for(ExpenseModel expenseModel : expenseList){
+		customerName = "";
+		customer = expenseModel.getCustomer();
+		if(customer != null){
+			customerName = customer.getFirstName() + " "+ customer.getMiddleName() + " " + customer.getLastName();
+			customerName = customerName.trim();
+		}
 	%><tr>
 		<td>-</td>
 		<td><%=expenseModel.getExpenseId() %></td>
-		<td><%=expenseModel.getExpenseItem() != null ? expenseModel.getExpenseItem().getExpenseItemName() : "" %></td>
 		<td><%=expenseModel.getVendor() != null ? expenseModel.getVendor().getVendorName() : ""%></td>
-		<td><%=expenseModel.getExpenseQty() %></td>
+		<td><%=expenseModel.getBoat() != null ? Utils.getString(expenseModel.getBoat().getBoatName()) : ""%></td>
+		<td><%=expenseModel.getFish() != null ? Utils.getString(expenseModel.getFish().getFishName()) : ""%></td>
+		<td><%=customerName%></td>
 		<td>-</td>
 		<td><%=expenseModel.getPaidAmt() %></td>
 		<td>-</td>

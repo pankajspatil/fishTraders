@@ -685,31 +685,6 @@ public OrderData getPrintOrderData(Integer tableId, String userId, Integer order
 		return orderList;
 	}
 	
-	public List<Customer> getCustomerData() throws SQLException{
-		
-		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
-		Connection conn = connectionsUtil.getConnection();
-		
-		String query = "select * from order_master where customer_name is not null and mobile_number is not null "+
-						"group by lower(customer_address), mobile_number order by customer_name;";
-		
-		ResultSet dataRS = conn.createStatement().executeQuery(query);
-		
-		Customer customer;
-		List<Customer> customerList = new ArrayList<Customer>();
-		while(dataRS.next()){
-			customer = new Customer();
-			
-			customer.setCustName(dataRS.getString("customer_name"));
-			customer.setMobile(dataRS.getString("mobile_number"));
-			customer.setCustAddress(dataRS.getString("customer_address"));
-			
-			customerList.add(customer);
-		}
-		
-		connectionsUtil.closeConnection(conn);
-		return customerList;
-	}
 	
 	public Integer updateCustomerInOrder(String data) throws SQLException {
 

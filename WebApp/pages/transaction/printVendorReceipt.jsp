@@ -1,12 +1,9 @@
-<%@page import="com.org.krishnadeep.models.ExpenseModel"%>
-<%@page import="com.org.krishnadeep.models.InvoiceModel"%>
-<%@page import="com.org.krishnadeep.modules.Invoice"%>
-<%@page import="com.org.krishnadeep.models.UserVisit"%>
-<%@page import="com.org.krishnadeep.modules.Visit"%>
+<%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
+<%@page import="com.org.fishtraders.transfer.InvoiceModel"%>
+<%@page import="com.org.fishtraders.modules.Invoice"%>
+<%@page import="com.org.fishtraders.generic.Utils"%>
 <%@page import="java.util.List"%>
-<%@page import="com.org.krishnadeep.generic.EnglishNumberToWords"%>
 <%@page import="java.util.Date"%>
-<%@page import="com.org.krishnadeep.generic.Utils"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -61,7 +58,7 @@ if(invoiceModel != null){
 		
 		for(ExpenseModel expenseModel : invoiceModel.getExpenseList()){
 		%><tr>
-			<th colspan="2"><%=expenseModel.getExpenseItem().getExpenseItemName() %></th>
+			<th colspan="2"><%=expenseModel.getFish().getFishName() %></th>
 			<th><%=expenseModel.getPaidAmt() %></th>
 		</tr><%
 		totalAmount += expenseModel.getPaidAmt();

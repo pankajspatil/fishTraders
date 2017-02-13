@@ -1,3 +1,4 @@
+<%@page import="com.org.fishtraders.transfer.Customer"%>
 <%@page import="com.org.fishtraders.transfer.Boat"%>
 <%@page import="com.org.fishtraders.master.Master"%>
 <%@page import="com.org.fishtraders.transfer.Fish"%>
@@ -25,14 +26,16 @@
 	<%
 	Master masters = new Master();
 	
-	List<Vendor> vendorList = masters.getAllVendors(true);
+	List<Vendor> vendorList = masters.getAllVendors(true, 0);
 	List<Fish> fishList = masters.getAllFishes(true);
+	List<Customer> customerList = masters.getAllCustomers(true, 0);
 	
 		Integer userId = Integer.parseInt(session.getAttribute(Constants.USER_ID).toString());
 		String page1 = Utils.getString(request.getParameter("page1"));
 		Integer vendorId = Utils.getInt(request.getParameter("vendorId"));
 		Integer fishId = Utils.getInt(request.getParameter("fishId"));
 		Integer boatId = Utils.getInt(request.getParameter("boatId"));
+		Integer customerId = Utils.getInt(request.getParameter("customerId"));
 		Double expAmount = Utils.getDouble(request.getParameter("expenseAmount"));
 		String expenseDesc = Utils.getString(request.getParameter("expenseDesc"));
 		
@@ -46,14 +49,17 @@
 			
 			Vendor vendor = new Vendor();
 			vendor.setVendorId(vendorId);
-			
 
 			Fish fish = new Fish();
 			fish.setFishId(fishId);
 			
+			Customer customer = new Customer();
+			customer.setCustomerId(customerId);
+			
 			expenseModel.setVendor(vendor);
 			expenseModel.setFish(fish);
 			expenseModel.setBoat(boat);
+			expenseModel.setCustomer(customer);
 			expenseModel.setExpenseAmt(expAmount);
 			expenseModel.setExpenseRemark(expenseDesc);
 			expenseModel.setCreatedBy(userId);
@@ -105,6 +111,22 @@
 				<%
 				for(Fish fish : fishList){
 					%><option value="<%=fish.getFishId()%>"><%=fish.getFishName() %></option><%
+				}%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th class="headerTR">Customer</th>
+		<td>
+			<select id="customerId" name="customerId" class="fullRowElement">
+				<option value="-1">Please Select</option>
+				<% String customerName = "";
+				for(Customer customer : customerList){
+					customerName = "";
+					customerName = customer.getFirstName() + " "+ customer.getMiddleName() + " " + customer.getLastName();
+					customerName = customerName.trim();
+					
+					%><option value="<%=customer.getCustomerId()%>"><%=customerName %></option><%
 				}%>
 			</select>
 		</td>

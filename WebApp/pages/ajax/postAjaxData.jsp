@@ -1,3 +1,5 @@
+<%@page import="com.org.fishtraders.modules.Invoice"%>
+<%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
 <%@page import="com.org.fishtraders.transfer.Boat"%>
 <%@page import="com.org.fishtraders.master.Master"%>
 <%@page import="com.org.fishtraders.transfer.Cooking"%>
@@ -25,40 +27,12 @@ try{
 	
 	Order order = new Order();
 	Master master = new Master();
+	Invoice invoice = new Invoice();
 	Integer returnValue = new Integer(0);
 	
-	if(action.equals("saveOrder")){
-		String returnStr = order.saveOrder(data, userId);
-		out.println(returnStr);
-	}else if(action.equals("fetchCookingData")){
-		List<Cooking> returnList = order.getOrderedMenus(data);
-		Gson gson = new Gson();
-		
-		String returnStr = gson.toJson(returnList);
-		out.println(returnStr);
-	}
-	else if(action.equals("updateCookingStatus")){
-			returnValue = order.updateCookingStatus(data);
-			out.println(returnValue);
-	}else if(action.equals("checkoutOrder")){
-			returnValue = order.checkoutOrder(data);
-			out.println(returnValue);
-	}else if(action.equals("checkIfMenuProcessed")){
-			returnValue = order.checkIfMenuProcessed(data);
-			out.println(returnValue);
-	}else if(action.equals("deleteRecord")){
-			returnValue = order.deleteRecord(data);
-			out.println(returnValue);
-	}else if(action.equals("cancelOrder")){
-			returnValue = order.cancelRecord(data);
-			out.println(returnValue);
-			System.out.println("returnValue"+returnValue);
-	}else if(action.equals("updateCustomer")){
+	if(action.equals("updateCustomer")){
 			returnValue = order.updateCustomerInOrder(data);
 			out.println(returnValue);
-	}else if(action.equals("deleteMenu")){
-		returnValue = order.updateCustomerInOrder(data);
-		out.println(returnValue);
 	}else if(action.equals("getBoatsByVendor")){
 		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
 		
@@ -70,7 +44,12 @@ try{
 		
 		String returnStr = gson.toJson(returnList);
 		out.println(returnStr);
-	}
+	}else if(action.equals("fetchExpenseByVendor")){
+		List<ExpenseModel> expenseList = invoice.getExpenseListByVendor(data);
+		Gson gson = new Gson();
+		String returnStr = gson.toJson(expenseList);
+		out.println(returnStr);
+}
 	
 	
 	

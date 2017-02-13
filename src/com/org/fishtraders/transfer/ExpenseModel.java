@@ -10,6 +10,8 @@ public class ExpenseModel {
 	
 	private Boat boat;
 	
+	private Customer customer;
+	
 	private Integer expenseQty;
 	
 	private String expenseRemark;
@@ -113,13 +115,21 @@ public class ExpenseModel {
 		this.boat = boat;
 	}
 
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	@Override
 	public String toString() {
 		return "ExpenseModel [expenseId=" + expenseId + ", vendor=" + vendor
-				+ ", fish=" + fish + ", boat=" + boat + ", expenseQty="
-				+ expenseQty + ", expenseRemark=" + expenseRemark
-				+ ", expenseVat=" + expenseVat + ", isActive=" + isActive
-				+ ", expenseAmt=" + expenseAmt + ", paidAmt=" + paidAmt
-				+ ", createdBy=" + createdBy + "]";
+				+ ", fish=" + fish + ", boat=" + boat + ", customer="
+				+ customer + ", expenseQty=" + expenseQty + ", expenseRemark="
+				+ expenseRemark + ", expenseVat=" + expenseVat + ", isActive="
+				+ isActive + ", expenseAmt=" + expenseAmt + ", paidAmt="
+				+ paidAmt + ", createdBy=" + createdBy + "]";
 	}
 }

@@ -1,3 +1,4 @@
+<%@page import="com.org.fishtraders.transfer.Customer"%>
 <%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
 <%@page import="java.util.List"%>
 <%@page import="com.org.fishtraders.modules.Expense"%>
@@ -14,6 +15,8 @@
 <%
 Expense expense = new Expense();
 List<ExpenseModel> expenseList = expense.getExpenseList(null, false);
+String customerName = "";
+Customer customer = null;
 %>
 
 <h1 align="center">Add Expense</h1>
@@ -26,20 +29,29 @@ List<ExpenseModel> expenseList = expense.getExpenseList(null, false);
 	<tr class="headerTR">
 		<th width="10%">No</th>
 		<th width="20%">Vendor</th>
-		<th width="20%">Boat</th>
+		<th width="10%">Boat</th>
 		<th width="10%">Fish</th>
+		<th width="20%">Customer</th>
 		<th>Amount</th>
 		<th>Paid</th>
 		<th width="30%">Remarks</th>
 	</tr>
 </thead>
 <tbody>
-	<%for(ExpenseModel expenseModel : expenseList){%>
+	<%for(ExpenseModel expenseModel : expenseList){
+		
+		customerName = "";		
+		customer = expenseModel.getCustomer();
+		customerName = customer.getFirstName() + " "+ customer.getMiddleName() + " " + customer.getLastName();
+		customerName = customerName.trim();
+		
+		%>
 		<tr>
 			<td align="center"><%=expenseModel.getExpenseId() %></td>
 			<td><%=expenseModel.getVendor().getVendorName() %></td>
 			<td><%=expenseModel.getBoat().getBoatName() %></td>
 			<td><%=expenseModel.getFish().getFishName() %></td>
+			<td><%=customerName %></td>
 			<td align="center"><%=expenseModel.getExpenseAmt() %></td>
 			<td align="center"><%=expenseModel.getPaidAmt() %></td>
 			<td><%=expenseModel.getExpenseRemark()%></td>

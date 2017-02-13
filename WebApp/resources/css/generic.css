@@ -24,6 +24,10 @@ tr td {
 	text-align: center;
 } */
 
+.mainTable{
+border-collapse: collapse !important;
+}
+
 .rowBorder tr td {
 	border: 1px solid black;
 }

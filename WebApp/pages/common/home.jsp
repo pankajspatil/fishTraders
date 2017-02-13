@@ -63,7 +63,7 @@
 		} else {
 
 			boatMap = home.getAllBoats();
-			vendorList = master.getAllVendors(true);
+			vendorList = master.getAllVendors(true, 0);
 			session.setAttribute("boatMap", boatMap);
 			session.setAttribute("VendorList", vendorList);
 		}
