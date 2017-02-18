@@ -9,6 +9,8 @@ public class InvoiceModel {
 	
 	private Vendor vendor;
 	
+	private Customer customer;
+	
 	private Double amount;
 	
 	private Boolean expenseExist;
@@ -85,11 +87,20 @@ public class InvoiceModel {
 		this.createdOn = createdOn;
 	}
 
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	@Override
 	public String toString() {
 		return "InvoiceModel [invoiceId=" + invoiceId + ", vendor=" + vendor
-				+ ", amount=" + amount + ", expenseExist=" + expenseExist
-				+ ", expenseList=" + expenseList + ", createdBy=" + createdBy
-				+ ", comments=" + comments + ", createdOn=" + createdOn + "]";
+				+ ", customer=" + customer + ", amount=" + amount
+				+ ", expenseExist=" + expenseExist + ", expenseList="
+				+ expenseList + ", createdBy=" + createdBy + ", comments="
+				+ comments + ", createdOn=" + createdOn + "]";
 	}
 }

@@ -27,7 +27,8 @@ public class Constants {
 	public static final String FIRST_NAME = "FIRST_NAME";
 	public static final String LAST_NAME = "LAST_NAME";
 	public static final String ENT_EMAIL = "ENT_EMAIL";
-	
+	public static final String VENDOR = "VENDOR";
+	public static final String CUSTOMER = "CUSTOMER";	
 	//Email constants
 	
 	public static final String TO = "TO";

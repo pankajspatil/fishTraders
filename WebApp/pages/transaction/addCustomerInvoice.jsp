@@ -1,3 +1,4 @@
+<%@page import="com.org.fishtraders.transfer.Customer"%>
 <%@page import="com.org.fishtraders.transfer.InvoiceModel"%>
 <%@page import="com.org.fishtraders.modules.Invoice"%>
 <%@page import="java.util.List"%>
@@ -13,20 +14,20 @@
 <body>
 <%
 Invoice invoice = new Invoice();
-List<InvoiceModel> invoiceList = invoice.getInvoiceListByVendor();
+List<InvoiceModel> invoiceList = invoice.getInvoiceListByCustomer();
 
 %>
 
-<h1 align="center">Add Vendor Invoice</h1>
+<h1 align="center">Add Customer Invoice</h1>
 <div style="float: right;padding-right: 11%; padding-bottom: 0.3%">
 	<!-- <input type="button" name="newExpense" id="newExpense" value=""> -->
-	<button class="btn btn-main btn-2g" name="newInvoice" id="newInvoice" onclick="openInvoiceFancyBox(0, 'newInvoice', this);">New Invoice</button>
+	<button class="btn btn-main btn-2g" name="newInvoice" id="newInvoice" onclick="openInvoiceFancyBox(0, 'newCustInvoice', this);">New Invoice</button>
 </div><br />
 <table width="100%" border="1" id="invoiceTable">
 <thead>
 	<tr class="headerTR">
 		<th width="20%">Invoice No</th>
-		<th width="20%">Vendor Name</th>
+		<th width="20%">Customer Name</th>
 		<th width="10%">Amount</th>
 		<th>Comments</th>
 		<th width="10%">Action</th>
@@ -35,19 +36,26 @@ List<InvoiceModel> invoiceList = invoice.getInvoiceListByVendor();
 <tbody>
 <%
 if(invoiceList.size() > 0){
+	String customerName = "";
+	Customer customer = null;
 	for(InvoiceModel invoiceModel : invoiceList){
+		customer = invoiceModel.getCustomer();
+		customerName = "";
+		customerName = customer.getFirstName() + " "+ customer.getMiddleName() + " " + customer.getLastName();
+		customerName = customerName.trim();
+		
 		%><tr align="center">
 			<th>
 				<a href="#" name="editInsurance" id="<%=invoiceModel.getInvoiceId() %>" 
 				style="text-decoration: none; color: #2d9fd0"
-				onclick="openInvoiceFancyBox(<%=invoiceModel.getInvoiceId() %>, 'newInvoice', this);"><%=invoiceModel.getInvoiceId() %>
+				onclick="openInvoiceFancyBox(<%=invoiceModel.getInvoiceId() %>, 'newCustInvoice', this);"><%=invoiceModel.getInvoiceId() %>
 				</a>
 			</th>
-			<td><%=invoiceModel.getVendor().getVendorName() %></td>
+			<td><%=customerName %></td>
 			<td><%=invoiceModel.getAmount() %></td>
 			<td align="left"><%=invoiceModel.getComments() %></td>
 			<td><img height="18%" name="print" src="<%=contextPath %>/resources/images/print.png"
-							onclick="printVendorReceipt(this, '<%=Constants.VENDOR %>')" id="print_<%=invoiceModel.getInvoiceId()%>"></td>
+							onclick="printVendorReceipt(this, '<%=Constants.CUSTOMER %>')" id="print_<%=invoiceModel.getInvoiceId()%>"></td>
 		</tr>
 		<%
 	}

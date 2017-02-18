@@ -8,7 +8,7 @@ $(document).ready(function() {
 	   var orderDashboard = $('#expenseTable').DataTable({
 	    	"bSort" : true,
 	    	"paging" : true,
-	    	"order": [[ 1, "desc" ]]/*,
+	    	"order": [[ 0, "desc" ]]/*,
 	    	"pageLength": 15,
 	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
 	    });

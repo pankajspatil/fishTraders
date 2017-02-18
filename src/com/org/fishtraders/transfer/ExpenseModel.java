@@ -22,7 +22,11 @@ public class ExpenseModel {
 	
 	private Double expenseAmt;
 	
+	private Double vendorAmt;
+	
 	private Double paidAmt;
+	
+	private Double custAmt;
 	
 	private Integer createdBy;
 
@@ -82,15 +86,6 @@ public class ExpenseModel {
 		this.expenseAmt = expenseAmt;
 	}
 
-	public Double getPaidAmt() {
-		return paidAmt;
-	}
-
-	public void setPaidAmt(Double paidAmt) {
-		this.paidAmt = paidAmt;
-	}
-	
-
 	public Integer getCreatedBy() {
 		return createdBy;
 	}
@@ -123,13 +118,38 @@ public class ExpenseModel {
 		this.customer = customer;
 	}
 
+	public Double getVendorAmt() {
+		return vendorAmt;
+	}
+
+	public void setVendorAmt(Double vendorAmt) {
+		this.vendorAmt = vendorAmt;
+	}
+
+	public Double getCustAmt() {
+		return custAmt;
+	}
+
+	public void setCustAmt(Double custAmt) {
+		this.custAmt = custAmt;
+	}
+
+	public Double getPaidAmt() {
+		return paidAmt;
+	}
+
+	public void setPaidAmt(Double paidAmt) {
+		this.paidAmt = paidAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "ExpenseModel [expenseId=" + expenseId + ", vendor=" + vendor
 				+ ", fish=" + fish + ", boat=" + boat + ", customer="
 				+ customer + ", expenseQty=" + expenseQty + ", expenseRemark="
 				+ expenseRemark + ", expenseVat=" + expenseVat + ", isActive="
-				+ isActive + ", expenseAmt=" + expenseAmt + ", paidAmt="
-				+ paidAmt + ", createdBy=" + createdBy + "]";
+				+ isActive + ", expenseAmt=" + expenseAmt + ", vendorAmt="
+				+ vendorAmt + ", paidAmt=" + paidAmt + ", custAmt=" + custAmt
+				+ ", createdBy=" + createdBy + "]";
 	}
 }

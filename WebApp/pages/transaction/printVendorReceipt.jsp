@@ -1,3 +1,5 @@
+<%@page import="com.org.fishtraders.transfer.Customer"%>
+<%@page import="com.org.fishtraders.generic.Constants"%>
 <%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
 <%@page import="com.org.fishtraders.transfer.InvoiceModel"%>
 <%@page import="com.org.fishtraders.modules.Invoice"%>
@@ -10,7 +12,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="/Krishnadeep/resources/css/print.css" media="print">
+<!-- <link rel="stylesheet" type="text/css" href="/FishTraders/resources/css/print.css" media="print"> -->
 <style type="text/css" media="print">
 @page {
     size: auto;   /* auto is the initial value */
@@ -22,12 +24,24 @@
 <%
 
 Integer invoiceId = Utils.getInt(request.getParameter("invoiceId"));
+String printType = Utils.getString(request.getParameter("printType"));
+
 Invoice invoice = new Invoice();
 
 InvoiceModel invoiceModel = invoice.getInvoice(invoiceId);
 double totalAmount = 0;
 
 if(invoiceModel != null){
+	
+	String displayName = "";
+	
+	if(printType.equals(Constants.CUSTOMER)){
+		Customer customer = invoiceModel.getCustomer();
+		displayName = customer.getFirstName() + " "+ customer.getMiddleName() + " " + customer.getLastName();
+		displayName = displayName.trim();
+	}else{
+		displayName = invoiceModel.getVendor().getVendorName();
+	}
 	
 	//String patientName =  userVisit.getPatient().getFirstName().toUpperCase() + " " + userVisit.getPatient().getLastName().toUpperCase();
 	//String doctorName =  userVisit.getDoctor().getFirstName().toUpperCase() + " " + userVisit.getDoctor().getLastName().toUpperCase();
@@ -47,8 +61,8 @@ if(invoiceModel != null){
 		<td width="35%"><b>Date : </b><%=invoiceModel.getCreatedOn() %></td>
 	</tr>
 	<tr>
-		<th>Vendor Name : </th>
-		<td colspan="2"><%=invoiceModel.getVendor().getVendorName() %></td>
+		<th>Name : </th>
+		<td colspan="2"><%=displayName %></td>
 	</tr>
 	<tr style="background-color: #D3D3D3; -webkit-print-color-adjust: exact;">
 		<th colspan="2">PERTICULARS</th>

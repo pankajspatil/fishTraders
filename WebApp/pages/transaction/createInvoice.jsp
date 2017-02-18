@@ -27,16 +27,20 @@
 	Invoice invoice = new Invoice();
 	
 	List<Vendor> vendorList = masters.getAllVendors(true, 0);
+	List<Customer> customerList = masters.getAllCustomers(true, 0);
 	
 	List<ExpenseModel> expenseList = new ArrayList<ExpenseModel>();
 	
 		Integer userId = Integer.parseInt(session.getAttribute(Constants.USER_ID).toString());
 		String page1 = Utils.getString(request.getParameter("page1"));
 		Integer vendorId = Utils.getInt(request.getParameter("vendorInvoice"));
+		Integer customerId = Utils.getInt(request.getParameter("customerId"));
 		Double invoiceAmount = Utils.getDouble(request.getParameter("invoiceAmount"));
 		String invoiceDesc = Utils.getString(request.getParameter("invoiceDesc"));
 		Boolean expenseExist = Boolean.parseBoolean(Utils.getString(request.getParameter("expenseExist")));
 		Integer invoiceId = Utils.getInt(request.getParameter("invoiceId"));
+		String invoiceType = Utils.getString(request.getParameter("invoiceType"));
+		String selected = "", customerName = "";
 		InvoiceModel invoiceModel;
 		
 		if(invoiceId != 0 && page1.equals("")){
@@ -44,6 +48,7 @@
 			
 			if(invoiceModel != null){
 				vendorId = invoiceModel.getVendor().getVendorId();
+				customerId = invoiceModel.getCustomer().getCustomerId();
 				invoiceAmount = invoiceModel.getAmount();
 				invoiceDesc = invoiceModel.getComments();
 				expenseExist = invoiceModel.getExpenseExist();
@@ -61,9 +66,13 @@
 			invoiceModel.setExpenseExist(expenseExist);
 			
 			Vendor vendor = new Vendor();
-			vendor.setVendorId(vendorId);
+			vendor.setVendorId(vendorId == -1 ? 0 : vendorId);
+			
+			Customer customer = new Customer();
+			customer.setCustomerId(customerId == -1 ? 0 : customerId);
 			
 			invoiceModel.setVendor(vendor);
+			invoiceModel.setCustomer(customer);
 						
 			Integer[] selectedExpenses = Utils.getIntegerArray(request.getParameterValues("selectedExpenses"));
 			
@@ -100,12 +109,12 @@
 <h1 align="center"><%=invoiceId == 0 ? "New" : "View" %> Invoice</h1>
 
 <table class="mainTable" align="center" width="50%" id="invoiceDetails" border="1" style="border: 0px solid">
-	<tr>
+	<tr style='display: <%=invoiceType.equals(Constants.VENDOR) ? "" : "none" %>'>
 		<th class="headerTR">Vendor</th>
 		<td>
 			<select id="vendorInvoice" name="vendorInvoice" class="fullRowElement">
 				<option value="-1">Please Select</option>
-				<%String selected = "";
+				<%
 				for(Vendor vendor : vendorList){
 					selected = "";
 					if(vendor.getVendorId() == vendorId){
@@ -114,6 +123,27 @@
 					%><option <%=selected %> value="<%=vendor.getVendorId()%>"><%=vendor.getVendorName() %></option><%
 				}%>
 			</select>
+	</tr>
+	<tr style='display: <%=invoiceType.equals(Constants.CUSTOMER) ? "" : "none" %>'>
+		<th class="headerTR">Customer</th>
+		<td>
+			<select id="customerId" name="customerId" class="fullRowElement">
+				<option value="-1">Please Select</option>
+				<%
+				for(Customer customer : customerList){
+					customerName = "";
+					customerName = customer.getFirstName() + " "+ customer.getMiddleName() + " " + customer.getLastName();
+					customerName = customerName.trim();
+					
+					selected = "";
+					if(customer.getCustomerId() == customerId){
+						selected = "selected";
+					}
+					
+					%><option <%=selected %> value="<%=customer.getCustomerId()%>"><%=customerName %></option><%
+				}%>
+			</select>
+		</td>
 	</tr>
 	<tr style="display: none;">
 		<th class="headerTR">Expense Exist</th>
@@ -158,7 +188,7 @@
 </thead>
 <tbody>
 <%if(expenseList.size() > 0 ){
-	String customerName = "";
+	
 	Customer customer = null;
 	
 	for(ExpenseModel expenseModel : expenseList){
@@ -184,6 +214,8 @@
 %>
 </tbody>
 </table>
+<input type="hidden" name="invoiceType" id="invoiceType" value="<%=invoiceType%>">
+
 <div id="dialog-confirm"></div>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/expense.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/resources/js/invoice.js"></script>

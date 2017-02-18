@@ -27,10 +27,14 @@ $(document).ready(function() {
 		});
 	   
 	   $('#vendorInvoice').change(function(){
-		   displayExpenseTable();
+		   displayExpenseTable('VENDOR');
 		});
 	   
-	   $('#expenseExist').change(function(){
+	   $('#customerId').change(function(){
+		   displayExpenseTable('CUSTOMER');
+		});
+	   
+	   /*$('#expenseExist').change(function(){
 		   var vendorId = $('#vendorInvoice').val();
 		   var expenseExist = $('#expenseExist').is(":checked");
 		   
@@ -50,17 +54,23 @@ $(document).ready(function() {
 				$('#invoiceExpenseTable').DataTable().clear().draw();
 			}
 		   
-		});
+		});*/
 	   
 });
 
-function openInvoiceFancyBox(invoiceId, menuType, obj){
+function openInvoiceFancyBox(invoiceId, invoiceType, obj){
 	
 	var paramMap = new Map();
 	
 	var url, btnObj;
 	
 	url = contextPath + '/pages/transaction/createInvoice.jsp?menuRequired=false&invoiceId=' + invoiceId;
+	
+	if(invoiceType === 'newCustInvoice'){
+		url += '&invoiceType=CUSTOMER';
+	}else if(invoiceType === 'newInvoice'){
+		url += '&invoiceType=VENDOR';
+	}
 	
 	paramMap.put(URL, url);
 	paramMap.put(WIDTH, '70%');
@@ -71,17 +81,22 @@ function openInvoiceFancyBox(invoiceId, menuType, obj){
 
 function displayExpenseTable(){
 	var vendorId = $('#vendorInvoice').val();
+	var customerId = $('#customerId').val();
 	var expenseExist = $('#expenseExist').is(":checked");
 	
-	if(vendorId != '' && expenseExist){
+	if((vendorId != '' || customerId != '') && expenseExist){
 		
 			  $('#invoiceExpenseTable').LoadingOverlay("show");
 			  
 			  var parameters = {};
-			  parameters.vendorId = vendorId;
+			  if($('#vendorInvoice').is(':visible')){
+				  parameters.vendorId = vendorId;  
+			  }else if($('#customerId').is(':visible')){
+				  parameters.customerId = customerId;
+			  }
 			  
 			  var postData = {
-						"action" : "fetchExpenseByVendor",
+						"action" : "fetchExpenseForInvoice",
 						"data" : JSON.stringify(parameters)
 				};
 			  
@@ -150,13 +165,18 @@ function displayExpenseTable(){
 function validateCreateInvoice(){
 	
 	var vendorId = $('#vendorInvoice').val();
+	var customerId = $('#customerId').val();
 	var expenseExist = $('#expenseExist').is(":checked");
 	var invoiceAmount = $('#invoiceAmount').val();
 	
 	var errorFound = false;
 	
 	var paramMap = new Map();
-	  if(vendorId == -1){
+	  if($('#vendorInvoice').is(':visible') && vendorId == -1){
+		  paramMap.put(MSG, 'Please select vendor.');
+		  displayNotification(paramMap);
+		  return false;
+	  }if($('#customerId').is(':visible') && customerId == -1){
 		  paramMap.put(MSG, 'Please select vendor.');
 		  displayNotification(paramMap);
 		  return false;
@@ -185,8 +205,8 @@ function validateCreateInvoice(){
 				return false;
 			}else{
 				var rowObj = $(paidObj).closest('tr');
-				var totalAmount = rowObj.find('td').eq(5).text();
-				var totalPaid = rowObj.find('td').eq(6).text() == '' ? 0 : rowObj.find('td').eq(6).text();
+				var totalAmount = rowObj.find('td').eq(6).text();
+				var totalPaid = rowObj.find('td').eq(7).text() == '' ? 0 : rowObj.find('td').eq(7).text();
 				
 				var remainingAmt = totalAmount - totalPaid;
 				
@@ -214,11 +234,11 @@ $(document).ready(function() {
 	});
 });
 
-function printVendorReceipt(imgObj){
+function printVendorReceipt(imgObj, printType){
 	
 	var invoiceId = imgObj.id.replace(/print_/g,'');
 	var paramMap = new Map();
-	var url = contextPath + '/pages/transaction/printVendorReceipt.jsp?invoiceId=' + invoiceId;
+	var url = contextPath + '/pages/transaction/printVendorReceipt.jsp?invoiceId=' + invoiceId +'&printType=' + printType;
 	
 	paramMap.put(URL, url);
 	paramMap.put(WIDTH, '70%');

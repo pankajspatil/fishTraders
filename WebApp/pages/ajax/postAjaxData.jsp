@@ -44,14 +44,12 @@ try{
 		
 		String returnStr = gson.toJson(returnList);
 		out.println(returnStr);
-	}else if(action.equals("fetchExpenseByVendor")){
-		List<ExpenseModel> expenseList = invoice.getExpenseListByVendor(data);
+	}else if(action.equals("fetchExpenseForInvoice")){
+		List<ExpenseModel> expenseList = invoice.getExpenseListForInvoice(data);
 		Gson gson = new Gson();
 		String returnStr = gson.toJson(expenseList);
 		out.println(returnStr);
 }
-	
-	
 	
 }catch (Exception ex){
 	System.out.println("Error while processing data for "+action);

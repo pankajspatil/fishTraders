@@ -20,26 +20,27 @@ import com.org.fishtraders.transfer.Vendor;
 
 public class Invoice {
 
-	public List<ExpenseModel> getExpenseListByVendor(String data) throws SQLException{
+public List<ExpenseModel> getExpenseListForInvoice(String data) throws SQLException{
 
 		Expense expense = new Expense();
 		
 		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
 		
-		Integer vendorId = jsonObject.get("vendorId").getAsInt();
+		Integer vendorId = jsonObject.get("vendorId") != null ? jsonObject.get("vendorId").getAsInt() : null;
+		Integer customerId = jsonObject.get("customerId") != null ? jsonObject.get("customerId").getAsInt() : null;
 
-		List<ExpenseModel> expenseList = expense.getExpenseList(vendorId, true);
+		List<ExpenseModel> expenseList = expense.getExpenseList(vendorId, customerId, true);
 		
 		return expenseList;
 	}
 
-	public void addInvoice(InvoiceModel invoiceModel) throws SQLException {
+public void addInvoice(InvoiceModel invoiceModel) throws SQLException {
 
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
 
-		String query = "INSERT INTO `invoice_master`(`vendor_id`,`expense_exist`,`amount`,`comments`,`created_by`) "+
-						"VALUES(?,?,?,?,?)";
+		String query = "INSERT INTO `invoice_master`(`vendor_id`,`expense_exist`,`amount`,`comments`,`created_by`, customer_id) "+
+						"VALUES(?,?,?,?,?,?)";
 
 		PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		
@@ -48,6 +49,7 @@ public class Invoice {
 		psmt.setDouble(3, invoiceModel.getAmount());
 		psmt.setString(4, invoiceModel.getComments());
 		psmt.setInt(5, invoiceModel.getCreatedBy());
+		psmt.setInt(6, invoiceModel.getCustomer().getCustomerId());
 
 		psmt.executeUpdate();
 		
@@ -75,7 +77,7 @@ public class Invoice {
 		
 }
 
-	public List<InvoiceModel> getInvoiceList() throws SQLException{
+public List<InvoiceModel> getInvoiceListByVendor() throws SQLException{
 		
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
@@ -112,6 +114,46 @@ public class Invoice {
 		return invoiceList;
 	}
 
+public List<InvoiceModel> getInvoiceListByCustomer() throws SQLException{
+		
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select i.invoice_id, ifnull(expAmount,amount) as amount, i.customer_id, comments, "
+					+ "expense_exist, first_name, middle_name, last_name from invoice_master i "
+					+ "inner join customer_master c on i.customer_id = c.customer_id "
+					+ "left join (select invoice_id, sum(ifnull(amount,0)) as expAmount from invoice_expense_map ie "
+					+ "where is_active = 1 group by invoice_id) ie on i.invoice_id = ie.invoice_id order by i.invoice_id desc";
+		
+		ResultSet dataRS = conn.createStatement().executeQuery(query);
+		List<InvoiceModel> invoiceList = new ArrayList<InvoiceModel>();
+		InvoiceModel invoiceModel;
+		Customer customer;
+		
+		while(dataRS.next()){
+			
+			customer = new Customer();
+			customer.setCustomerId(dataRS.getInt("customer_id"));
+			customer.setFirstName(Utils.getString(dataRS.getString("first_name")));
+			customer.setMiddleName(Utils.getString(dataRS.getString("middle_name")));
+			customer.setLastName(Utils.getString(dataRS.getString("last_name")));
+			
+			invoiceModel = new InvoiceModel();
+			invoiceModel.setInvoiceId(dataRS.getInt("invoice_id"));
+			invoiceModel.setExpenseExist(dataRS.getBoolean("expense_exist"));
+			invoiceModel.setAmount(dataRS.getDouble("amount"));
+			invoiceModel.setComments(dataRS.getString("comments"));
+			
+			invoiceModel.setCustomer(customer);
+			invoiceList.add(invoiceModel);
+		}
+		
+		connectionsUtil.closeConnection(conn);
+		
+		return invoiceList;
+	}
+
+	
 	public InvoiceModel getInvoice(Integer invoiceId) throws SQLException{
 		
 		InvoiceModel invoiceModel = null;
@@ -121,13 +163,13 @@ public class Invoice {
 		
 		String query = "select i.invoice_id, v.vendor_id, expense_exist, comments, e.expense_id, "+ 
 						"vendor_name, i.amount as tAmount, ie.amount as eAmount, i.created_on,f.fish_name, "+
-						"b.boat_name, c.first_name, c.middle_name, c.last_name from invoice_master i "+
-						"inner join vendor_master v on i.vendor_id = v.vendor_id and i.invoice_id = ? "+
-						"inner join invoice_expense_map ie on i.invoice_id = ie.invoice_id "+
+						"b.boat_name, c.first_name, c.middle_name, c.last_name, c.customer_id from invoice_master i "+
+						"inner join invoice_expense_map ie on i.invoice_id = ie.invoice_id and i.invoice_id = ? "+
 						"inner join expenses e on ie.expense_id = e.expense_id "+
 						"inner join fish_master f on e.fish_id = f.fish_id "+
 						"inner join boat_master b on e.boat_id = b.boat_id " +
-						"inner join customer_master c on c.customer_id = e.customer_id";
+						"inner join vendor_master v on e.vendor_id = v.vendor_id  "+
+						"inner join customer_master c on e.customer_id = c.customer_id";
 		
 		PreparedStatement psmt = conn.prepareStatement(query);
 		
@@ -149,11 +191,18 @@ public class Invoice {
 			vendor.setVendorId(dataRS.getInt("vendor_id"));
 			vendor.setVendorName(dataRS.getString("vendor_name"));
 			
+			customer = new Customer();
+			customer.setCustomerId(dataRS.getInt("customer_id"));
+			customer.setFirstName(dataRS.getString("first_name"));
+			customer.setMiddleName(dataRS.getString("middle_name"));
+			customer.setLastName(dataRS.getString("last_name"));
+			
 			if(count == 0){
 				invoiceModel = new InvoiceModel();
 				invoiceModel.setInvoiceId(dataRS.getInt("invoice_id"));
 				invoiceModel.setAmount(dataRS.getDouble("tAmount"));
 				invoiceModel.setVendor(vendor);
+				invoiceModel.setCustomer(customer);
 				invoiceModel.setExpenseExist(dataRS.getBoolean("expense_exist"));
 				invoiceModel.setCreatedOn(dataRS.getString("created_on"));
 			}
@@ -164,10 +213,7 @@ public class Invoice {
 			boat = new Boat();
 			boat.setBoatName(dataRS.getString("boat_name"));
 			
-			customer = new Customer();
-			customer.setFirstName(dataRS.getString("first_name"));
-			customer.setMiddleName(dataRS.getString("middle_name"));
-			customer.setLastName(dataRS.getString("last_name"));
+			
 			
 			expenseModel = new ExpenseModel();
 			expenseModel.setExpenseId(dataRS.getInt("expense_id"));

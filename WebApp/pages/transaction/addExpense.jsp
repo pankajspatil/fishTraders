@@ -14,7 +14,7 @@
 <body>
 <%
 Expense expense = new Expense();
-List<ExpenseModel> expenseList = expense.getExpenseList(null, false);
+List<ExpenseModel> expenseList = expense.getExpenseList(null, null, false);
 String customerName = "";
 Customer customer = null;
 %>
@@ -33,7 +33,8 @@ Customer customer = null;
 		<th width="10%">Fish</th>
 		<th width="20%">Customer</th>
 		<th>Amount</th>
-		<th>Paid</th>
+		<th>Paid-Vendor</th>
+		<th>Paid-Cust.</th>
 		<th width="30%">Remarks</th>
 	</tr>
 </thead>
@@ -53,7 +54,8 @@ Customer customer = null;
 			<td><%=expenseModel.getFish().getFishName() %></td>
 			<td><%=customerName %></td>
 			<td align="center"><%=expenseModel.getExpenseAmt() %></td>
-			<td align="center"><%=expenseModel.getPaidAmt() %></td>
+			<td align="center"><%=expenseModel.getVendorAmt() %></td>
+			<td align="center"><%=expenseModel.getCustAmt() %></td>
 			<td><%=expenseModel.getExpenseRemark()%></td>
 		</tr>
 	<%}%>

@@ -64,7 +64,9 @@
 					href='<%=request.getContextPath()%>/pages/transaction/addExpense.jsp'><span>Expense</span></a>
 				</li>
 				<li><a
-					href='<%=request.getContextPath()%>/pages/transaction/addVendorInvoice.jsp'><span>Invoice</span></a></li>
+					href='<%=request.getContextPath()%>/pages/transaction/addVendorInvoice.jsp'><span>Vendor Invoice</span></a></li>
+				<li><a
+					href='<%=request.getContextPath()%>/pages/transaction/addCustomerInvoice.jsp'><span>Customer Invoice</span></a></li>
 			</ul></li>
 			<% } 
 				if (menulist.contains("Reports")) {

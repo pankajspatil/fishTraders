@@ -45,7 +45,7 @@ public class Expense {
 			connectionsUtil.closeConnection(conn);
 	}
 	
-	public List<ExpenseModel> getExpenseList(Integer vendorId, boolean payableOnly) throws SQLException{
+	public List<ExpenseModel> getExpenseList(Integer vendorId, Integer customerId, boolean payableOnly) throws SQLException{
 			
 		
 			connectionsUtil = new ConnectionsUtil();
@@ -53,25 +53,41 @@ public class Expense {
 
 			String query = "SELECT e.expense_id, f.fish_id, f.fish_name, v.vendor_id, v.vendor_name, " +
 							"b.boat_id, b.boat_name, c.customer_id, c.first_name, c.last_name, c.middle_name, " +
-							"e.expense_amount, ie.paidAmt, e.expense_remark FROM expenses e "+
+							"e.expense_amount, ie.vendorAmt, ie.custAmt, e.expense_remark FROM expenses e "+
 							"inner join fish_master f on e.fish_id = f.fish_id "+
 							"inner join boat_master b on b.boat_id = e.boat_id " +
-							"inner join customer_master c on e.customer_id = c.customer_id " + 
-							"inner join vendor_master v on e.vendor_id = v.vendor_id ";
+							"inner join customer_master c on e.customer_id = c.customer_id ";
+			
+							if(customerId != null){
+								query += "and c.customer_id = ? ";
+							}
+			
+							query += "inner join vendor_master v on e.vendor_id = v.vendor_id ";
 							if(vendorId != null){
 								query += "and v.vendor_id = ? ";
 							}
 							
-							query += "left join (select expense_id, sum(ifnull(amount,0)) as paidAmt from invoice_expense_map ie "+ 
-							"where is_active = 1 group by expense_id) ie on e.expense_id = ie.expense_id";
+							query += "left join (select expense_id, sum(case when i.vendor_id !=0 then ie.amount else 0 end) as vendorAmt, "+
+							"sum(case when i.customer_id !=0 then ie.amount else 0 end) as custAmt from invoice_expense_map ie "+
+							"inner join invoice_master i on ie.invoice_id = i.invoice_id " +
+							"where ie.is_active = 1 and i.is_active = 1 " +
+							"group by expense_id) ie on e.expense_id = ie.expense_id ";
 							
 							if(payableOnly){
-								query += " having (expense_amount - ifnull(ie.paidAmt,0)) > 0";
+								
+								if(customerId != null){
+									query += "having (expense_amount - ifnull(ie.custAmt,0)) > 0";
+								}
+								if(vendorId != null){
+									query += "having (expense_amount - ifnull(ie.vendorAmt,0)) > 0";
+								}
 							}
 					
 			PreparedStatement preparedStatement = conn.prepareStatement(query);
 			if(vendorId != null){
 				preparedStatement.setInt(1, vendorId);
+			}else if(customerId != null){
+				preparedStatement.setInt(1, customerId);
 			}
 			
 			dataRS = preparedStatement.executeQuery();
@@ -108,7 +124,17 @@ public class Expense {
 				expenseModel.setBoat(boat);
 				expenseModel.setCustomer(customer);
 				expenseModel.setExpenseAmt(dataRS.getDouble("expense_amount"));
-				expenseModel.setPaidAmt(dataRS.getDouble("paidAmt"));
+				
+				expenseModel.setVendorAmt(dataRS.getDouble("vendorAmt"));
+				expenseModel.setCustAmt(dataRS.getDouble("custAmt"));
+				
+				if(customerId != null){
+					expenseModel.setPaidAmt(dataRS.getDouble("custAmt"));
+				}
+				if(vendorId != null){
+					expenseModel.setPaidAmt(dataRS.getDouble("vendorAmt"));
+				}
+				
 				expenseModel.setExpenseRemark(dataRS.getString("expense_remark"));
 				
 				expenseList.add(expenseModel);
