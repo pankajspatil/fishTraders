@@ -2,10 +2,8 @@
 <%@page import="com.org.fishtraders.transfer.ExpenseModel"%>
 <%@page import="com.org.fishtraders.transfer.Boat"%>
 <%@page import="com.org.fishtraders.master.Master"%>
-<%@page import="com.org.fishtraders.transfer.Cooking"%>
 <%@page import="java.util.List"%>
 <%@page import="com.org.fishtraders.generic.Constants"%>
-<%@page import="com.org.fishtraders.order.Order"%>
 <%@page import="com.org.fishtraders.generic.Utils"%>
 <%@page import="com.google.gson.JsonParser"%>
 <%@page import="com.google.gson.JsonObject"%>
@@ -25,15 +23,11 @@ try{
 	String userId = Utils.getString(session.getAttribute(Constants.USER_ID));
 	String data = Utils.getString(request.getParameter("data"));
 	
-	Order order = new Order();
 	Master master = new Master();
 	Invoice invoice = new Invoice();
 	Integer returnValue = new Integer(0);
 	
-	if(action.equals("updateCustomer")){
-			returnValue = order.updateCustomerInOrder(data);
-			out.println(returnValue);
-	}else if(action.equals("getBoatsByVendor")){
+	if(action.equals("getBoatsByVendor")){
 		JsonObject jsonObject  = Utils.getJSONObjectFromString(data);
 		
 		Integer vendorId = jsonObject.get("vendorId").getAsInt();

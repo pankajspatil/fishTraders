@@ -58,10 +58,10 @@ function openExpenseFancyBox(expenseId, menuType, obj){
 function validateCreateExpense(){
 	
 	var vendorId = $('#vendorId').val();
-	var expenseItem = $('#expenseItem').val();
-	var expenseQty = $('#expenseQty').val();
+	var boatId = $('#boatId').val();
+	var fishId = $('#fishId').val();
+	var customerId = $('#customerId').val();
 	var expenseAmount = $('#expenseAmount').val();
-	var expenseVat = $('#expenseVat').val();
 
 	
 	var paramMap = new Map();
@@ -69,20 +69,23 @@ function validateCreateExpense(){
 		  paramMap.put(MSG, 'Please select vendor.');
 			displayNotification(paramMap);
 		  return false;
-	  }else if(expenseItem == -1){
-		  paramMap.put(MSG, 'Please select item.');
+	  }else if(boatId == -1){
+		  paramMap.put(MSG, 'Please select boat.');
 			displayNotification(paramMap);
 		  return false;
-	  }else if(expenseQty == ''){
-		  paramMap.put(MSG, 'Expense quantity can not be blank.');
-		  displayNotification(paramMap);
+	  }else if(fishId == -1){
+		  paramMap.put(MSG, 'Please select fish.');
+			displayNotification(paramMap);
+		  return false;
+	  }else if(customerId == -1){
+		  paramMap.put(MSG, 'Please select customer.');
+			displayNotification(paramMap);
 		  return false;
 	  }else if(expenseAmount == ''){
 		  paramMap.put(MSG, 'Expense amount can not be blank.');
 		  displayNotification(paramMap);
 		  return false;
 	  }
-	
 }
 
 function updateBoats(el){

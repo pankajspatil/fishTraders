@@ -119,7 +119,7 @@ public List<Boat> getAllBoats(Boolean isActive, Integer boatId, Integer vendorId
 		
 		vendor.setVendorId(dataRS.getInt("vendor_id"));
 		vendor.setVendorName(dataRS.getString("vendor_name"));
-		//vendor.setVendorAddress(vendorAddress);
+		vendor.setVendorAddress(dataRS.getString("address"));
 		
 		boat.setBoatId(dataRS.getInt("boat_id"));
 		boat.setBoatName(dataRS.getString("boat_name"));
@@ -270,6 +270,54 @@ public Fish updateFish(Fish fish) throws SQLException{
 	connectionsUtil.closeConnection(conn);
 	
 	return fish;
+}
+
+public Boat insertBoat(Boat boat) throws SQLException{
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "insert into boat_master(boat_name, vendor_id, is_active, created_by) values(?,?,?,?)";
+	
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	
+	
+	psmt.setString(1, boat.getBoatName());
+	psmt.setInt(2, boat.getVendor().getVendorId());
+	psmt.setBoolean(3, boat.getIsActive());
+	psmt.setInt(4, boat.getCreatedBy());
+	
+	psmt.executeUpdate();
+	
+	ResultSet dataRS = psmt.getGeneratedKeys();
+	if(dataRS.next()){
+		boat.setBoatId(dataRS.getInt(1));
+	}
+	
+	connectionsUtil.closeConnection(dataRS);
+	
+	return boat;
+}
+
+public Boat updateBoat(Boat boat) throws SQLException{
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "update boat_master set boat_name = ?, vendor_id = ?, is_active = ?, created_by = ? where boat_id = ?";
+	
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	
+	
+	psmt.setString(1, boat.getBoatName());
+	psmt.setInt(2, boat.getVendor().getVendorId());
+	psmt.setBoolean(3, boat.getIsActive());
+	psmt.setInt(4, boat.getCreatedBy());
+	psmt.setInt(5, boat.getBoatId());
+	
+	psmt.executeUpdate();
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return boat;
 }
 
 
