@@ -1,8 +1,10 @@
 package com.org.fishtraders.master;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import com.org.fishtraders.transfer.Vendor;
 
 public class Master {
 	
-	public List<Vendor> getAllVendors(Boolean isActive, Integer vendorId) throws SQLException{
+public List<Vendor> getAllVendors(Boolean isActive, Integer vendorId) throws SQLException{
 
 		ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 		Connection conn = connectionsUtil.getConnection();
@@ -167,6 +169,57 @@ public List<Customer> getAllCustomers(Boolean isActive, Integer customerId) thro
 	
 	return customerList;
 }
+
+public Vendor insertVendor(Vendor vendor, String userId) throws SQLException{
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "insert into vendor_master(vendor_name, contact_no, address, is_active, created_by) values(?,?,?,?,?)";
+	
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	
+	
+	psmt.setString(1, vendor.getVendorName());
+	psmt.setString(2, vendor.getContactNo());
+	psmt.setString(3, vendor.getVendorAddress());
+	psmt.setBoolean(4, vendor.getIsActive());
+	psmt.setString(5, userId);
+	
+	psmt.executeUpdate();
+	
+	ResultSet dataRS = psmt.getGeneratedKeys();
+	if(dataRS.next()){
+		vendor.setVendorId(dataRS.getInt(1));
+	}
+	
+	connectionsUtil.closeConnection(dataRS);
+	
+	return vendor;
+}
+
+public Vendor updateVendor(Vendor vendor, String userId) throws SQLException{
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "update vendor_master set vendor_name = ?, contact_no = ?, address = ?, is_active = ?, created_by = ? where vendor_id = ?";
+	
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	
+	
+	psmt.setString(1, vendor.getVendorName());
+	psmt.setString(2, vendor.getContactNo());
+	psmt.setString(3, vendor.getVendorAddress());
+	psmt.setBoolean(4, vendor.getIsActive());
+	psmt.setString(5, userId);
+	psmt.setInt(6, vendor.getVendorId());
+	
+	psmt.executeUpdate();
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return vendor;
+}
+
 
 
 }

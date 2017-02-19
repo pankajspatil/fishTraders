@@ -39,7 +39,7 @@
 			<li class='has-sub'><a href='#'><span>Master</span></a>
 				<ul>
 					<li class='first-child'><a
-						href='<%=request.getContextPath()%>/pages/master/tableMaster.jsp'><span>Table
+						href='<%=request.getContextPath()%>/pages/master/addVendor.jsp'><span>Vendor
 								Master</span></a></li>
 					<li class='first-child'><a
 								href='<%=request.getContextPath()%>/pages/master/menuMaster.jsp'><span>Food Menu Master</span></a></li>

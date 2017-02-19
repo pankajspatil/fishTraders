@@ -40,6 +40,24 @@ $(document).ready(function() {
 			 collapsible: true ,
 			 defaultTab: 'li#mainMenuTab'
 			 });
+	   
+	   /***Methods for vendor master screen***/
+	   
+	   $('#newVendor').click(function(){
+		   openVendorFancyBox(0, 'newVendor', this);
+		});
+	   
+	   var vendorTable = $('#vendorTable').DataTable({
+	    	"bSort" : true,
+	    	"paging" : true,
+	    	"order": [[ 0, "asc" ]]/*,
+	    	"pageLength": 15,
+	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
+	    });
+	   
+	   $('img[name=editVendor]').click(function(e){
+		   updateVendorRecord(this);
+		});
 });
 
 function openMenuFancyBox(menuId, menuType, obj){
@@ -323,3 +341,25 @@ function validateSubMenuForm(){
 	
 }
 
+/**Methods for vendor master screen**/
+
+function openVendorFancyBox(vendorId, menuType, obj){
+	
+	var paramMap = new Map();
+	
+	var url, btnObj;
+	
+	url = contextPath + '/pages/master/createVendor.jsp?menuRequired=false&vendorId=' + vendorId;
+	
+	paramMap.put(URL, url);
+	paramMap.put(WIDTH, '70%');
+	paramMap.put(HEIGHT, '80%');
+	
+	openFancyBox(obj, paramMap);
+}
+
+function updateVendorRecord(imgObj){
+	
+	var vendorId =  imgObj.id;
+	openVendorFancyBox(vendorId, 'updateVendor', imgObj);
+}
