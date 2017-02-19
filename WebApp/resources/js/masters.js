@@ -58,6 +58,31 @@ $(document).ready(function() {
 	   $('img[name=editBoat]').click(function(e){
 		   updateBoatRecord(this);
 		});
+	   
+	   /***Methods for customer master screen***/
+	   
+	   var customerData = $('#customerData').DataTable({
+	    	"bSort" : true,
+	    	"paging" : true,
+	    	"order": [[ 0, "asc" ]]/*,
+	    	"pageLength": 15,
+	    	"aLengthMenu": [[10, 15, 25, 35, 50, 100], [10, 15, 25, 35, 50, 100]]*/	
+	    });
+	   
+	   $('#newCustomer').click(function(){
+			openCustomerFancyBox(0, 'newCustomer', this);
+		});
+		
+		$('img[name=editCustomer]').click(function(e){
+				openCustomerFancyBox($(this).id, 'updateCustomer', this);
+		});
+		
+		$( "#dob" ).datepicker({
+			changeMonth: true,
+		    changeYear: true,
+		    dateFormat: 'yy-mm-dd',
+		    maxDate: new Date()
+		});
 });
 
 /**Methods for vendor master screen**/
@@ -217,3 +242,89 @@ function validateBoatForm(){
 	}
 	
 }
+
+
+/****Methods for Customer master screen****/
+
+function openCustomerFancyBox(customerId, operation, obj){
+	
+	var paramMap = new Map();
+	
+	var url = contextPath + '/pages/master/createCustomer.jsp?menuRequired=false&customerId=' + customerId;
+	
+	paramMap.put(URL, url);
+	paramMap.put(WIDTH, '70%');
+	paramMap.put(HEIGHT, '80%');
+	
+	openFancyBox(obj, paramMap);
+}
+
+function validateCustomerForm(){
+	
+	var elementIds = [
+		                  ['firstName','first name'], ['lastName','last name'], ['gender', 'gender'], ['dob','DOB'],
+		                  ['contact', 'contact no'], ['address', 'address']
+	                 ];
+	var errorFound = false;
+	var paramMap = new Map();
+	$.each(elementIds, function( index, value ) {
+		if(value[0] == 'gender' && $('#' + value[0]).val() == -1){
+			paramMap.put(MSG, 'Please select ' + value[1]);
+			errorFound = true;
+			return false;
+		}else if($('#' + value[0]).val() == ''){
+			  paramMap.put(MSG, 'Please enter ' + value[1]);
+			  errorFound = true;
+			  return false;
+		  }
+		});
+	if(errorFound){
+		displayNotification(paramMap);
+		return false;
+	}else if($('#email').val() != '' && !isValidEmailAddress($('#email').val())){
+		paramMap.put(MSG, 'Please enter valid email.');
+		displayNotification(paramMap);
+		return false;
+	}
+	
+	var customerId = customerObj.customerId;
+	if(customerId !== undefined){
+		var oldFirstName = customerObj.firstName;
+		var oldLastName = customerObj.lastName;
+		var oldDob = customerObj.dob;
+		
+		var firstName = $('#firstName').val();
+		var lastName = $('#lastName').val()
+		var dob = $('#dob').val();
+		
+		var oldCombineText = (oldFirstName+oldLastName+oldDob).toLowerCase();
+		var combineText = (firstName+lastName+dob).toLowerCase();
+		
+		if(oldCombineText != combineText){
+			var customerTable = parent.$('#customerData');
+			
+			var firstNameArray = $(customerTable).DataTable().column(0).data();	
+			firstNameArray = convertCaseArray(firstNameArray, LOWER_CASE);
+			
+			var lastNameArray = $(customerTable).DataTable().column(2).data();	
+			lastNameArray = convertCaseArray(lastNameArray, LOWER_CASE);
+			
+			var dobArray = $(customerTable).DataTable().column(4).data();	
+			
+			$.each(firstNameArray, function( index, value ) {
+				var cmbText = value + lastNameArray[index] + dobArray[index];
+				if(combineText == cmbText){
+					errorFound = true;
+					paramMap.put(MSG, 'Duplicate combination of first name, last name and dob.');
+					return false;
+				}				
+			});
+		}
+		
+		if(errorFound){
+			displayNotification(paramMap);
+			return false;
+		}
+	}
+}
+

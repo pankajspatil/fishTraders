@@ -320,5 +320,188 @@ public Boat updateBoat(Boat boat) throws SQLException{
 	return boat;
 }
 
+/**Customer Master Screen**/
+
+public List<Customer> searchCustomer(Integer searchKey, String searchValue) throws SQLException {
+
+	ResultSet dataRS = null;
+	List<Customer> customerList = new ArrayList<Customer>();
+	
+	switch (searchKey) {
+	case 1:
+		dataRS = getCustomerByName(searchValue);
+		break;
+	case 2:
+		dataRS = getCustomerByMobileNo(searchValue);
+		break;
+	case 4:
+		dataRS = getCustomerByDOB(searchValue);
+		break;
+	case 5:
+		dataRS = getCustomerByID(searchValue);
+		break;
+	default:
+		dataRS = getAllCustomers(false);
+		
+	}
+	
+	Customer customer = null;
+	while(dataRS.next()){
+		customer = new Customer();
+		
+		customer.setCustomerId(dataRS.getInt("customer_id"));
+		customer.setFirstName(Utils.getString(dataRS.getString("first_name")));
+		customer.setMiddleName(Utils.getString(dataRS.getString("middle_name")));
+		customer.setLastName(Utils.getString(dataRS.getString("last_name")));
+		customer.setEmail(Utils.getString(dataRS.getString("email")));
+		customer.setContactNo(Utils.getString(dataRS.getString("contact_no")));
+		customer.setSex(Utils.getString(dataRS.getString("sex")));
+		customer.setAddress(Utils.getString(dataRS.getString("address")));
+		customer.setDob(Utils.getString(dataRS.getString("dob")));
+		customer.setIsActive(dataRS.getBoolean("is_active"));
+		
+		customerList.add(customer);
+	}
+	
+	if(dataRS != null){
+		ConnectionsUtil.closeRes(dataRS);
+	}
+
+	return customerList;
+}
+
+private ResultSet getCustomerByDOB(String dob) {
+
+	ResultSet dataRS = null;
+	
+	try{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();		
+		Connection conn = connectionsUtil.getConnection();
+		String query = "select * from customer_master where dob = ?";
+		PreparedStatement pst = conn.prepareStatement(query);
+		
+		pst.setString(1, dob);
+		
+		dataRS = pst.executeQuery();
+		
+		query = null;connectionsUtil = null;			
+	}catch(Exception ex){
+		ex.printStackTrace();
+	}
+	return dataRS;
+}
+
+private ResultSet getAllCustomers(Boolean isActive) {
+
+	ResultSet dataRS = null;
+	
+	try{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();		
+		Connection conn = connectionsUtil.getConnection();
+		String query = "select * from customer_master ";
+		if(isActive){
+			query += "where is_active = 1";
+		}
+		PreparedStatement pst = conn.prepareStatement(query);
+		dataRS = pst.executeQuery();
+		
+		query = null;connectionsUtil = null;			
+	}catch(Exception ex){
+		ex.printStackTrace();
+	}
+	return dataRS;
+}
+
+public ResultSet getCustomerByName(String searchValue) {
+	
+	ResultSet dataRS = null;
+	
+	try{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();		
+		Connection conn = connectionsUtil.getConnection();
+		String query = "select * from customer_master where first_name like '%"+searchValue+"%' or last_name like '%"+searchValue+"%'";
+		dataRS = conn.createStatement().executeQuery(query);
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+	}
+	return dataRS;
+}
+
+public ResultSet getCustomerByMobileNo(String phone) {
+
+	ResultSet dataRS = null;
+	try{
+		ConnectionsUtil connectionsUtil = new ConnectionsUtil();		
+		Connection conn = connectionsUtil.getConnection();
+		String query = "select * from customer_master where contact_no = ?";
+		PreparedStatement pst = conn.prepareStatement(query);
+		pst.setString(1, phone);
+		dataRS = pst.executeQuery();
+		
+		query = null;connectionsUtil = null;
+		
+	}catch(Exception ex){
+		ex.printStackTrace();
+	}
+	
+	return dataRS;
+}
+
+public ResultSet getCustomerByID(String customerId){
+
+	ResultSet dataRS = null;
+	try{		
+		ConnectionsUtil connectionsUtil= new ConnectionsUtil();
+		Connection conn = connectionsUtil.getConnection();
+		
+		String query = "select * from customer_master where customer_id = ?";
+		
+		PreparedStatement psm = conn.prepareStatement(query);
+		psm.setString(1, customerId);
+		
+		dataRS = psm.executeQuery();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+	return dataRS;
+}
+
+public void createUpdateCustomer(Customer customer) throws SQLException{
+
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "";
+	
+	query = "INSERT INTO `customer_master`(`first_name`,`middle_name`,`last_name`,`email`,"
+				+ "`contact_no`,`sex`,`address`,`dob`,`created_by`,`is_active`) VALUES(?,?,?,?,?,?,?,?,?,?)";
+	
+	if(customer.getCustomerId() != null && customer.getCustomerId() != 0){
+		query = "UPDATE `customer_master` SET `first_name` = ?,`middle_name` = ?,"
+				+ "`last_name` = ?,`email` = ?,`contact_no` = ?,`sex` = ?,`address` = ?,"
+				+ "`dob` = ?,`created_by` = ?,`is_active` = ? WHERE `customer_id` = ?;";
+	}
+	
+	PreparedStatement psmt = conn.prepareStatement(query);
+	
+	psmt.setString(1, customer.getFirstName());
+	psmt.setString(2, customer.getMiddleName());
+	psmt.setString(3, customer.getLastName());
+	psmt.setString(4, customer.getEmail());
+	psmt.setString(5, customer.getContactNo());
+	psmt.setString(6, customer.getSex());
+	psmt.setString(7, customer.getAddress());
+	psmt.setString(8, customer.getDob());
+	psmt.setInt(9, customer.getCreatedBy());
+	psmt.setBoolean(10, customer.getIsActive());
+	
+	if(customer.getCustomerId() != null && customer.getCustomerId() != 0){
+		psmt.setInt(11, customer.getCustomerId());
+	}
+	psmt.executeUpdate();
+}
+
 
 }

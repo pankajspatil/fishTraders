@@ -45,6 +45,8 @@
 								href='<%=request.getContextPath()%>/pages/master/addBoat.jsp'><span>Boat Master</span></a></li>
 					<li class='first-child'><a
 								href='<%=request.getContextPath()%>/pages/master/addFish.jsp'><span>Fish Master</span></a></li>
+					<li class='first-child'><a
+								href='<%=request.getContextPath()%>/pages/master/addCustomer.jsp'><span>Customer Master</span></a></li>
 				</ul>
 			</li>
 			<% } 

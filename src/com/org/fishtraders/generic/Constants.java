@@ -54,4 +54,6 @@ public class Constants {
 	public static final String CHANGED_PASSWORD = "CHANGED_PASSWORD";
 	public static final String AUTH_CODE = "AUTH_CODE";
 	
+	public static final Integer SINGLE_PATIENT = 5;
+	
 }

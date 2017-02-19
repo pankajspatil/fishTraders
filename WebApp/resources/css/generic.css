@@ -134,9 +134,9 @@ td {
 	cursor: pointer;
 }
 
-.required:before {
+.required:after {
 	color: #d61f1f;
-	content: '*';
+	content: ' *';
 }
 
 #divleft {
