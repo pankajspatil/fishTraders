@@ -27,7 +27,7 @@
 	Master masters = new Master();
 	
 	List<Vendor> vendorList = masters.getAllVendors(true, 0);
-	List<Fish> fishList = masters.getAllFishes(true);
+	List<Fish> fishList = masters.getAllFishes(true, 0);
 	List<Customer> customerList = masters.getAllCustomers(true, 0);
 	
 		Integer userId = Integer.parseInt(session.getAttribute(Constants.USER_ID).toString());
