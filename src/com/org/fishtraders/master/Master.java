@@ -54,14 +54,19 @@ public List<Vendor> getAllVendors(Boolean isActive, Integer vendorId) throws SQL
 		return vendorList;
 		}
 
-public List<Fish> getAllFishes(Boolean isActive) throws SQLException{
+public List<Fish> getAllFishes(Boolean isActive, Integer fishId) throws SQLException{
 	
 	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 	Connection conn = connectionsUtil.getConnection();
 	
+	
 	String query = "select * from fish_master";
-	if(isActive){
+	if(isActive && fishId != 0){
+		query += " where is_active = 1 and fish_id = "+ fishId;
+	}else if(isActive){
 		query += " where is_active = 1";
+	}else if(fishId != 0){
+		query += " where fish_id = "+ fishId;
 	}
 	
 	ResultSet dataRS = conn.createStatement().executeQuery(query);
@@ -74,6 +79,8 @@ public List<Fish> getAllFishes(Boolean isActive) throws SQLException{
 		fish.setFishId(dataRS.getInt("fish_id"));
 		fish.setFishName(dataRS.getString("fish_name"));
 		fish.setIsActive(dataRS.getBoolean("is_active"));
+		fish.setCreatedBy(dataRS.getInt("created_by"));
+		fish.setCreatedOn(dataRS.getString("created_on"));
 		
 		fishList.add(fish);
 	}
@@ -170,7 +177,7 @@ public List<Customer> getAllCustomers(Boolean isActive, Integer customerId) thro
 	return customerList;
 }
 
-public Vendor insertVendor(Vendor vendor, String userId) throws SQLException{
+public Vendor insertVendor(Vendor vendor) throws SQLException{
 	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 	Connection conn = connectionsUtil.getConnection();
 	
@@ -183,7 +190,7 @@ public Vendor insertVendor(Vendor vendor, String userId) throws SQLException{
 	psmt.setString(2, vendor.getContactNo());
 	psmt.setString(3, vendor.getVendorAddress());
 	psmt.setBoolean(4, vendor.getIsActive());
-	psmt.setString(5, userId);
+	psmt.setInt(5, vendor.getCreatedBy());
 	
 	psmt.executeUpdate();
 	
@@ -197,7 +204,7 @@ public Vendor insertVendor(Vendor vendor, String userId) throws SQLException{
 	return vendor;
 }
 
-public Vendor updateVendor(Vendor vendor, String userId) throws SQLException{
+public Vendor updateVendor(Vendor vendor) throws SQLException{
 	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
 	Connection conn = connectionsUtil.getConnection();
 	
@@ -210,7 +217,7 @@ public Vendor updateVendor(Vendor vendor, String userId) throws SQLException{
 	psmt.setString(2, vendor.getContactNo());
 	psmt.setString(3, vendor.getVendorAddress());
 	psmt.setBoolean(4, vendor.getIsActive());
-	psmt.setString(5, userId);
+	psmt.setInt(5, vendor.getCreatedBy());
 	psmt.setInt(6, vendor.getVendorId());
 	
 	psmt.executeUpdate();
@@ -220,6 +227,50 @@ public Vendor updateVendor(Vendor vendor, String userId) throws SQLException{
 	return vendor;
 }
 
+public Fish insertFish(Fish fish) throws SQLException{
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "insert into fish_master(fish_name, is_active, created_by) values(?,?,?)";
+	
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	
+	
+	psmt.setString(1, fish.getFishName());
+	psmt.setBoolean(2, fish.getIsActive());
+	psmt.setInt(3, fish.getCreatedBy());
+	
+	psmt.executeUpdate();
+	
+	ResultSet dataRS = psmt.getGeneratedKeys();
+	if(dataRS.next()){
+		fish.setFishId(dataRS.getInt(1));
+	}
+	
+	connectionsUtil.closeConnection(dataRS);
+	
+	return fish;
+}
+
+public Fish updateFish(Fish fish) throws SQLException{
+	ConnectionsUtil connectionsUtil = new ConnectionsUtil();
+	Connection conn = connectionsUtil.getConnection();
+	
+	String query = "update fish_master set fish_name = ?, is_active = ?, created_by = ? where fish_id = ?";
+	
+	PreparedStatement psmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	
+	psmt.setString(1, fish.getFishName());
+	psmt.setBoolean(2, fish.getIsActive());
+	psmt.setInt(3, fish.getCreatedBy());
+	psmt.setInt(4, fish.getFishId());
+	
+	psmt.executeUpdate();
+	
+	connectionsUtil.closeConnection(conn);
+	
+	return fish;
+}
 
 
 }

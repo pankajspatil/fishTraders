@@ -42,18 +42,9 @@
 						href='<%=request.getContextPath()%>/pages/master/addVendor.jsp'><span>Vendor
 								Master</span></a></li>
 					<li class='first-child'><a
-								href='<%=request.getContextPath()%>/pages/master/menuMaster.jsp'><span>Food Menu Master</span></a></li>
-					<%-- <li class='has-sub'><a href='#'><span>Food Menu</span></a>
-						<ul>
-							<li class='first-child'><a
-								href='<%=request.getContextPath()%>/pages/master/menuMaster.jsp'><span>Food Menu</span></a></li>
-							<li>
-								<a href='<%=request.getContextPath()%>/pages/master/addFoodDishes.jsp'>
-									<span>Dishes</span>
-								</a>
-							</li>
-						</ul>
-					</li> --%>
+								href='<%=request.getContextPath()%>/pages/master/addBoat.jsp'><span>Boat Master</span></a></li>
+					<li class='first-child'><a
+								href='<%=request.getContextPath()%>/pages/master/addFish.jsp'><span>Fish Master</span></a></li>
 				</ul>
 			</li>
 			<% } 

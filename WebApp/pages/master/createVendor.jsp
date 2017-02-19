@@ -56,11 +56,12 @@ if(page1.equals("") && vendorId != 0){
 	vendor.setVendorAddress(address);
 	vendor.setIsActive(active);
 	vendor.setVendorId(vendorId);
+	vendor.setCreatedBy(Utils.getInt(userId));
 	
 	if(page1.equals("ADD")){
-		master.insertVendor(vendor, userId);	
+		master.insertVendor(vendor);	
 	}else if(page1.equals("UPDATE")){
-		master.updateVendor(vendor, userId);
+		master.updateVendor(vendor);
 		message = "Record Updated Successfully.";
 	}
 	if(!page1.equals("")){
